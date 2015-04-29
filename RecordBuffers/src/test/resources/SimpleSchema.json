@@ -1,0 +1,57 @@
+{
+  "schema": "simple_schema",
+  "table_list": [
+    {
+      "table": "attribution_result_rule",
+      "fields": [
+        {"id": 1,"name": "run_num",    "type": "Byte",   "isRequired": true},
+        {"id": 2,"name": "value",      "type": "String", "default": "Unknown"}
+      ]
+    },
+    {
+      "table": "attribution_result",
+      "fields": [
+        {"id": 1,"name": "id","type": "Integer","isRequired": true},
+        {"id": 2,"name": "rules",      "type": "List:attribution_result_rule", "isRequired": true}
+      ]
+    },
+    {
+      "table": "impression",
+      "fields": [
+        {"id": 1, "name": "media_provider_id", "type": "Integer","isRequired": true},
+        {"id": 2,"name": "mp_tpt_category_id","type": "Short",  "default": "-1"},
+        {"id": 3,"name": "truncated_url",     "type": "String", "default": "Unknown"},
+        {"id": 4,"name": "bid",         "type": "Boolean",  "default": "true"},
+        {"id": 5,"name": "bid_type",          "type": "Byte",   "default": "-1"},
+        {"id": 6,"name": "attribution_results","type": "List:attribution_result"},
+        {"id": 7,"name": "allowed_ad_formats","type": "Long",   "default": "-1"},
+		{"id": 8,"name": "cost","type": "Double",   "default": "0"}
+		]
+    },
+    {
+      "table": "provider_user_id",
+      "fields": [
+        {"id": 1,"name": "provider_type",          "type": "Byte",   "isRequired": true},
+        {"id": 2,"name": "provider_id",            "type": "Integer","isRequired": true}
+      ]
+    },
+    {
+      "table": "id_map",
+      "fields": [
+        {"id": 1,"name": "media_provider_ids","type": "List:provider_user_id"}
+      ]
+    },
+    {
+      "table": "analytical_user_profile",
+      "fields": [
+        {"id": 1,"name": "user_id",                 "type": "Long",   "isRequired": true, "hasRef": true},
+        {"id": 2,"name": "version",         "type": "Byte", "isRequired": true, "isSortKey": true},
+        {"id": 3,"name": "resolution",      "type": "Short",  "default": "-1"},
+        {"id": 4,"name": "os_version",      "type": "String", "default": "Unknown"},
+        {"id": 5,"name": "impressions",            "type": "List:impression"},
+        {"id": 6,"name": "id_maps",                "type": "id_map"},
+		{"id": 7, "name": "time_list",     "type": "List:Integer"}
+      ]
+    }
+  ]
+}

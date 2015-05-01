@@ -15,9 +15,9 @@
  */
 package datamine.storage.recordbuffers.example.interfaces;
 
-import java.util.List;
-
 import datamine.storage.api.BaseInterface;
+
+import java.util.List;
 
 
 /**

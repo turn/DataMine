@@ -32,13 +32,13 @@ import com.google.common.collect.Maps;
 
 import datamine.storage.api.RecordMetadataInterface;
 import datamine.storage.idl.Field;
+import datamine.storage.idl.FieldValueOperatorInterface;
 import datamine.storage.idl.type.CollectionFieldType;
 import datamine.storage.idl.type.FieldType;
 import datamine.storage.idl.type.GroupFieldType;
 import datamine.storage.idl.type.PrimitiveFieldType;
 import datamine.storage.idl.type.PrimitiveType;
-import datamine.storage.idl.value.ValueOperatorInterface;
-import datamine.storage.recordbuffers.idl.value.ValueOperatorFactory;
+import datamine.storage.recordbuffers.idl.value.FieldValueOperatorFactory;
 
 /**
  * MetadataOperator defines the functions to read/write attributes of a
@@ -46,7 +46,7 @@ import datamine.storage.recordbuffers.idl.value.ValueOperatorFactory;
  * 
  * @author yqi
  */
-public class RecordOperator<T extends Enum<T> & RecordMetadataInterface> {
+class RecordOperator<T extends Enum<T> & RecordMetadataInterface> {
 
 	public static final Logger LOG = LoggerFactory.getLogger(RecordOperator.class);
 	public static final int MAX_BUF_SIZE = 1024;
@@ -299,8 +299,8 @@ public class RecordOperator<T extends Enum<T> & RecordMetadataInterface> {
 					Object val = input[i];
 					Field curField = curCol.getField();
 					FieldType curFieldType = curField.getType();
-					ValueOperatorInterface valOpr = 
-							ValueOperatorFactory.getOperator(curFieldType);
+					FieldValueOperatorInterface valOpr = 
+							FieldValueOperatorFactory.getOperator(curFieldType);
 
 					if (val != null && valOpr.isValid(val) && 
 							!curField.equalToDefaultValue(val)) {
@@ -429,7 +429,7 @@ public class RecordOperator<T extends Enum<T> & RecordMetadataInterface> {
 
 				FieldType fieldType = curField.getField().getType();
 				int id = curField.getField().getId() - 1; // note that the ID starts at 1 instead of 0
-				ValueOperatorInterface valueOpr = ValueOperatorFactory.getOperator(fieldType);
+				FieldValueOperatorInterface valueOpr = FieldValueOperatorFactory.getOperator(fieldType);
 				if (fieldType instanceof PrimitiveFieldType) {
 					switch (((PrimitiveFieldType) fieldType).getType()) {
 					case STRING:

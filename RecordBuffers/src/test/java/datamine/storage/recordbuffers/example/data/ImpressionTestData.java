@@ -15,6 +15,13 @@
  */
 package datamine.storage.recordbuffers.example.data;
 
+import datamine.storage.api.RecordBuilderInterface;
+import datamine.storage.recordbuffers.example.model.*;
+import datamine.storage.recordbuffers.example.interfaces.*;
+import datamine.storage.idl.generator.AbstractTestData;
+import datamine.storage.idl.generator.RandomValueGenerator;
+import datamine.storage.idl.type.*;
+
 import java.nio.ByteBuffer;
 import java.util.*;
 
@@ -22,13 +29,6 @@ import org.testng.Assert;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
-import datamine.storage.api.RecordBuilderInterface;
-import datamine.storage.idl.generator.AbstractTestData;
-import datamine.storage.idl.generator.RandomValueGenerator;
-import datamine.storage.idl.type.*;
-import datamine.storage.recordbuffers.example.interfaces.*;
-import datamine.storage.recordbuffers.example.model.*;
 
 
 

@@ -25,20 +25,20 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
 
+import datamine.storage.idl.FieldValueOperatorInterface;
 import datamine.storage.idl.type.CollectionFieldType;
 import datamine.storage.idl.type.CollectionType;
 import datamine.storage.idl.type.FieldType;
 import datamine.storage.idl.type.GroupFieldType;
 import datamine.storage.idl.type.PrimitiveFieldType;
 import datamine.storage.idl.type.PrimitiveType;
-import datamine.storage.idl.value.ValueOperatorInterface;
 
 /**
  * The operation is defined for the collection type
  * 
  * @author yqi
  */
-class CollectionValueOperator implements ValueOperatorInterface {
+class CollectionValueOperator implements FieldValueOperatorInterface {
 
 	private static final Logger LOG = LoggerFactory.getLogger(
 			CollectionValueOperator.class);
@@ -99,7 +99,7 @@ class CollectionValueOperator implements ValueOperatorInterface {
 		int listSize = buffer.getInt(index);
 		index += 4;
 		//2. start reading values
-		ValueOperatorInterface valOpr = ValueOperatorFactory.getOperator(elementType);
+		FieldValueOperatorInterface valOpr = FieldValueOperatorFactory.getOperator(elementType);
 		if (elementType instanceof PrimitiveFieldType) {
 			PrimitiveType type = ((PrimitiveFieldType) elementType).getType();
 			switch (type) {
@@ -151,7 +151,7 @@ class CollectionValueOperator implements ValueOperatorInterface {
 		ByteArrayOutputStream outStream = new ByteArrayOutputStream();
 
 		// 2. fill the table
-		ValueOperatorInterface valOpr = ValueOperatorFactory.getOperator(elementType);
+		FieldValueOperatorInterface valOpr = FieldValueOperatorFactory.getOperator(elementType);
 		outStream.write(ByteBuffer.allocate(4).putInt(valList.size()).array());
 		if (elementType instanceof PrimitiveFieldType) {
 			PrimitiveType type = ((PrimitiveFieldType) elementType).getType();
@@ -205,7 +205,7 @@ class CollectionValueOperator implements ValueOperatorInterface {
 		
 		// 1. get the buffer size to allocate
 		int num = valList.size();
-		ValueOperatorInterface valOpr = ValueOperatorFactory.getOperator(elementType);
+		FieldValueOperatorInterface valOpr = FieldValueOperatorFactory.getOperator(elementType);
 		if (elementType instanceof PrimitiveFieldType) {
 			PrimitiveType type = ((PrimitiveFieldType) elementType).getType();
 			switch (type) {

@@ -22,13 +22,13 @@ import com.google.common.base.Preconditions;
 
 import datamine.storage.api.RecordMetadataInterface;
 import datamine.storage.idl.Field;
+import datamine.storage.idl.FieldValueOperatorInterface;
 import datamine.storage.idl.type.CollectionFieldType;
 import datamine.storage.idl.type.FieldType;
 import datamine.storage.idl.type.GroupFieldType;
 import datamine.storage.idl.type.PrimitiveFieldType;
 import datamine.storage.idl.type.PrimitiveType;
-import datamine.storage.idl.value.ValueOperatorInterface;
-import datamine.storage.recordbuffers.idl.value.ValueOperatorFactory;
+import datamine.storage.recordbuffers.idl.value.FieldValueOperatorFactory;
 
 /**
  * The definition of record for each tuple stored in the table. 
@@ -54,6 +54,16 @@ public class Record<T extends Enum<T> & RecordMetadataInterface> {
 		operator = RecordOperator.getRecordOperator(clazz);
 	}
 	
+	/**
+	 * Constructor. 
+	 * 
+	 * <p>
+	 * Note that the input recordbuffer instance can be changed by the record. 
+	 * </p>
+	 * 
+	 * @param clazz the class indicating the record metadata
+	 * @param buf the instance of {@link RecordBuffer}
+	 */
 	public Record(Class<T> clazz, RecordBuffer buf) {
 		this(clazz);
 		
@@ -180,7 +190,7 @@ public class Record<T extends Enum<T> & RecordMetadataInterface> {
 			int offset = field.isDesSortKey() ? 
 					operator.getSortKeyOffset(buf, 0) :
 					operator.getFieldWithReferenceOffset(col, buf, 0);
-			ValueOperatorInterface valueOpr = ValueOperatorFactory.getOperator(type);
+			FieldValueOperatorInterface valueOpr = FieldValueOperatorFactory.getOperator(type);
 			if (type instanceof PrimitiveFieldType) {
 				PrimitiveType priType = ((PrimitiveFieldType) type).getType();
 				switch (priType) {
@@ -225,7 +235,7 @@ public class Record<T extends Enum<T> & RecordMetadataInterface> {
 			int id = col.getField().getId() - 1; // note that id starts at 1
 			int size = 0;
 			FieldType type = col.getField().getType();
-			ValueOperatorInterface valOpr = ValueOperatorFactory.getOperator(type);
+			FieldValueOperatorInterface valOpr = FieldValueOperatorFactory.getOperator(type);
 			int sizeId = valueArray.length - 1;
 			int length = (Integer) valueArray[sizeId];
 

@@ -11,7 +11,7 @@ Record buffers is not the only one solution while dealing with the big data prob
 
 ## IDL Specification
 
-Please see [DataMine IDL](https://stash.turn.com/projects/DM/repos/aup2/browse/doc/DataMine_IDL.md).
+Please see [DataMine IDL](../doc/DataMine_IDL.md).
 
 ## Code Generation
 <a name="code_generation"></a>
@@ -40,10 +40,10 @@ To enable such a code generation, the project POM should include the plugin belo
 						<goals>
 							<goal>table_interfaces</goal>
 						</goals>
-						<phase>generate-sources</phase>
+						<phase>${codeGenerationPhase}</phase>
 						<configuration>
-							<schemaPath>/path/to/schema/file</schemaPath>
-							<packageName>com.turn.datamine.storage.aup.interfaces</packageName>
+							<schemaPath>src/main/resources/AUPConf.json</schemaPath>
+							<packageName>application.package.interfaces</packageName>
 						</configuration>
 					</execution>
 					<execution>
@@ -51,10 +51,22 @@ To enable such a code generation, the project POM should include the plugin belo
 						<goals>
 							<goal>table_interface_convertors</goal>
 						</goals>
-						<phase>generate-sources</phase>
+						<phase>${codeGenerationPhase}</phase>
 						<configuration>
-							<schemaPath>/path/to/schema/file</schemaPath>
-							<packageName>com.turn.datamine.storage.aup.operator.conversion</packageName>
+							<schemaPath>src/main/resources/AUPConf.json</schemaPath>
+							<packageName>application.package.operator.conversion</packageName>
+							<interfacePackageName>application.package.interfaces</interfacePackageName>
+						</configuration>
+					</execution>
+					<execution>
+						<id>sti</id>
+						<goals>
+							<goal>table_schema_interfaces</goal>
+						</goals>
+						<phase>${codeGenerationPhase}</phase>
+						<configuration>
+							<schemaPath>src/main/resources/AUPConf.json</schemaPath>
+							<packageName>application.package.metadata</packageName>
 						</configuration>
 					</execution>
 					<execution>
@@ -62,10 +74,12 @@ To enable such a code generation, the project POM should include the plugin belo
 						<goals>
 							<goal>record_buffer_tables</goal>
 						</goals>
-						<phase>generate-sources</phase>
+						<phase>${codeGenerationPhase}</phase>
 						<configuration>
-							<schemaPath>/path/to/schema/file</schemaPath>
-							<packageName>com.turn.datamine.storage.aup.recordbuffers</packageName>
+							<schemaPath>src/main/resources/AUPConf.json</schemaPath>
+							<packageName>application.package.recordbuffers.wrapper</packageName>
+							<interfacePackageName>application.package.interfaces</interfacePackageName>
+							<metadataPackageName>application.package.metadata</metadataPackageName>
 						</configuration>
 					</execution>
 					<execution>
@@ -73,10 +87,30 @@ To enable such a code generation, the project POM should include the plugin belo
 						<goals>
 							<goal>record_buffer_table_tests</goal>
 						</goals>
-						<phase>generate-sources</phase>
+						<phase>${codeGenerationPhase}</phase>
 						<configuration>
-							<schemaPath>/path/to/schema/file</schemaPath>
-							<packageName>com.turn.datamine.storage.aup</packageName>
+							<schemaPath>src/main/resources/AUPConf.json</schemaPath>
+							<packageName>application.package.recordbuffers.data</packageName>
+							<interfacePackageName>application.package.interfaces</interfacePackageName>
+							<metadataPackageName>application.package.metadata</metadataPackageName>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.turn.datamine.storage.avro</groupId>
+				<artifactId>avro-maven-plugin</artifactId>
+				<version>${datamine.version}</version>
+				<executions>
+					<execution>
+						<id>avro_parquet</id>
+						<goals>
+							<goal>avro_parquet_tables</goal>
+						</goals>
+						<phase>${codeGenerationPhase}</phase>
+						<configuration>
+							<schemaPath>src/main/resources/AUPConf.json</schemaPath>
+							<packageName>application.package.avro.parquet</packageName>
 						</configuration>
 					</execution>
 				</executions>
@@ -88,7 +122,9 @@ To enable such a code generation, the project POM should include the plugin belo
 Note that the two parameters can be configured:
 
 - *schemaPath* : the path where the schema JSON file is stored, for example, *src/main/resources/AUPConf.json*; it may be the same for all goals.
-- *packageName* : the package name of the output Java code, for example, *com.turn.datamine.storage.aup.interfaces*; each goal may have its own unique package name. 
+- *packageName* : the package name of the output Java code, for example, *application.package.interfaces*; each goal may have its own unique package name. 
+- *interfacePackageName* : the package name of the output Java code for the table access interfaces.
+- *metadataPackageName* : the package name of the outoput Java code for the table metadata.
 
 ## Encoding
 
@@ -119,5 +155,3 @@ Currently, there are three types of attributes having their offsets in the refer
 2. The attribute having the annotation of "hasRef": the attribute can be specified by the user if it is frequently accessed.
 3. The attribute of collection type (i.e., nested table): by default, any nested table has its offset stored in the referene section; according to our experience the nested table is often the hot spot. Having its offset in the reference section, it could significantly speed up some basic operations, like getting the size of the nested table. 
  
-
-## Examples

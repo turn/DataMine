@@ -19,27 +19,27 @@ import java.util.Map;
 
 import com.google.common.collect.Maps;
 
+import datamine.storage.idl.FieldValueOperatorInterface;
 import datamine.storage.idl.type.CollectionFieldType;
 import datamine.storage.idl.type.FieldType;
 import datamine.storage.idl.type.GroupFieldType;
 import datamine.storage.idl.type.PrimitiveFieldType;
-import datamine.storage.idl.value.ValueOperatorInterface;
 
 /**
  * @author yqi
  * @date Mar 31, 2015
  */
-public class ValueOperatorFactory {
+public class FieldValueOperatorFactory {
 	
-	private ValueOperatorFactory() {  }
+	private FieldValueOperatorFactory() {  }
 	
-	private static Map<FieldType, ValueOperatorInterface> valueOprMap = Maps.newHashMap(); 
+	private static Map<FieldType, FieldValueOperatorInterface> valueOprMap = Maps.newHashMap(); 
 	
-	public static final ValueOperatorInterface getOperator(FieldType type) {
+	public static final FieldValueOperatorInterface getOperator(FieldType type) {
 		if (valueOprMap.containsKey(type)) {
 			return valueOprMap.get(type);
 		} else {
-			ValueOperatorInterface newOpr = null;
+			FieldValueOperatorInterface newOpr = null;
 			if (type instanceof PrimitiveFieldType) {
 				newOpr = new PrimitiveValueOperator((PrimitiveFieldType) type);
 			} else if (type instanceof GroupFieldType) {

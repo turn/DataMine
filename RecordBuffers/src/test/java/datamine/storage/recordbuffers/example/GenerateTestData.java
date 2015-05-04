@@ -46,7 +46,7 @@ public class GenerateTestData {
 
 		InterfaceGenerator generator = new InterfaceGenerator(
 				"src/test/java/", 
-				"com.turn.datamine.storage.recordbuffers.example.interfaces");
+				"datamine.storage.recordbuffers.example.interfaces");
 
 		// generate the java source codes
 		Schema schema = new JsonSchemaConvertor().apply(
@@ -58,23 +58,23 @@ public class GenerateTestData {
 		//1. generate model codes
 		MetadataFileGenerator generator1 = new MetadataFileGenerator(
 				"src/test/java/", 
-				"com.turn.datamine.storage.recordbuffers.example.model");
+				"datamine.storage.recordbuffers.example.model");
 		generator1.apply(schema);
 
 		//2. generate wrapper codes
 		RecordMetaWrapperGenerator gen = new RecordMetaWrapperGenerator(
 				"src/test/java/", 
-				"com.turn.datamine.storage.recordbuffers.example.wrapper",
-				"com.turn.datamine.storage.recordbuffers.example.model",
-				"com.turn.datamine.storage.recordbuffers.example.interfaces");
+				"datamine.storage.recordbuffers.example.wrapper",
+				"datamine.storage.recordbuffers.example.model",
+				"datamine.storage.recordbuffers.example.interfaces");
 		gen.apply(schema);
 		
 		//3. generate the data for unit testing
 		TableTestDataGenerator gen2 = new TableTestDataGenerator(
 				"src/test/java/", 
-				"com.turn.datamine.storage.recordbuffers.example.data",
-				"com.turn.datamine.storage.recordbuffers.example.model",
-				"com.turn.datamine.storage.recordbuffers.example.interfaces");
+				"datamine.storage.recordbuffers.example.data",
+				"datamine.storage.recordbuffers.example.model",
+				"datamine.storage.recordbuffers.example.interfaces");
 		gen2.apply(schema);
 
 	}

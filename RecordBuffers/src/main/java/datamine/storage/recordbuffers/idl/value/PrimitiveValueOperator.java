@@ -17,8 +17,8 @@ package datamine.storage.recordbuffers.idl.value;
 
 import java.nio.ByteBuffer;
 
+import datamine.storage.idl.FieldValueOperatorInterface;
 import datamine.storage.idl.type.PrimitiveFieldType;
-import datamine.storage.idl.value.ValueOperatorInterface;
 import datamine.storage.recordbuffers.idl.value.primitive.BinaryValueOperator;
 import datamine.storage.recordbuffers.idl.value.primitive.BooleanValueOperator;
 import datamine.storage.recordbuffers.idl.value.primitive.ByteValueOperator;
@@ -34,9 +34,9 @@ import datamine.storage.recordbuffers.idl.value.primitive.StringValueOperator;
  * 
  * @author yqi
  */
-class PrimitiveValueOperator implements ValueOperatorInterface {
+class PrimitiveValueOperator implements FieldValueOperatorInterface {
 
-	private final ValueOperatorInterface valueOpr;
+	private final FieldValueOperatorInterface valueOpr;
 	private final PrimitiveFieldType primitiveType;
 	
 	public PrimitiveValueOperator(PrimitiveFieldType type) {

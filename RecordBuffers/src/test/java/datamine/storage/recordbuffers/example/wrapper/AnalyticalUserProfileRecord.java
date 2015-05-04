@@ -15,19 +15,18 @@
  */
 package datamine.storage.recordbuffers.example.wrapper;
 
+import datamine.storage.recordbuffers.example.model.*;
+import datamine.storage.recordbuffers.example.interfaces.*;
+import datamine.storage.api.BaseInterface;
+import datamine.storage.recordbuffers.*;
+
 import java.nio.ByteBuffer;
 import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.google.common.collect.Lists;
 import com.google.common.base.Strings;
-
-import datamine.storage.api.BaseInterface;
-import datamine.storage.recordbuffers.*;
-import datamine.storage.recordbuffers.example.interfaces.*;
-import datamine.storage.recordbuffers.example.model.*;
 
 
 
@@ -45,10 +44,6 @@ public class AnalyticalUserProfileRecord implements AnalyticalUserProfileInterfa
 
     public AnalyticalUserProfileRecord(Record<AnalyticalUserProfileMetadata> value) {
         this.value = value;
-    }
-
-    public AnalyticalUserProfileRecord(RecordBuffer buffer) {
-        this.value = new Record<AnalyticalUserProfileMetadata>(AnalyticalUserProfileMetadata.class, buffer);
     }
 
     @Override

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package datamine.storage.idl.value;
+package datamine.storage.idl;
 
 import java.nio.ByteBuffer;
 
@@ -22,7 +22,7 @@ import java.nio.ByteBuffer;
  * 
  * @author yqi
  */
-public interface ValueOperatorInterface {
+public interface FieldValueOperatorInterface {
 	/**
 	 * Check if the input is valid
 	 * @param val the input object

@@ -17,8 +17,8 @@ package datamine.storage.recordbuffers.idl.value;
 
 import java.nio.ByteBuffer;
 
+import datamine.storage.idl.FieldValueOperatorInterface;
 import datamine.storage.idl.type.GroupFieldType;
-import datamine.storage.idl.value.ValueOperatorInterface;
 import datamine.storage.recordbuffers.Record;
 import datamine.storage.recordbuffers.RecordBuffer;
 
@@ -26,7 +26,7 @@ import datamine.storage.recordbuffers.RecordBuffer;
  * @author yqi
  * @date Mar 26, 2015
  */
-class GroupValueOperator implements ValueOperatorInterface {
+class GroupValueOperator implements FieldValueOperatorInterface {
 
 	private final GroupFieldType type;
 	public GroupValueOperator(GroupFieldType type) {

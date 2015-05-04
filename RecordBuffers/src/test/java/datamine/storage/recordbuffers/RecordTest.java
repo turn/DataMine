@@ -38,7 +38,7 @@ import datamine.storage.recordbuffers.example.model.AnalyticalUserProfileMetadat
 import datamine.storage.recordbuffers.example.wrapper.AnalyticalUserProfileRecord;
 import datamine.storage.recordbuffers.example.wrapper.ImpressionRecord;
 import datamine.storage.recordbuffers.example.wrapper.builder.RecordBuffersBuilder;
-import datamine.storage.recordbuffers.idl.value.ValueOperatorFactory;
+import datamine.storage.recordbuffers.idl.value.FieldValueOperatorFactory;
 
 public class RecordTest {
 
@@ -67,7 +67,7 @@ public class RecordTest {
 	@Test
 	public void getRecordLength() {
 		GroupFieldType gft = new GroupFieldType("AUP", AnalyticalUserProfileMetadata.class);
-		int len = ValueOperatorFactory.getOperator(gft).getNumOfBytes(testRecord);
+		int len = FieldValueOperatorFactory.getOperator(gft).getNumOfBytes(testRecord);
 		// trigger the creation of the object array
 		testRecord.getValue(AnalyticalUserProfileMetadata.IMPRESSIONS);
 		Assert.assertEquals(testRecord.getNumOfBytes(), len);
@@ -111,7 +111,7 @@ public class RecordTest {
 		Assert.assertEquals(idSize, aup.getTimeList().size());
 		
 		GroupFieldType gft = new GroupFieldType("AUP", AnalyticalUserProfileMetadata.class);
-		Assert.assertEquals(len, ValueOperatorFactory.getOperator(gft).getNumOfBytes(aupRecord));
+		Assert.assertEquals(len, FieldValueOperatorFactory.getOperator(gft).getNumOfBytes(aupRecord));
 	}
 	
 	

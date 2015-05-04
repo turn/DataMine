@@ -16,13 +16,13 @@
 package datamine.storage.recordbuffers.example.wrapper.builder;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import datamine.storage.api.BaseInterface;
 import datamine.storage.api.RecordBuilderInterface;
-import datamine.storage.recordbuffers.example.interfaces.*;
 import datamine.storage.recordbuffers.example.wrapper.*;
+import datamine.storage.recordbuffers.example.interfaces.*;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 
@@ -43,24 +43,24 @@ public class RecordBuffersBuilder implements RecordBuilderInterface {
 			return (T) AnalyticalUserProfileRecord.class.newInstance();
 		}
 		else
-		if (tableClass == IdMapInterface.class) {
-			return (T) IdMapRecord.class.newInstance();
-		}
-		else
-		if (tableClass == ImpressionInterface.class) {
-			return (T) ImpressionRecord.class.newInstance();
+		if (tableClass == AttributionResultRuleInterface.class) {
+			return (T) AttributionResultRuleRecord.class.newInstance();
 		}
 		else
 		if (tableClass == AttributionResultInterface.class) {
 			return (T) AttributionResultRecord.class.newInstance();
 		}
 		else
-		if (tableClass == AttributionResultRuleInterface.class) {
-			return (T) AttributionResultRuleRecord.class.newInstance();
+		if (tableClass == IdMapInterface.class) {
+			return (T) IdMapRecord.class.newInstance();
 		}
 		else
 		if (tableClass == ProviderUserIdInterface.class) {
 			return (T) ProviderUserIdRecord.class.newInstance();
+		}
+		else
+		if (tableClass == ImpressionInterface.class) {
+			return (T) ImpressionRecord.class.newInstance();
 		}
 
 		} catch (InstantiationException e) {

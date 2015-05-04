@@ -18,8 +18,8 @@ package datamine.storage.recordbuffers.example.model;
 import datamine.storage.api.RecordMetadataInterface;
 import datamine.storage.idl.Field;
 import datamine.storage.idl.type.FieldType;
-import datamine.storage.idl.type.FieldTypeFactory;
 import datamine.storage.idl.type.PrimitiveType;
+import datamine.storage.idl.type.FieldTypeFactory;
 
 
 

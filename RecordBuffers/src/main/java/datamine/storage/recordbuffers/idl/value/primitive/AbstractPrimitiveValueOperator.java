@@ -15,9 +15,9 @@
  */
 package datamine.storage.recordbuffers.idl.value.primitive;
 
-import datamine.storage.idl.value.ValueOperatorInterface;
+import datamine.storage.idl.FieldValueOperatorInterface;
 
-abstract public class AbstractPrimitiveValueOperator implements ValueOperatorInterface {
+abstract public class AbstractPrimitiveValueOperator implements FieldValueOperatorInterface {
 
 	protected final int NUM_OF_BYTES;
 	

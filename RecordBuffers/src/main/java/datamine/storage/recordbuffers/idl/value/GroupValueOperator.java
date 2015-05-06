@@ -21,6 +21,7 @@ import datamine.storage.idl.FieldValueOperatorInterface;
 import datamine.storage.idl.type.GroupFieldType;
 import datamine.storage.recordbuffers.Record;
 import datamine.storage.recordbuffers.RecordBuffer;
+import datamine.storage.recordbuffers.WritableRecord;
 
 /**
  * @author yqi
@@ -67,7 +68,7 @@ class GroupValueOperator implements FieldValueOperatorInterface {
 		if (type.getTableClass() == null) {
 			throw new IllegalArgumentException(type.getGroupName() + ": A valid group type should have its table class");
 		}
-		return new Record(type.getTableClass(), rb);
+		return new WritableRecord(type.getTableClass(), rb);
 	}
 
 	@Override

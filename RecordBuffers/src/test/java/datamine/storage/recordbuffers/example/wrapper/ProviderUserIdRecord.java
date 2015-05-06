@@ -39,7 +39,7 @@ public class ProviderUserIdRecord implements ProviderUserIdInterface {
     Record<ProviderUserIdMetadata> value = null;
 
     public ProviderUserIdRecord() {
-        value = new Record<ProviderUserIdMetadata>(ProviderUserIdMetadata.class);
+        value = new WritableRecord<ProviderUserIdMetadata>(ProviderUserIdMetadata.class);
     }
 
     public ProviderUserIdRecord(Record<ProviderUserIdMetadata> value) {
@@ -73,7 +73,7 @@ public class ProviderUserIdRecord implements ProviderUserIdInterface {
     @Override
     public void copyFrom(BaseInterface right) {
 		// note that it may not be deep copy!!
-		this.value = new Record<ProviderUserIdMetadata>(ProviderUserIdMetadata.class, 
+		this.value = new WritableRecord<ProviderUserIdMetadata>(ProviderUserIdMetadata.class, 
 			new RecordBuffer(((Record) right.getBaseObject()).getRecordBuffer()));
     }
 

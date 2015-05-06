@@ -39,7 +39,7 @@ public class AttributionResultRuleRecord implements AttributionResultRuleInterfa
     Record<AttributionResultRuleMetadata> value = null;
 
     public AttributionResultRuleRecord() {
-        value = new Record<AttributionResultRuleMetadata>(AttributionResultRuleMetadata.class);
+        value = new WritableRecord<AttributionResultRuleMetadata>(AttributionResultRuleMetadata.class);
     }
 
     public AttributionResultRuleRecord(Record<AttributionResultRuleMetadata> value) {
@@ -73,7 +73,7 @@ public class AttributionResultRuleRecord implements AttributionResultRuleInterfa
     @Override
     public void copyFrom(BaseInterface right) {
 		// note that it may not be deep copy!!
-		this.value = new Record<AttributionResultRuleMetadata>(AttributionResultRuleMetadata.class, 
+		this.value = new WritableRecord<AttributionResultRuleMetadata>(AttributionResultRuleMetadata.class, 
 			new RecordBuffer(((Record) right.getBaseObject()).getRecordBuffer()));
     }
 

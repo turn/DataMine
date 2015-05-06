@@ -39,7 +39,7 @@ public class ImpressionRecord implements ImpressionInterface {
     Record<ImpressionMetadata> value = null;
 
     public ImpressionRecord() {
-        value = new Record<ImpressionMetadata>(ImpressionMetadata.class);
+        value = new WritableRecord<ImpressionMetadata>(ImpressionMetadata.class);
     }
 
     public ImpressionRecord(Record<ImpressionMetadata> value) {
@@ -73,7 +73,7 @@ public class ImpressionRecord implements ImpressionInterface {
     @Override
     public void copyFrom(BaseInterface right) {
 		// note that it may not be deep copy!!
-		this.value = new Record<ImpressionMetadata>(ImpressionMetadata.class, 
+		this.value = new WritableRecord<ImpressionMetadata>(ImpressionMetadata.class, 
 			new RecordBuffer(((Record) right.getBaseObject()).getRecordBuffer()));
     }
 

@@ -52,7 +52,7 @@ public class AnalyticalUserProfileRecord implements AnalyticalUserProfileInterfa
 
 
     public AnalyticalUserProfileRecord() {
-        value = new Record<AnalyticalUserProfileMetadata>(AnalyticalUserProfileMetadata.class);
+        value = new WritableRecord<AnalyticalUserProfileMetadata>(AnalyticalUserProfileMetadata.class);
     }
 
     public AnalyticalUserProfileRecord(Record<AnalyticalUserProfileMetadata> value) {
@@ -86,7 +86,7 @@ public class AnalyticalUserProfileRecord implements AnalyticalUserProfileInterfa
     @Override
     public void copyFrom(BaseInterface right) {
 		// note that it may not be deep copy!!
-		this.value = new Record<AnalyticalUserProfileMetadata>(AnalyticalUserProfileMetadata.class, 
+		this.value = new WritableRecord<AnalyticalUserProfileMetadata>(AnalyticalUserProfileMetadata.class, 
 			new RecordBuffer(((Record) right.getBaseObject()).getRecordBuffer()));
     }
 

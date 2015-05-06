@@ -49,7 +49,6 @@ import datamine.storage.recordbuffers.idl.value.FieldValueOperatorFactory;
 class RecordOperator<T extends Enum<T> & RecordMetadataInterface> {
 
 	public static final Logger LOG = LoggerFactory.getLogger(RecordOperator.class);
-	public static final int MAX_BUF_SIZE = 1024;
 	
 	private final Class<T> dummyClass; // a helper to collect ENUM info
 	private final List<T> fieldList = Lists.newArrayList(); // a list of fields ordered by its 'ID'
@@ -173,32 +172,6 @@ class RecordOperator<T extends Enum<T> & RecordMetadataInterface> {
 			}
 		}
 		return -1;
-	}
-
-	/** 
-	 * Find out the size of the collection-type field in the record
-	 * @param col the collection-type field 
-	 * @param buffer the byte buffer storing the record
-	 * @param initOffset the starting position of the record in the record buffer
-	 * @return the size of the collection-type field in the record
-	 */
-	public int getCollectionSize(T col, ByteBuffer buffer, int initOffset) {
-		int id = col.getField().getId();
-		if (refSection.collectionReferenceSequenceMap.containsKey(id)) {
-			int offset = initOffset + 4 + 2 + (refSection.hasSortKey ? 4 : 0);
-			int numOfCollectionsInRecord = buffer.get(offset);
-			offset += 1; // for the number of collection-type fields
-
-			int seqenceNo = refSection.collectionReferenceSequenceMap.get(id);
-			if (seqenceNo < numOfCollectionsInRecord) {
-				offset += 4 * seqenceNo; // the position of the reference
-				int valOffset = buffer.getInt(offset);
-				if (valOffset > 0) {
-					return buffer.getInt(valOffset + 4);
-				} 
-			} 
-		}
-		return 0;
 	}
 
 	

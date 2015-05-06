@@ -61,7 +61,7 @@ public class RecordTest {
 		recordList.clear();
 		for (AnalyticalUserProfileInterface cur : testAupList) {
 			Record<AnalyticalUserProfileMetadata> record = (Record<AnalyticalUserProfileMetadata>) cur.getBaseObject();
-			recordList.add(new Record(AnalyticalUserProfileMetadata.class, record.getRecordBuffer()));
+			recordList.add(new WritableRecord(AnalyticalUserProfileMetadata.class, record.getRecordBuffer()));
 		}
 		testRecord = recordList.get(0);
 	}

@@ -101,20 +101,18 @@ public final class WritableRecord<T extends Enum<T> & RecordMetadataInterface> e
 			int size = 0;
 			FieldType type = col.getField().getType();
 			FieldValueOperatorInterface valOpr = FieldValueOperatorFactory.getOperator(type);
-			int sizeId = valueArray.length - 1;
-			int length = (Integer) valueArray[sizeId];
 
 			if (valueArray[id] != null) {
 				size = valOpr.getNumOfBytes(valueArray[id]);				
 			} else {
 				// add the overhead of the value
-				length += valOpr.getMetadataSize();
+				this.numOfBytes += valOpr.getMetadataLength();
 			}
 			//3. update the value in the intermediate structure
 			valueArray[id] = val;
 			
 			//4. determine the difference of sizes for serialization
-			valueArray[sizeId] = length + valOpr.getNumOfBytes(val) - size;
+			this.numOfBytes += valOpr.getNumOfBytes(val) - size;
 			hasNewValues = true;
 			if (this.buffer != null) {
 				this.buffer.clear();
@@ -128,7 +126,8 @@ public final class WritableRecord<T extends Enum<T> & RecordMetadataInterface> e
 	
 		Field field = col.getField();
 		// when the column is sort-key or with 'hasRef' annotation 
-		if ((field.isDesSortKey() || field.hasReference()) && valueArray == null && this.buffer.getRecordBufferSize() > 0) {
+		if ((field.isDesSortKey() || field.hasReference()) && 
+				valueArray == null && this.buffer.getRecordBufferSize() > 0) {
 			FieldType type = field.getType();
 			ByteBuffer buf = buffer.getByteBuffer();
 			// find out the offset directly
@@ -156,7 +155,7 @@ public final class WritableRecord<T extends Enum<T> & RecordMetadataInterface> e
 		}
 		
 		int id = field.getId() - 1; // note that id starts at 1.
- 		Object result = valueArray != null && valueArray.length > id + 1 ? valueArray[id] : null;
+ 		Object result = valueArray != null && valueArray.length > id ? valueArray[id] : null;
 		if (result == null) { // never return NULL
 			return col.getField().getDefaultValue();
 		} else {
@@ -332,9 +331,7 @@ public final class WritableRecord<T extends Enum<T> & RecordMetadataInterface> e
 			}
 		} else {
 			if (this.valueArray == null) {
-				int fieldNum = this.meta.getTableSize();
-				this.valueArray = new Object[1 + fieldNum];
-				this.valueArray[fieldNum] = this.meta.getMaxHeaderLength();
+				this.valueArray = new Object[this.meta.getTableSize()];
 				this.numOfBytes = this.meta.getMaxHeaderLength();
 			}
 		}
@@ -356,7 +353,7 @@ public final class WritableRecord<T extends Enum<T> & RecordMetadataInterface> e
 		short refSectionLength = bytebuffer.getShort(initOffset + 4);
 		int posOfAttrs = refSectionLength + 6 + initOffset;
 	
-		valueArray = new Object[length+1];
+		valueArray = new Object[length];
 
 		int offset = posOfAttrs + (length + 7) / 8; // skip # of attrs, flags;
 		for (int i = 0; i < length; i++) {
@@ -409,7 +406,6 @@ public final class WritableRecord<T extends Enum<T> & RecordMetadataInterface> e
 				
 			} 
 		}	
-		valueArray[length] = offset - initOffset;
 		this.numOfBytes = offset - initOffset;
 	}
 

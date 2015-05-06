@@ -62,7 +62,7 @@ final public class StringValueOperator extends AbstractPrimitiveValueOperator {
 	}
 	
 	@Override
-	public int getMetadataSize() {
+	public int getMetadataLength() {
 		return 2;
 	}
 }

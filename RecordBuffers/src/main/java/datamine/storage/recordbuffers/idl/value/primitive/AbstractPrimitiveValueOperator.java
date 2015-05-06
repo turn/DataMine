@@ -36,7 +36,7 @@ abstract public class AbstractPrimitiveValueOperator implements FieldValueOperat
 	}
 
 	@Override
-	public int getMetadataSize() {
+	public int getMetadataLength() {
 		return 0;
 	}
 }

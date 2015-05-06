@@ -46,6 +46,7 @@ import datamine.storage.recordbuffers.idl.value.FieldValueOperatorFactory;
  * 
  * @author yqi
  */
+@Deprecated
 class RecordOperator<T extends Enum<T> & RecordMetadataInterface> {
 
 	public static final Logger LOG = LoggerFactory.getLogger(RecordOperator.class);

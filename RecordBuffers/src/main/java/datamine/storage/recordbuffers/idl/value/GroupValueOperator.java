@@ -88,7 +88,7 @@ class GroupValueOperator implements FieldValueOperatorInterface {
 	}
 
 	@Override
-	public int getMetadataSize() {
+	public int getMetadataLength() {
 		return 4;
 	}
 

@@ -149,6 +149,17 @@ class RecordBufferMeta<T extends Enum<T> & RecordMetadataInterface> {
 				? this.refSection.nonCollectionReferenceOffsetMap.size() : 0);
 	}
 	
+	/**
+	 * By default an order is applied to all collection-type fields. The function 
+	 * gets the sequence id (starting at 0) of the input field. 
+	 * 
+	 * <p>
+	 * If the input is not a collection-type field, -1 would be returned. 
+	 * </p>
+	 * 
+	 * @param fieldId the field ID of the input collection-type attribute
+	 * @return the sequence id (starting at 0) of the input collection-type field
+	 */
 	public int getSequenceOfCollectionField(int fieldId) {
 		return hasCollectionFieldInReferenceSection() 
 				? this.refSection.collectionReferenceSequenceMap.get(fieldId) : -1;

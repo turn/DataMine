@@ -64,7 +64,7 @@ final public class BinaryValueOperator extends AbstractPrimitiveValueOperator {
 	}
 
 	@Override
-	public int getMetadataSize() {
+	public int getMetadataLength() {
 		return 4;
 	}
 }

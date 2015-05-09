@@ -114,6 +114,10 @@ public class AnalyticalUserProfileTestData extends AbstractTestData<AnalyticalUs
 				Assert.assertEquals((List) objectList.get(i).getTimeList(), data.get(i).get(AnalyticalUserProfileMetadata.TIME_LIST));
 			}
 
+			if (data.get(i).containsKey(AnalyticalUserProfileMetadata.DAY)) {
+				Assert.assertEquals(objectList.get(i).getDay(), data.get(i).get(AnalyticalUserProfileMetadata.DAY));
+			}
+
 		}
 	}
 

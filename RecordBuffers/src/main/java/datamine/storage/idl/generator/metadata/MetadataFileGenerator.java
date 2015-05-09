@@ -84,14 +84,17 @@ public class MetadataFileGenerator implements ElementVisitor,
 				"	static final String name = {table_name};",
 				"	private Field field;",
 				"",
-				"	private {metadataClassName}(short id, String name, FieldType type, boolean isRequired, Object defaultValue) {",
-				"		this(id,name, type, isRequired, defaultValue, false, false, false);",
-				"	}",
-				"",
-				"	private {metadataClassName}(short id, String name, FieldType type, boolean isRequired, ", 
-				"		Object defaultValue, boolean isSorted, boolean isAscSorted, boolean hasRef) {",
-				"		field = new Field(id,name, type, defaultValue, Field.getContraintEnumSet(",
-				"				isRequired, isSorted, isAscSorted, hasRef));",
+				"	private {metadataClassName}(short id, String name, FieldType type, ",
+				"		boolean isRequired, Object defaultValue, boolean isDesSorted, ",
+				"		boolean isAscSorted, boolean isFrequentlyUsed, boolean isDerived) {",
+				"		field = new Field.Builder(id, name, type).", 
+				"				withDefaultValue(defaultValue).", 
+				"				isRequired(isRequired).", 
+				"				isDesSorted(isDesSorted).", 
+				"				isAscSorted(isAscSorted).", 
+				"				isFrequentlyUsed(isFrequentlyUsed).", 
+				"				isDerived(isDerived).", 
+				"				build();",
 				"	}",
 				"",
 				"	@Override",
@@ -108,24 +111,8 @@ public class MetadataFileGenerator implements ElementVisitor,
 				"	public String getTableName() { ",
 				"		return name; ",
 				"	}",
-				"",
-//				"	static RecordOperator<{metadataClassName}> operator = ",
-//				"		new RecordOperator<{metadataClassName}>({metadataClassName}.class);",
-//				"",
-//				"	public static RecordOperator<{metadataClassName}> getOperator() {",
-//				"		return operator;",
-//				"	}",
-//				"",
-//				"	public Object getValue(ByteBuffer buf) {",
-//				"		return operator.getValue(buf, this);",
-//				"	}",
-//				"",
-//				"	@Override",
-//				"	public Comparator<Map<{metadataClassName}, Object>>  getComparator() {",
-//				"		return {comparatorImplementation}",
-//				"	}",
-				"",
-				"}"
+				"}",
+				""
 		};
 
 		final String[] importString = {
@@ -175,14 +162,6 @@ public class MetadataFileGenerator implements ElementVisitor,
 		if (field.isRequired() || !(type instanceof PrimitiveFieldType)) {
 			sb.append("null"); // default value
 			
-			if (field.isDesSortKey() && field.hasReference()) {
-				sb.append(", true, false, true");
-			} else if (field.isDesSortKey()) {
-				sb.append(", true, false, false");
-			} else if (field.hasReference()) {
-				sb.append(", false, false, true");
-			}
-			
 		} else {
 			String javaTypeStr = new JavaTypeConvertor().apply(type);
 			Object defVal = field.getDefaultValue();
@@ -193,7 +172,13 @@ public class MetadataFileGenerator implements ElementVisitor,
 				
 			}
 			sb.append("(").append(javaTypeStr).append(")").append(valueStr);	
-		}		
+		}	
+
+		// constraints of the field
+		sb.append(field.isDesSortKey() ? ", true" : ", false");
+		sb.append(field.isAscSortKey() ? ", true" : ", false");
+		sb.append(field.isFrequentlyUsed() ? ", true" : ", false");
+		sb.append(field.isDerived()? ", true" : ", false");
 		sb.append("),");		
 		
 		CodeTemplate code = new CodeTemplate(new String[]{sb.toString()});

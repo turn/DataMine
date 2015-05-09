@@ -65,6 +65,9 @@ class TableValidation implements ValidateInterface<Table> {
 		List<Integer> fieldIds = Lists.newArrayList();
 		Set<Field> sortedKeys = Sets.newHashSet();
 		for (Field cur : input.getFields()) {
+			// validate the field itself
+			fieldValidator.check(cur);
+			
 			// check if the name is unique
 			if (fieldNames.contains(cur.getName())) {
 				throw new NameDuplicationException(cur.getName());
@@ -73,25 +76,24 @@ class TableValidation implements ValidateInterface<Table> {
 			}
 			
 			// check if the ID is unique
-			if (fieldIdSet.contains(cur.getId())) {
+			int curId = cur.getId();
+			if (fieldIdSet.contains(curId)) {
 				throw new IdentityDuplicationException(cur.getId());
-			} else {
+			} else if (curId != Field.DERIVED_FIELD_ID){
 				fieldIdSet.add(cur.getId());	
 				fieldIds.add(cur.getId());
 			}
 			
-			if (cur.isDesSortKey()) {
+			if (cur.isSortKey()) {
 				sortedKeys.add(cur);
 			}
-			
-			fieldValidator.check(cur);
 		}
 		// validate the field IDs
 		Collections.sort(fieldIds);
 		int len = fieldIds.size();
 		if (fieldIds.get(0) != 1) {
 			throw new IllegalFieldIdentityException(
-					"Field Id must start at 1");
+					"Non drived field Id must start at 1");
 		} 
 		
 		if (fieldIds.get(len-1) != len) {

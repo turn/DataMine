@@ -204,18 +204,21 @@ public class RecordMetaWrapperGenerator implements ElementVisitor,
 	@Override
 	public void visit(Field field) {
 		currentTemplate.fillFields("fieldGetter", new FieldGetterTemplateGenerator(currentTable).apply(field));
-		currentTemplate.fillFields("fieldSetter", new FieldSetterTemplateGenerator(currentTable).apply(field));
 		currentTemplate.fillFields("fieldDefaultValue", new FieldGetterDefaultTemplateGenerator().apply(field));
 		currentTemplate.fillFields("fieldListSize", new ListFieldSizeTemplateGenerator(currentTable).apply(field));
+		if (!field.isDerived()) {
+			currentTemplate.fillFields("fieldSetter", new FieldSetterTemplateGenerator(currentTable).apply(field));
+		}
 		
 		// dealing with the comparable field
-		if (field.isDesSortKey()) {
+		if (field.isSortKey()) {
 			String interfaceName = InterfaceGenerator.getInterfaceName(currentTable.getName());
 			String fieldGetter = InterfaceGenerator.getGetterName(field);
 			StringBuffer sb = new StringBuffer();
 			sb.append("\t@Override\n")
 				.append("\tpublic int compareTo(").append(interfaceName).append(" o) {\n")
-				.append("\t\t").append("return o.").append(fieldGetter).append("() - this.").append(fieldGetter).append("();\n")
+				.append("\t\t").append("return ").append(field.isAscSortKey() ? "-":"")
+				.append("(o.").append(fieldGetter).append("() - this.").append(fieldGetter).append("());\n")
 				.append("\t}\n");
 			currentTemplate.fillFields("fieldComparable", sb.toString());
 		}

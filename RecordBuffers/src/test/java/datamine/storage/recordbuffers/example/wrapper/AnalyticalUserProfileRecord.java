@@ -153,6 +153,12 @@ public class AnalyticalUserProfileRecord implements AnalyticalUserProfileInterfa
         
     }
 
+    @Override
+    public String getDay() {
+        
+        return (String) this.value.getValue(AnalyticalUserProfileMetadata.DAY);
+    }
+
 
 
 	@Override
@@ -256,6 +262,11 @@ public class AnalyticalUserProfileRecord implements AnalyticalUserProfileInterfa
         return (String)"Unknown";
     }
 
+    @Override
+    public String getDayDefaultValue() {
+        return (String)"Unknown";
+    }
+
 
 	@Override
 	public int getImpressionsSize() {
@@ -270,7 +281,7 @@ public class AnalyticalUserProfileRecord implements AnalyticalUserProfileInterfa
 
 	@Override
 	public int compareTo(AnalyticalUserProfileInterface o) {
-		return o.getVersion() - this.getVersion();
+		return (o.getVersion() - this.getVersion());
 	}
 
 }

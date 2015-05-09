@@ -26,24 +26,27 @@ import java.util.List;
 public interface AnalyticalUserProfileInterface extends BaseInterface , Comparable<AnalyticalUserProfileInterface> {
 
 		public long getUserId();
-		public void setUserId(long input);
 		public byte getVersion();
-		public void setVersion(byte input);
 		public short getResolution();
-		public void setResolution(short input);
 		public String getOsVersion();
-		public void setOsVersion(String input);
 		public List<ImpressionInterface> getImpressions();
-		public void setImpressions(List<ImpressionInterface> input);
 		public IdMapInterface getIdMaps();
-		public void setIdMaps(IdMapInterface input);
 		public List<Integer> getTimeList();
+		public String getDay();
+
+		public void setUserId(long input);
+		public void setVersion(byte input);
+		public void setResolution(short input);
+		public void setOsVersion(String input);
+		public void setImpressions(List<ImpressionInterface> input);
+		public void setIdMaps(IdMapInterface input);
 		public void setTimeList(List<Integer> input);
 
 		public long getUserIdDefaultValue();
 		public byte getVersionDefaultValue();
 		public short getResolutionDefaultValue();
 		public String getOsVersionDefaultValue();
+		public String getDayDefaultValue();
 
 		public int getImpressionsSize();
 		public int getTimeListSize();

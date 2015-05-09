@@ -22,7 +22,9 @@ import datamine.storage.idl.Field.Constraint;
 import datamine.storage.idl.type.FieldType;
 import datamine.storage.idl.type.PrimitiveFieldType;
 import datamine.storage.idl.validate.exceptions.AbstractValidationException;
+import datamine.storage.idl.validate.exceptions.IllegalDerivedFieldException;
 import datamine.storage.idl.validate.exceptions.IllegalFieldDefaultValueException;
+import datamine.storage.idl.validate.exceptions.IllegalFieldIdentityException;
 import datamine.storage.idl.validate.exceptions.OptionalSortKeyException;
 import datamine.storage.recordbuffers.idl.value.FieldValueOperatorFactory;
 
@@ -37,23 +39,58 @@ class FieldValidation implements ValidateInterface<Field> {
 	public void check(Field input) throws AbstractValidationException {
 		
 		// the ID is validated in its holder (i.e., table)
+		int curId = input.getId();
+		String fieldName = input.getName();
+		
+		// The ID of derived field must be equal to Field.DERIVED_FIELD_ID 
+		if (curId != Field.DERIVED_FIELD_ID && input.isDerived()) {
+			throw new IllegalFieldIdentityException(
+					"Derived field (\"" + fieldName + "\") must have a unique ID to be : " + Field.DERIVED_FIELD_ID);
+		} else if (curId == Field.DERIVED_FIELD_ID && !input.isDerived()) {
+			throw new IllegalFieldIdentityException(fieldName + " - " +
+					"Non-derived field (\""+ fieldName +"\") must not have a ID to be : " + Field.DERIVED_FIELD_ID);
+		}
+		
+		// derived field should be always primitive
+		FieldType type = input.getType();
+		if (input.isDerived()) {
+			if (!(type instanceof PrimitiveFieldType)) {
+				throw new IllegalDerivedFieldException("Derived field (" + 
+						fieldName + ") must be primitive!");
+			}
+			
+			if (input.isSortKey()) {
+				throw new IllegalDerivedFieldException("Derived field (" + 
+						fieldName + ") cannot be used as a sort key!");
+			}
+			
+			if (input.isRequired()) {
+				throw new IllegalDerivedFieldException("Derived field (" + 
+						fieldName + ") must be optional!");
+			}
+			
+			if (input.isFrequentlyUsed()) {
+				throw new IllegalDerivedFieldException("Derived field (" + 
+						fieldName + ") cannot be indicated as a frequently used one!");
+			}
+		}
+		
 		
 		// validate the name
-		new NamingConvensionValidation().check(input.getName());
+		new NamingConvensionValidation().check(fieldName);
 				
 		// validate its type and default value
-		FieldType type = input.getType();
 		Object defaultVal = input.getDefaultValue();
 		
 		if (type instanceof PrimitiveFieldType && !input.isRequired()) {
 			if (!FieldValueOperatorFactory.getOperator(type).isValid(defaultVal)) {
 				throw new IllegalFieldDefaultValueException(
-						input.getName(), defaultVal + " is not valid!");
+						fieldName, defaultVal + " is not valid!");
 			}
 		} else {
 			if (defaultVal != null) {
 				throw new IllegalFieldDefaultValueException(
-						input.getName(), "No requirement for the default value!");
+						fieldName, "No requirement for the default value!");
 			}
 		}
 		
@@ -61,9 +98,11 @@ class FieldValidation implements ValidateInterface<Field> {
 		EnumSet<Constraint> constraints = input.getConstraints();
 		if (constraints.contains(Constraint.ASC_SORTED) || constraints.contains(Constraint.DES_SORTED)) {
 			if (!constraints.contains(Constraint.REQUIRED)) {
-				throw new OptionalSortKeyException(input.getName());
+				throw new OptionalSortKeyException(fieldName);
 			}
-		}
+
+		}		
+		
 	}
 
 }

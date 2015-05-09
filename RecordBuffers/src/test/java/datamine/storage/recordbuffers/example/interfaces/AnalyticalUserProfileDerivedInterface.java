@@ -15,22 +15,14 @@
  */
 package datamine.storage.recordbuffers.example.interfaces;
 
-import datamine.storage.api.BaseInterface;
-
-import java.util.List;
 
 
 /**
  * DO NOT CHANGE! Auto-generated code
  */
-public interface IdMapInterface extends BaseInterface  {
+public interface AnalyticalUserProfileDerivedInterface {
 
-		public List<ProviderUserIdInterface> getMediaProviderIds();
-
-		public void setMediaProviderIds(List<ProviderUserIdInterface> input);
-
-
-		public int getMediaProviderIdsSize();
+		public String getDay();
 
 }
 

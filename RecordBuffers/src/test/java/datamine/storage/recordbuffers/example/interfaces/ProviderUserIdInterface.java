@@ -26,8 +26,9 @@ import java.util.List;
 public interface ProviderUserIdInterface extends BaseInterface  {
 
 		public byte getProviderType();
-		public void setProviderType(byte input);
 		public int getProviderId();
+
+		public void setProviderType(byte input);
 		public void setProviderId(int input);
 
 		public byte getProviderTypeDefaultValue();

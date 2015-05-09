@@ -26,8 +26,9 @@ import java.util.List;
 public interface AttributionResultRuleInterface extends BaseInterface  {
 
 		public byte getRunNum();
-		public void setRunNum(byte input);
 		public String getValue();
+
+		public void setRunNum(byte input);
 		public void setValue(String input);
 
 		public byte getRunNumDefaultValue();

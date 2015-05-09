@@ -28,29 +28,37 @@ public class FieldTest {
 	public void getContraintEnumSet() {
 		
 		boolean isRequired = false;
-		boolean isSorted = false;
-		boolean isAscSorted = true;
-		boolean hasRef = false;
+		boolean isDesSorted = false;
+		boolean isAscSorted = false;
+		boolean isFrequentlyUsed = false;
+		boolean isDerived = false;
 		
 		EnumSet<Field.Constraint> constraints = Field.getContraintEnumSet(
-				isRequired, isSorted, isAscSorted, hasRef);
+				isRequired, isDesSorted, isAscSorted, isFrequentlyUsed, isDerived);
 		Assert.assertEquals(constraints, EnumSet.of(Field.Constraint.OPTIONAL));
 		
 		isRequired = true;
-		isSorted = false;
-		isAscSorted = true;
-		
-		constraints = Field.getContraintEnumSet(
-				isRequired, isSorted, isAscSorted, hasRef);
-		Assert.assertEquals(constraints, EnumSet.of(Field.Constraint.REQUIRED));
-		
-		isRequired = true;
-		isSorted = true;
+		isDesSorted = false;
 		isAscSorted = false;
 		
 		constraints = Field.getContraintEnumSet(
-				isRequired, isSorted, isAscSorted, hasRef);
+				isRequired, isDesSorted, isAscSorted, isFrequentlyUsed, isDerived);
+		Assert.assertEquals(constraints, EnumSet.of(Field.Constraint.REQUIRED));
+		
+		isRequired = true;
+		isDesSorted = true;
+		isAscSorted = false;
+		
+		constraints = Field.getContraintEnumSet(
+				isRequired, isDesSorted, isAscSorted, isFrequentlyUsed, isDerived);
 		Assert.assertEquals(constraints, EnumSet.of(Field.Constraint.REQUIRED, 
 				Field.Constraint.DES_SORTED));
+	}
+	
+	@Test (expectedExceptions=java.lang.IllegalArgumentException.class)
+	void checkDerived() {
+		boolean isDesSorted = true;
+		boolean isAscSorted = true;
+		Field.getContraintEnumSet(false, isDesSorted, isAscSorted, false, false);
 	}
 }

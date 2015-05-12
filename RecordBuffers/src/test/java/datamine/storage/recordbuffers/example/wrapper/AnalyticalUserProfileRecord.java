@@ -37,6 +37,14 @@ public class AnalyticalUserProfileRecord implements AnalyticalUserProfileInterfa
     static final Logger LOG = LoggerFactory.getLogger(AnalyticalUserProfileRecord.class);
 
     Record<AnalyticalUserProfileMetadata> value = null;
+	
+	private AnalyticalUserProfileDerivedValueInterface derivedFieldValues = new AnalyticalUserProfileDefaultDerivedValues();
+
+	public AnalyticalUserProfileRecord(Record<AnalyticalUserProfileMetadata> record, AnalyticalUserProfileDerivedValueInterface derived) {
+		value = record;
+		derivedFieldValues = derived;
+	}
+
 
     public AnalyticalUserProfileRecord() {
         value = new Record<AnalyticalUserProfileMetadata>(AnalyticalUserProfileMetadata.class);
@@ -156,7 +164,7 @@ public class AnalyticalUserProfileRecord implements AnalyticalUserProfileInterfa
     @Override
     public String getDay() {
         
-        return (String) this.value.getValue(AnalyticalUserProfileMetadata.DAY);
+        return derivedFieldValues.getDay();
     }
 
 
@@ -282,6 +290,18 @@ public class AnalyticalUserProfileRecord implements AnalyticalUserProfileInterfa
 	@Override
 	public int compareTo(AnalyticalUserProfileInterface o) {
 		return (o.getVersion() - this.getVersion());
+	}
+
+
+	public static class AnalyticalUserProfileDefaultDerivedValues implements AnalyticalUserProfileDerivedValueInterface {
+
+	
+	    @Override
+    public String getDay() {
+        return (String)"Unknown";
+    }
+
+
 	}
 
 }

@@ -37,6 +37,7 @@ public class AttributionResultRuleRecord implements AttributionResultRuleInterfa
     static final Logger LOG = LoggerFactory.getLogger(AttributionResultRuleRecord.class);
 
     Record<AttributionResultRuleMetadata> value = null;
+	
 
     public AttributionResultRuleRecord() {
         value = new Record<AttributionResultRuleMetadata>(AttributionResultRuleMetadata.class);
@@ -129,6 +130,7 @@ public class AttributionResultRuleRecord implements AttributionResultRuleInterfa
     public String getValueDefaultValue() {
         return (String)"Unknown";
     }
+
 
 
 

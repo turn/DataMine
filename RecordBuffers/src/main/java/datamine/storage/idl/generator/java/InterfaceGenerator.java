@@ -70,7 +70,7 @@ public class InterfaceGenerator implements CodeGenerator, ElementVisitor {
 		String[] classCode = {
 				"public interface {interface} {",
 				"",
-				"{fieldGetter}",
+				"{fieldDefaultValue}",
 				"}"
 		};
 		
@@ -122,7 +122,7 @@ public class InterfaceGenerator implements CodeGenerator, ElementVisitor {
 		// decide if a derived interface is necessary
 		if (field.isDerived()) {
 			createDerivedTableTemplate(currentTable);
-			currentDerivedTemplate.fillFields("fieldGetter", 
+			currentDerivedTemplate.fillFields("fieldDefaultValue", 
 					templateGenerator.getGetterTemplate());
 		}
 		
@@ -182,7 +182,14 @@ public class InterfaceGenerator implements CodeGenerator, ElementVisitor {
 	public static String getDerivedInterfaceName(String tableName) {
 		return new StringBuilder().append(
 				CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, tableName))
-				.append("DerivedInterface").toString();
+				.append("DerivedValueInterface").toString();
+	}
+	
+	
+	public static String getDerivedClassName(String tableName) {
+		return new StringBuilder().append(
+				CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, tableName))
+				.append("DefaultDerivedValues").toString();
 	}
 	
 	public static String getGetterName(Field field) {

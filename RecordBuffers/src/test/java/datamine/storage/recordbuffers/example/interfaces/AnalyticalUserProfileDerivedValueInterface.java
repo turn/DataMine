@@ -20,7 +20,7 @@ package datamine.storage.recordbuffers.example.interfaces;
 /**
  * DO NOT CHANGE! Auto-generated code
  */
-public interface AnalyticalUserProfileDerivedInterface {
+public interface AnalyticalUserProfileDerivedValueInterface {
 
 		public String getDay();
 

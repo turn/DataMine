@@ -37,6 +37,7 @@ public class IdMapRecord implements IdMapInterface {
     static final Logger LOG = LoggerFactory.getLogger(IdMapRecord.class);
 
     Record<IdMapMetadata> value = null;
+	
 
     public IdMapRecord() {
         value = new Record<IdMapMetadata>(IdMapMetadata.class);
@@ -126,6 +127,7 @@ public class IdMapRecord implements IdMapInterface {
 	public int getMediaProviderIdsSize() {
 		return this.value.getListSize(IdMapMetadata.MEDIA_PROVIDER_IDS);
 	}
+
 
 
 

@@ -37,6 +37,7 @@ public class ProviderUserIdRecord implements ProviderUserIdInterface {
     static final Logger LOG = LoggerFactory.getLogger(ProviderUserIdRecord.class);
 
     Record<ProviderUserIdMetadata> value = null;
+	
 
     public ProviderUserIdRecord() {
         value = new Record<ProviderUserIdMetadata>(ProviderUserIdMetadata.class);
@@ -129,6 +130,7 @@ public class ProviderUserIdRecord implements ProviderUserIdInterface {
     public int getProviderIdDefaultValue() {
         throw new NullPointerException("Require a valid value for provider_id! Make sure the column has been selected!");
     }
+
 
 
 

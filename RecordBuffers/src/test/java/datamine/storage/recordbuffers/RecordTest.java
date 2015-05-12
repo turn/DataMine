@@ -154,6 +154,13 @@ public class RecordTest {
 		testAupData.assertObjects(testAupList);
 	}
 	
+	@Test
+	public void derivedFields() {
+		for (AnalyticalUserProfileInterface cur : testAupList) {
+			Assert.assertEquals(cur.getDay(), cur.getDayDefaultValue());
+		}
+	}
+	
 //	@Test
 	public void testPerformance() {
 		for (int i=0; i<10000; ++i) {

@@ -1,4 +1,4 @@
-# DataMine
+# DataMine  [![Build Status](https://travis-ci.org/turn/DataMine.svg?branch=master)](https://travis-ci.org/turn/DataMine)
 
 DataMine aims to provide a comprehensive solution to the challenges of information management and analytics at Turn. The diagram below illustrates the important components in DataMine.
 

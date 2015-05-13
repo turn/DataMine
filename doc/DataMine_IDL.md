@@ -3,7 +3,7 @@
 DataMine schema defines an interface description language (IDL) to describe the data structure in the DataMine storage. 
 
 
-A schema is usually stored in the individual file. For instance, the file, [AUPConf.json](https://stash.turn.com/projects/DM/repos/aup2/browse/AUPConf.json) depicts the schema of *AUP*.
+A schema is usually stored in the individual file. For instance, the file, [SimpleSchema.json](../RecordBuffers/src/test/resources/SimpleSchema.json) depicts the schema of *simple_schema*.
 
 
 ## Elements
@@ -20,7 +20,7 @@ Basically a DataMine schema is composed of tables. Furthermore a table has a lis
 
 ### table
 
-A *table* is a concept to describe the data structure. It has at least two attribtues:
+A *table* is a concept to describe the data structure. It has at least two attributes:
 
 - *table* is the name of the table. 
 - *fields* has a list of *fields* in the table. 
@@ -29,7 +29,7 @@ Optionally a table can have an attribute as *version no.*, which is introduced f
 
 ### field
 
-The element, *field* describes the attribtues of a column in the table. Pariticularly it has the following attributes:
+The element, *field* describes the attributes of a column in the table. Particularly it has the following attributes:
 
 - *id* is for the ID of the field. 
 - *name* is the name of the field.
@@ -37,13 +37,13 @@ The element, *field* describes the attribtues of a column in the table. Pariticu
 - *default value* specifies the default value of the field if it is not a required field. 
 - *constraints* depicts the constraints enforced upon the field. It could be one or multiple of the following:
 	- isRequired: it is true if the field is required.
-	- isSortKey: it is true if the field is used for sorting records. Note that a table has at most one field to be sort key and it must define its sort key while initialization. A table cannot get rid of its sort key once defined. 
-	- isAscSorted: it is true if the table has a sort key and the sorting is in the ascending order.
-	- hasRef: it is introduced to improve the reading performance of the field.
+	- isAscSortKey or isDesSortKey: it is true if the field is used for sorting records. Note that a table has at most one field to be sort key and it must define its sort key while initialization. A table cannot get rid of its sort key once defined. 
+	- isFrequentlyUsed: it is introduced to improve the reading performance of the field.
+	- isDerived: it is true when the field has its value calculated on the fly according to the application; now a derived field must be optional and primitive and all derived fields have the same *id* (e.g., 0).
 
 ### type
 
-DataMine schema supports primvitive type, group type and collection type.  
+DataMine schema supports primitive type, group type and collection type.  
 
 - The primitive type is a set, including:
 	- BYTE: a byte type, whose value is contained in a byte
@@ -52,11 +52,11 @@ DataMine schema supports primvitive type, group type and collection type.
 	- INT32: an integer type, whose value is represented by four bytes
 	- INT64: an integer type, whose value is represented by eight bytes
 	- FLOAT: a float numeric type, whose value is represented by four bytes
-	- DOUBLE: a float nueric type, whose value is represented by eight bytes
+	- DOUBLE: a float numeric type, whose value is represented by eight bytes
 	- STRING: a string type, which is UTF8???
 	- BINARY: an array of bytes
 	
-- The group type describes the structure of a record, and it has attribtues:
+- The group type describes the structure of a record, and it has attributes:
 	- *name*: the name of the structure it describes
 	- *type*: the group type, e.g., "STRUCT"
 	
@@ -76,9 +76,9 @@ It is quite common to change the table schema, e.g. by introducing new columns. 
 
 ## An Implementation in JSON 
 
-JSON is a language .... (Check the reference). Considering its flexibity and representative, JSON is a good candidate to describe the DataMine schema. 
+JSON is a language .... (Check the reference). Considering its flexibility and representative, JSON is a good candidate to describe the DataMine schema. 
 
-Specifically a DataMine schema is represented as a set of key-value pairs. At the topest level, there are two attributes: 
+Specifically a DataMine schema is represented as a set of key-value pairs. At the top level, there are two attributes: 
 
 - *schema* specifies the name of the schema. 
 - *table_list* is an array of tables in the schema. 
@@ -98,8 +98,10 @@ To explain every field, a set of attributes are defined, including
 	- collection type, e.g., List:Short, List:provider_user_id (LIST)
 - *default* indicates the default value for an optional field
 - *isRequired* identifies the necessity of a field
-- *isSortKey* indicates a sort key of the table
-- *hasRef* implicates an data access optimization on the field 
+- *isAscSortKey* indicates a sort key of the table (in ascending order)
+- *isDesSortKey* indicates a sort key of the table (in descending order)
+- *isFrequentlyUsed* implicates an data access optimization on the field 
+- *isDerived* indicates a field not stored physically (i.e., its value is calculated on the fly)
 
 ### Example
 
@@ -111,11 +113,12 @@ An example below illustrates the schema of "attribution" in the JSON format.
 	    {
 	      "table": "attribution_result_rule",
 	      "fields": [
-	        {"id": 1,"name": "run_num",    "type": "Byte",   "isRequired": true},
+	        {"id": 1,"name": "run_num",    "type": "Byte",   "isRequired": true, "isAscSortKey": true},
 	        {"id": 2,"name": "category_id","type": "String", "default": "\"Unknown\""},
 	        {"id": 3,"name": "keyword",    "type": "String", "default": "\"Unknown\""},
 	        {"id": 4,"name": "key",        "type": "String", "default": "\"Unknown\""},
-	        {"id": 5,"name": "value",      "type": "String", "default": "\"Unknown\""}
+	        {"id": 5,"name": "value",      "type": "String", "default": "\"Unknown\""},
+	        {"id": 0,"name": "note",      "type": "String", "default": "\"Unknown\"", "isDerived": true}
 	      ]
 	    },
 	    {

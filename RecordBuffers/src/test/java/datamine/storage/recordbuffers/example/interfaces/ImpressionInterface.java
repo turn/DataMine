@@ -53,5 +53,6 @@ public interface ImpressionInterface extends BaseInterface  {
 
 		public int getAttributionResultsSize();
 
+
 }
 

@@ -90,7 +90,7 @@ public class JsonSchemaConvertor implements JsonElementVisitor,
 					"The sort-key column must be required! - " + field.getName());
 		}
 		
-		fields.add(new Field.Builder(fId, fName, type).
+		fields.add(Field.newBuilder(fId, fName, type).
 				withDefaultValue(defaultValue).
 				isRequired(field.isRequired()).
 				isDesSorted(field.isDesSorted()).

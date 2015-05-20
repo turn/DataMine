@@ -35,5 +35,6 @@ public interface AttributionResultInterface extends BaseInterface  {
 
 		public int getRulesSize();
 
+
 }
 

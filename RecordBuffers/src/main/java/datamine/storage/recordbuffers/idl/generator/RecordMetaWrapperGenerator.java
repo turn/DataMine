@@ -260,11 +260,16 @@ public class RecordMetaWrapperGenerator implements ElementVisitor,
 				"		value = record;",
 				"		derivedFieldValues = derived;",
 				"	}",
+				"",
+				"	public void setDerivedValueImplementation({derivedInterface} derived) {",
+				"		derivedFieldValues = derived;",
+				"	}",
+				""
 		};
 		String tableName = currentTable.getName();
 		CodeTemplate derivedFieldsTemplate = new CodeTemplate(declarationCode);
 		derivedFieldsTemplate.fillFields("derivedInterface", InterfaceGenerator.getDerivedInterfaceName(tableName));
-		derivedFieldsTemplate.fillFields("defaultDerivedClass", InterfaceGenerator.getDerivedClassName(tableName));
+		derivedFieldsTemplate.fillFields("defaultDerivedClass", InterfaceGenerator.getDefaultDerivedClassName(tableName));
 		derivedFieldsTemplate.fillFields("wrapperName", getWrapperClassName(tableName));
 		derivedFieldsTemplate.fillFields("baseClassName", getBaseClassName(tableName));
 		currentTemplate.fillFields("variable4derivedColumns", derivedFieldsTemplate);
@@ -283,7 +288,7 @@ public class RecordMetaWrapperGenerator implements ElementVisitor,
 		derivedDefaultValueTemplate.fillFields("interface", 
 				InterfaceGenerator.getDerivedInterfaceName(tableName));
 		derivedDefaultValueTemplate.fillFields("class", 
-				InterfaceGenerator.getDerivedClassName(tableName));
+				InterfaceGenerator.getDefaultDerivedClassName(tableName));
 		currentTemplate.fillFields("defaultDerivedClass", derivedDefaultValueTemplate);
 		return derivedDefaultValueTemplate;		
 	}

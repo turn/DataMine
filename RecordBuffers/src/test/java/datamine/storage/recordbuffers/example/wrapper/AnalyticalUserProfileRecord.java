@@ -45,6 +45,11 @@ public class AnalyticalUserProfileRecord implements AnalyticalUserProfileInterfa
 		derivedFieldValues = derived;
 	}
 
+	public void setDerivedValueImplementation(AnalyticalUserProfileDerivedValueInterface derived) {
+		derivedFieldValues = derived;
+	}
+
+
 
     public AnalyticalUserProfileRecord() {
         value = new Record<AnalyticalUserProfileMetadata>(AnalyticalUserProfileMetadata.class);

@@ -93,6 +93,7 @@ public class InterfaceGenerator implements CodeGenerator, ElementVisitor {
 				"{fieldSetter}",
 				"{fieldDefaultValue}",
 				"{fieldListSize}",
+				"{setDerivedImplementation}",
 				"}"
 		};
 		
@@ -150,6 +151,13 @@ public class InterfaceGenerator implements CodeGenerator, ElementVisitor {
 		if (!field.isDerived()) {
 			currentTemplate.fillFields("fieldSetter", 
 					templateGenerator.getSetterTemplate());	
+		} else {
+			final String[] codes = {
+				"		public void setDerivedValueImplementation({derivedInterface} derived);"
+			};
+			CodeTemplate ct = new CodeTemplate(codes);
+			ct.fillFields("derivedInterface", getDerivedInterfaceName(currentTable.getName()));
+			currentTemplate.fillFields("setDerivedImplementation", ct);
 		}
 				
 		if (field.isSortKey()) {
@@ -186,7 +194,7 @@ public class InterfaceGenerator implements CodeGenerator, ElementVisitor {
 	}
 	
 	
-	public static String getDerivedClassName(String tableName) {
+	public static String getDefaultDerivedClassName(String tableName) {
 		return new StringBuilder().append(
 				CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, tableName))
 				.append("DefaultDerivedValues").toString();

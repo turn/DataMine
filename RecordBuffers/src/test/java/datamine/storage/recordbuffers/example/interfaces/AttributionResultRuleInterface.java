@@ -35,5 +35,6 @@ public interface AttributionResultRuleInterface extends BaseInterface  {
 		public String getValueDefaultValue();
 
 
+
 }
 

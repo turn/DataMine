@@ -39,7 +39,7 @@ public enum AttributionResultMetadata implements RecordMetadataInterface {
 	private AttributionResultMetadata(short id, String name, FieldType type, 
 		boolean isRequired, Object defaultValue, boolean isDesSorted, 
 		boolean isAscSorted, boolean isFrequentlyUsed, boolean isDerived) {
-		field = new Field.Builder(id, name, type).
+		field = Field.newBuilder(id, name, type).
 				withDefaultValue(defaultValue).
 				isRequired(isRequired).
 				isDesSorted(isDesSorted).

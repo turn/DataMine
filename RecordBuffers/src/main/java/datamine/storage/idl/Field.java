@@ -67,7 +67,7 @@ public class Field implements Element {
 		private boolean isCommonlyUsed = false;
 		private boolean isDerived = false;
 		
-		public Builder(int id, String name, FieldType type) {
+		private Builder(int id, String name, FieldType type) {
 			this.id = id;
 			this.name = name;
 			this.type = type;
@@ -108,6 +108,9 @@ public class Field implements Element {
 		}
 	}
 	
+	public static Builder newBuilder(int id, String name, FieldType type) {
+		return new Builder(id, name, type);
+	}
 
 	/**
 	 * Get a set of constraints based on the input

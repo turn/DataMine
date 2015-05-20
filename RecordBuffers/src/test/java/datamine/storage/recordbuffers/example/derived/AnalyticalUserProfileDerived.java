@@ -13,28 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package datamine.storage.recordbuffers.example.interfaces;
+package datamine.storage.recordbuffers.example.derived;
 
-import datamine.storage.api.BaseInterface;
-
-import java.util.List;
-
+import datamine.storage.recordbuffers.example.interfaces.AnalyticalUserProfileDerivedValueInterface;
+import datamine.storage.recordbuffers.example.interfaces.AnalyticalUserProfileInterface;
 
 /**
- * DO NOT CHANGE! Auto-generated code
+ * @author yqi
+ * @date May 20, 2015
  */
-public interface ProviderUserIdInterface extends BaseInterface  {
+public class AnalyticalUserProfileDerived implements
+		AnalyticalUserProfileDerivedValueInterface {
 
-		public byte getProviderType();
-		public int getProviderId();
-
-		public void setProviderType(byte input);
-		public void setProviderId(int input);
-
-		public byte getProviderTypeDefaultValue();
-		public int getProviderIdDefaultValue();
-
-
+	private final AnalyticalUserProfileInterface aup;
+	
+	public AnalyticalUserProfileDerived(AnalyticalUserProfileInterface aup) {
+		this.aup = aup;
+	}
+	
+	@Override
+	public String getDay() {
+		return "Monday";
+	}
 
 }
-

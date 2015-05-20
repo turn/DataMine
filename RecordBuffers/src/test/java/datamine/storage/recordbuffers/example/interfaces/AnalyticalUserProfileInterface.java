@@ -51,5 +51,7 @@ public interface AnalyticalUserProfileInterface extends BaseInterface , Comparab
 		public int getImpressionsSize();
 		public int getTimeListSize();
 
+		public void setDerivedValueImplementation(AnalyticalUserProfileDerivedValueInterface derived);
+
 }
 

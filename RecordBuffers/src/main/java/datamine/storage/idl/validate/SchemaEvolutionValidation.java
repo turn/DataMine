@@ -21,6 +21,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.Lists;
+
 import datamine.storage.idl.Field;
 import datamine.storage.idl.Schema;
 import datamine.storage.idl.Table;
@@ -47,7 +49,8 @@ import datamine.storage.idl.validate.exceptions.SmallerTableVersionInSchemaEvolu
  * <i> The default value of existing fields should not be changed.
  * <i> The way of sorting should not be changed if a field is the sort-key
  * <i> At most one sort key is allowed in the table
- * <i> The field can not be changed from non-sort key into sort key, or vise versa. 
+ * <i> The field can not be changed from non-sort key into sort key, or vise versa.
+ * <i> The derived field can be removed in the new schema. 
  * 
  * </p>
  * 
@@ -96,8 +99,18 @@ public class SchemaEvolutionValidation implements ValidateInterface<Schema> {
 					currentTable.getVersion(), nextTable.getVersion());
 		}
 		//2. check fields in the table
-		List<Field> fieldsInCurrentTable = currentTable.getFields();
-		List<Field> fieldsInNextTable = nextTable.getFields();
+		List<Field> fieldsInCurrentTable = Lists.newArrayList();
+		for (Field cur : currentTable.getFields()) {
+			if (!cur.isDerived()) {
+				fieldsInCurrentTable.add(cur);
+			}
+		}
+		List<Field> fieldsInNextTable = Lists.newArrayList();
+		for (Field cur : nextTable.getFields()) {
+			if (!cur.isDerived()) {
+				fieldsInNextTable.add(cur);
+			}
+		}
 		
 		//2.1 ensure all fields in the current table do exist still
 		if (fieldsInCurrentTable.size() > fieldsInNextTable.size()) {
@@ -153,7 +166,7 @@ public class SchemaEvolutionValidation implements ValidateInterface<Schema> {
 			(curConstraints.contains(Constraint.ASC_SORTED) && 
 			!nextConstraints.contains(Constraint.ASC_SORTED))) {
 			throw new FieldConstraintModifiedInSchemaEvolutionException(
-					"Cannot make eliminate a sort key field from : " + current.getName()); 
+					"Cannot make eliminate a sort key field : " + current.getName()); 
 		}
 
 		// check the default value

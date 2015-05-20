@@ -18,6 +18,7 @@ package datamine.storage.idl;
 import java.util.EnumSet;
 
 import com.google.common.base.Objects;
+import com.google.common.base.Preconditions;
 import com.google.gson.GsonBuilder;
 
 import datamine.storage.idl.type.FieldType;
@@ -29,8 +30,10 @@ import datamine.storage.idl.type.FieldType;
  */
 public class Field implements Element {
 	
+	public static final int DERIVED_FIELD_ID = 0;
+	
 	public enum Constraint {
-		REQUIRED, ASC_SORTED, DES_SORTED, OPTIONAL, HAS_REFERENCE
+		REQUIRED, ASC_SORTED, DES_SORTED, OPTIONAL, FREQUENTLY_USED, DERIVED
 	}
 	
 	private final int id;
@@ -38,46 +41,92 @@ public class Field implements Element {
 	private final FieldType type;
 	private final Object defaultValue;
 	private final EnumSet<Constraint> constraints;
+			
+	private Field(Builder builder) {
+		this.id = builder.id;
+		this.name = builder.name;
+		this.type = builder.type;
+		this.defaultValue = builder.defaultValue;
+		this.constraints = getContraintEnumSet(
+				builder.isRequired, builder.isDesSorted, 
+				builder.isAscSorted, builder.isCommonlyUsed,
+				builder.isDerived);
+	}
+
+	public static class Builder {
+		// required
+		private final int id;
+		private final String name;
+		private final FieldType type;
 		
-	/**
-	 * @param id
-	 * @param name
-	 * @param type
-	 * @param defaultValue
-	 * @param isRequired
-	 */
-	public Field(int id, String name, FieldType type, Object defaultValue,
-			EnumSet<Constraint> constraints) {
-		this.id = id;
-		this.name = name;
-		this.type = type;
-		this.defaultValue = defaultValue;
-		this.constraints = constraints;
+		// optional
+		private Object defaultValue = null;
+		private boolean isRequired = false;
+		private boolean isDesSorted = false;
+		private boolean isAscSorted = false;
+		private boolean isCommonlyUsed = false;
+		private boolean isDerived = false;
+		
+		private Builder(int id, String name, FieldType type) {
+			this.id = id;
+			this.name = name;
+			this.type = type;
+		}
+		
+		public Builder withDefaultValue(Object dVal) {
+			this.defaultValue = dVal;
+			return this;
+		}
+		
+		public Builder isRequired(boolean isRequired) {
+			this.isRequired = isRequired;
+			return this;
+		}
+		
+		public Builder isDesSorted(boolean isDesSorted) {
+			this.isDesSorted = isDesSorted;
+			return this;
+		}
+		
+		public Builder isAscSorted(boolean isAscSorted) {
+			this.isAscSorted = isAscSorted;
+			return this;
+		}
+		
+		public Builder isFrequentlyUsed(boolean isOR) {
+			this.isCommonlyUsed = isOR;
+			return this;
+		}
+		
+		public Builder isDerived(boolean isDerived) {
+			this.isDerived = isDerived;
+			return this;
+		}
+		
+		public Field build() {
+			return new Field(this);
+		}
 	}
-
-	/**
-	 * Constructor with only name
-	 * @param name
-	 */
-	public Field(String name) {
-		this.id = 0;
-		this.name = name;
-		this.type = null;
-		this.defaultValue = null;
-		this.constraints = null;
+	
+	public static Builder newBuilder(int id, String name, FieldType type) {
+		return new Builder(id, name, type);
 	}
-
 
 	/**
 	 * Get a set of constraints based on the input
 	 * 
 	 * @param isRequired true if it is a required field
-	 * @param isSorted true if the field is used for record sorting
+	 * @param isDesSorted true if the field is used for record sorting
 	 * @param isAscSorted true if the sorting is in the ascending order (only valid when isSorted=true)
 	 * @return a set of constraints based on the input
 	 */
 	public static EnumSet<Constraint> getContraintEnumSet(boolean isRequired,
-			boolean isSorted, boolean isAscSorted, boolean hasRef) {
+			boolean isDesSorted, boolean isAscSorted, boolean isFrequentlyUsed, 
+			boolean isDerived) {
+		
+		Preconditions.checkArgument(!(isDesSorted && isAscSorted), 
+				"No way to keep ASC sorting and DES sorting at the same time");
+		
 		EnumSet<Constraint> ret;
 		//1. required or not?
 		if (isRequired) {
@@ -86,16 +135,22 @@ public class Field implements Element {
 			ret = EnumSet.of(Constraint.OPTIONAL);
 		}
 		//2. sorted? if so, asc or des?
-		if (isSorted) {
-			if (isAscSorted) {
-				ret.add(Constraint.ASC_SORTED);
-			} else {
-				ret.add(Constraint.DES_SORTED);
-			}
+		if (isDesSorted) {
+			ret.add(Constraint.DES_SORTED);
 		}
+		
+		if (isAscSorted) {
+			ret.add(Constraint.ASC_SORTED);
+		}
+		
 		//3. hasRef?
-		if (hasRef) {
-			ret.add(Constraint.HAS_REFERENCE);
+		if (isFrequentlyUsed) {
+			ret.add(Constraint.FREQUENTLY_USED);
+		}
+		
+		//4. isDerived?
+		if (isDerived) {
+			ret.add(Constraint.DERIVED);
 		}
 		
 		return ret;
@@ -129,8 +184,20 @@ public class Field implements Element {
 		return constraints.contains(Constraint.DES_SORTED);
 	}
 	
-	public boolean hasReference () {
-		return constraints.contains(Constraint.HAS_REFERENCE);
+	public boolean isFrequentlyUsed () {
+		return constraints.contains(Constraint.FREQUENTLY_USED);
+	}
+	
+	public boolean isDerived() {
+		return constraints.contains(Constraint.DERIVED);
+	}
+	
+	public boolean isAscSortKey() {
+		return constraints.contains(Constraint.ASC_SORTED);
+	}
+	
+	public boolean isSortKey() {
+		return isAscSortKey() || isDesSortKey();
 	}
 	
 	@Override
@@ -152,7 +219,6 @@ public class Field implements Element {
 		}
 	}
 
-	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -200,4 +266,5 @@ public class Field implements Element {
 			return false;
 		return true;
 	}
+
 }

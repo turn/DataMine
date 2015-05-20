@@ -28,22 +28,25 @@ import datamine.storage.idl.type.FieldTypeFactory;
  */
 public enum AttributionResultRuleMetadata implements RecordMetadataInterface {
 
-	RUN_NUM((short)1, "run_num", FieldTypeFactory.getPrimitiveType(PrimitiveType.BYTE), true, null),
-	VALUE((short)2, "value", FieldTypeFactory.getPrimitiveType(PrimitiveType.STRING), false, (String)"Unknown"),
+	RUN_NUM((short)1, "run_num", FieldTypeFactory.getPrimitiveType(PrimitiveType.BYTE), true, null, false, false, false, false),
+	VALUE((short)2, "value", FieldTypeFactory.getPrimitiveType(PrimitiveType.STRING), false, (String)"Unknown", false, false, false, false),
 ;
 
 	static final short version = 1;
 	static final String name = "attribution_result_rule";
 	private Field field;
 
-	private AttributionResultRuleMetadata(short id, String name, FieldType type, boolean isRequired, Object defaultValue) {
-		this(id,name, type, isRequired, defaultValue, false, false, false);
-	}
-
-	private AttributionResultRuleMetadata(short id, String name, FieldType type, boolean isRequired, 
-		Object defaultValue, boolean isSorted, boolean isAscSorted, boolean hasRef) {
-		field = new Field(id,name, type, defaultValue, Field.getContraintEnumSet(
-				isRequired, isSorted, isAscSorted, hasRef));
+	private AttributionResultRuleMetadata(short id, String name, FieldType type, 
+		boolean isRequired, Object defaultValue, boolean isDesSorted, 
+		boolean isAscSorted, boolean isFrequentlyUsed, boolean isDerived) {
+		field = Field.newBuilder(id, name, type).
+				withDefaultValue(defaultValue).
+				isRequired(isRequired).
+				isDesSorted(isDesSorted).
+				isAscSorted(isAscSorted).
+				isFrequentlyUsed(isFrequentlyUsed).
+				isDerived(isDerived).
+				build();
 	}
 
 	@Override
@@ -60,7 +63,6 @@ public enum AttributionResultRuleMetadata implements RecordMetadataInterface {
 	public String getTableName() { 
 		return name; 
 	}
-
-
 }
+
 

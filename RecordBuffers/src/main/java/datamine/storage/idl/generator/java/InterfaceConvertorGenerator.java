@@ -95,6 +95,10 @@ public class InterfaceConvertorGenerator implements ElementVisitor, CodeGenerato
 	@Override
 	public void visit(Field field) {
 				
+		if (field.isDerived()) {
+			return;
+		}
+		
 		FieldType type = field.getType();
 		CodeTemplate fieldCode = new FieldTemplateGenerator().apply(type);				
 		

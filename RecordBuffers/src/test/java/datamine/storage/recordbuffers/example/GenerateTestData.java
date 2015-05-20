@@ -23,9 +23,12 @@ import com.google.common.io.Files;
 
 import datamine.storage.idl.Schema;
 import datamine.storage.idl.generator.TableTestDataGenerator;
+import datamine.storage.idl.generator.java.InterfaceConvertorGenerator;
 import datamine.storage.idl.generator.java.InterfaceGenerator;
 import datamine.storage.idl.generator.metadata.MetadataFileGenerator;
 import datamine.storage.idl.json.JsonSchemaConvertor;
+import datamine.storage.idl.validate.SchemaValidation;
+import datamine.storage.idl.validate.exceptions.AbstractValidationException;
 import datamine.storage.recordbuffers.idl.generator.RecordMetaWrapperGenerator;
 
 /**
@@ -39,21 +42,33 @@ public class GenerateTestData {
 	/**
 	 * @param args
 	 * @throws IOException 
+	 * @throws AbstractValidationException 
 	 */
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, AbstractValidationException {
 
 		File schemaPath = new File("src/test/resources/SimpleSchema.json");
-
+		Schema schema = new JsonSchemaConvertor().apply(
+				Files.toString(schemaPath, Charsets.UTF_8));
+		
+		// verify
+		new SchemaValidation().check(schema); 
+		
 		InterfaceGenerator generator = new InterfaceGenerator(
 				"src/test/java/", 
 				"datamine.storage.recordbuffers.example.interfaces");
 
 		// generate the java source codes
-		Schema schema = new JsonSchemaConvertor().apply(
-				Files.toString(schemaPath, Charsets.UTF_8));
 		schema.accept(generator);
 		generator.generate();
 
+		InterfaceConvertorGenerator generator0 = new InterfaceConvertorGenerator(
+				"src/test/java/", 
+				"datamine.storage.recordbuffers.example.convertors",
+				"datamine.storage.recordbuffers.example.interfaces");
+
+		// generate the java source codes
+		schema.accept(generator0);
+		generator0.generate();
 		
 		//1. generate model codes
 		MetadataFileGenerator generator1 = new MetadataFileGenerator(

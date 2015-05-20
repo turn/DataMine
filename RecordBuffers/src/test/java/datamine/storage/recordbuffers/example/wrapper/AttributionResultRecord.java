@@ -37,6 +37,7 @@ public class AttributionResultRecord implements AttributionResultInterface {
     static final Logger LOG = LoggerFactory.getLogger(AttributionResultRecord.class);
 
     Record<AttributionResultMetadata> value = null;
+	
 
     public AttributionResultRecord() {
         value = new Record<AttributionResultMetadata>(AttributionResultMetadata.class);
@@ -146,6 +147,7 @@ public class AttributionResultRecord implements AttributionResultInterface {
 	public int getRulesSize() {
 		return this.value.getListSize(AttributionResultMetadata.RULES);
 	}
+
 
 
 

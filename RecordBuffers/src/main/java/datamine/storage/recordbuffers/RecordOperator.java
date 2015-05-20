@@ -18,7 +18,6 @@ package datamine.storage.recordbuffers;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -28,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import datamine.storage.api.RecordMetadataInterface;
@@ -52,7 +52,7 @@ class RecordOperator<T extends Enum<T> & RecordMetadataInterface> {
 	public static final int MAX_BUF_SIZE = 1024;
 	
 	private final Class<T> dummyClass; // a helper to collect ENUM info
-	private final List<T> fieldList; // a list of fields ordered by its 'ID'
+	private final List<T> fieldList = Lists.newArrayList(); // a list of fields ordered by its 'ID'
 	private final ReferenceSection refSection;
 
 	// The factory pattern to minimize the instances of the class
@@ -79,8 +79,12 @@ class RecordOperator<T extends Enum<T> & RecordMetadataInterface> {
 	 */
 	private RecordOperator(Class<T> enumClass) {
 		dummyClass = enumClass;
-		fieldList = Arrays.asList(dummyClass.getEnumConstants());
-
+		for (T cur : dummyClass.getEnumConstants()) {
+			if (!cur.getField().isDerived()) {
+				fieldList.add(cur);
+			}
+		}
+		
 		// sort the attr
 		Collections.sort(fieldList,
 				new AttributeComparator<T>());
@@ -143,7 +147,7 @@ class RecordOperator<T extends Enum<T> & RecordMetadataInterface> {
 	 * @return the offset of the field with 'hasRef' annotation.
 	 */
 	public int getFieldWithReferenceOffset(T col, ByteBuffer buffer, int initOffset) {
-		Preconditions.checkArgument(col.getField().hasReference(), 
+		Preconditions.checkArgument(col.getField().isFrequentlyUsed(), 
 				col + " is not a field with the reference in the reference section!");
 
 		int id = col.getField().getId();
@@ -311,7 +315,7 @@ class RecordOperator<T extends Enum<T> & RecordMetadataInterface> {
 							hasValidValue = true;
 
 							// if it is a sort key
-							if (curField.isDesSortKey()) {
+							if (curField.isSortKey()) {
 								sortKeyOffset = curPosition;
 							}
 
@@ -323,7 +327,7 @@ class RecordOperator<T extends Enum<T> & RecordMetadataInterface> {
 							}
 
 							// if it is a field with reference 
-							if (curField.hasReference()) {
+							if (curField.isFrequentlyUsed()) {
 								refFieldOffsetListByteBuf.putShort((short) curField.getId());
 								refFieldOffsetListByteBuf.putInt(curPosition);
 							}
@@ -505,7 +509,7 @@ class RecordOperator<T extends Enum<T> & RecordMetadataInterface> {
 			boolean hasReferenceType = false;
 			for (T cur : fieldList) {
 				Field field = cur.getField();
-				if (field.isDesSortKey()) {
+				if (field.isSortKey()) {
 					hasSortKey = true;
 					length += 4; // 4 (or integer) for the reference to the pos of sorted key attribute
 				}
@@ -517,7 +521,7 @@ class RecordOperator<T extends Enum<T> & RecordMetadataInterface> {
 					}
 					collectionReferenceSequenceMap.put(field.getId(), sequenceNo++);
 					length += 4;
-				} else if (field.hasReference()) {
+				} else if (field.isFrequentlyUsed()) {
 					// A collection-type field should not have "REFERENCE"
 					if (!hasReferenceType) {
 						hasReferenceType = true;

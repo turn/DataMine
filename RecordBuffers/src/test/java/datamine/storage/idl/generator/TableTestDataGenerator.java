@@ -172,9 +172,12 @@ public class TableTestDataGenerator implements ElementVisitor,
 
 	@Override
 	public void visit(Field field) {
-		currentTemplate.fillFields("recordFieldSetters", new FieldSetterTemplateGenerator(currentTable).apply(field));
+		if (!field.isDerived()) {
+			currentTemplate.fillFields("recordFieldSetters", new FieldSetterTemplateGenerator(currentTable).apply(field));
+			currentTemplate.fillFields("setDataMap", new FieldValueAssignmentTemplateGenerator(currentTable).apply(field));
+		}
+		
 		currentTemplate.fillFields("assertFieldValues", new FieldAssertTemplateGenerator(currentTable).apply(field));
-		currentTemplate.fillFields("setDataMap", new FieldValueAssignmentTemplateGenerator(currentTable).apply(field));
 	}
 
 	@Override

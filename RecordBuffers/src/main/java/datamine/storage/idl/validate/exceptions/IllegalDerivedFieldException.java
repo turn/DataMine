@@ -13,28 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package datamine.storage.recordbuffers.example.interfaces;
-
-import datamine.storage.api.BaseInterface;
-
-import java.util.List;
-
+package datamine.storage.idl.validate.exceptions;
 
 /**
- * DO NOT CHANGE! Auto-generated code
+ * @author yqi
  */
-public interface ProviderUserIdInterface extends BaseInterface  {
+public class IllegalDerivedFieldException extends AbstractValidationException {
 
-		public byte getProviderType();
-		public int getProviderId();
+	private static final long serialVersionUID = 7802224094716993467L;
 
-		public void setProviderType(byte input);
-		public void setProviderId(int input);
-
-		public byte getProviderTypeDefaultValue();
-		public int getProviderIdDefaultValue();
-
-
-
+	public IllegalDerivedFieldException(String msg) {
+		super(msg);
+	}
+	
 }
-

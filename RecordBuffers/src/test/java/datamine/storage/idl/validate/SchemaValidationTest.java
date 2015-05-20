@@ -22,6 +22,7 @@ import datamine.storage.idl.json.JsonSchemaConvertor;
 import datamine.storage.idl.validate.SchemaValidation;
 import datamine.storage.idl.validate.exceptions.AbstractValidationException;
 import datamine.storage.idl.validate.exceptions.IdentityDuplicationException;
+import datamine.storage.idl.validate.exceptions.IllegalDerivedFieldException;
 import datamine.storage.idl.validate.exceptions.IllegalFieldDefaultValueException;
 import datamine.storage.idl.validate.exceptions.IllegalFieldIdentityException;
 import datamine.storage.idl.validate.exceptions.IllegalNamingConversionException;
@@ -75,7 +76,42 @@ public class SchemaValidationTest {
 	
 	@Test(expectedExceptions = MultipleSortKeysException.class)
 	public void checkSortKey() throws AbstractValidationException {
-		String json_str = "{\n  \"schema\": \"simple_schema\",\n  \"table_list\": [\n    {\n      \"table\": \"attribution_result_rule\",\n      \"fields\": [\n        {\"id\": 1,\"name\": \"run_num\",    \"type\": \"Byte\",   \"isRequired\": true, \"isSortKey\": true},\n        {\"id\": 2,\"name\": \"value\",      \"type\": \"String\", \"isRequired\": true, \"isSortKey\": true},\n        {\"id\": 3,\"name\": \"key\",      \"type\": \"String\", \"default\": \"Unknown\"}\n      ]\n    }\n    ]\n}";
+		String json_str = "{\n  \"schema\": \"simple_schema\",\n  \"table_list\": [\n    {\n      \"table\": \"attribution_result_rule\",\n      \"fields\": [\n        {\"id\": 1,\"name\": \"run_num\",    \"type\": \"Byte\",   \"isRequired\": true, \"isAscSortKey\": true},\n        {\"id\": 2,\"name\": \"value\",      \"type\": \"String\", \"isRequired\": true, \"isAscSortKey\": true},\n        {\"id\": 3,\"name\": \"key\",      \"type\": \"String\", \"default\": \"Unknown\"}\n      ]\n    }\n    ]\n}";
+		Schema schema = new JsonSchemaConvertor().apply(json_str);
+		new SchemaValidation().check(schema);
+	}
+	
+	@Test(expectedExceptions = IllegalFieldIdentityException.class)
+	public void checkFieldId() throws AbstractValidationException {
+		String json_str = "{\n  \"schema\": \"simple_schema\",\n  \"table_list\": [\n    {\n      \"table\": \"attribution_result_rule\",\n      \"fields\": [\n        {\"id\": 1,\"name\": \"run_num\",    \"type\": \"Byte\",   \"isRequired\": true},\n        {\"id\": 2,\"name\": \"value\",      \"type\": \"String\", \"isRequired\": true, \"isAscSortKey\": true},\n        {\"id\": 3,\"name\": \"key\",      \"type\": \"String\", \"default\": \"Unknown\", \"isDerived\": true}\n      ]\n    }\n    ]\n}";
+		Schema schema = new JsonSchemaConvertor().apply(json_str);
+		new SchemaValidation().check(schema);
+	}
+	
+	@Test(expectedExceptions = IllegalDerivedFieldException.class)
+	public void checkDerivedFieldMustBePrimitive() throws AbstractValidationException {
+		String json_str = "{\n  \"schema\": \"simple_schema\",\n  \"table_list\": [\n    {\n      \"table\": \"attribution_result_rule\",\n      \"fields\": [\n        {\"id\": 1,\"name\": \"run_num\",    \"type\": \"Byte\",   \"isRequired\": true},\n        {\"id\": 2,\"name\": \"value\",      \"type\": \"String\", \"isRequired\": true, \"isAscSortKey\": true},\n        {\"id\": 0,\"name\": \"key\",      \"type\": \"List:Integer\", \"default\": \"Unknown\", \"isDerived\": true}\n      ]\n    }\n    ]\n}";
+		Schema schema = new JsonSchemaConvertor().apply(json_str);
+		new SchemaValidation().check(schema);
+	}
+	
+	@Test(expectedExceptions = IllegalDerivedFieldException.class)
+	public void checkDerivedFieldMustBeOptional() throws AbstractValidationException {
+		String json_str = "{\n  \"schema\": \"simple_schema\",\n  \"table_list\": [\n    {\n      \"table\": \"attribution_result_rule\",\n      \"fields\": [\n        {\"id\": 1,\"name\": \"run_num\",    \"type\": \"Byte\",   \"isRequired\": true},\n        {\"id\": 2,\"name\": \"value\",      \"type\": \"String\", \"isRequired\": true, \"isAscSortKey\": true},\n        {\"id\": 0,\"name\": \"key\",      \"type\": \"String\", \"default\": \"Unknown\", \"isDerived\": true, \"isRequired\": true}\n      ]\n    }\n    ]\n}";
+		Schema schema = new JsonSchemaConvertor().apply(json_str);
+		new SchemaValidation().check(schema);
+	}
+	
+	@Test(expectedExceptions = IllegalArgumentException.class)
+	public void checkDerivedFieldCannotBeSortKey() throws AbstractValidationException {
+		String json_str = "{\n  \"schema\": \"simple_schema\",\n  \"table_list\": [\n    {\n      \"table\": \"attribution_result_rule\",\n      \"fields\": [\n        {\"id\": 1,\"name\": \"run_num\",    \"type\": \"Byte\",   \"isRequired\": true},\n        {\"id\": 2,\"name\": \"value\",      \"type\": \"String\", \"isRequired\": true},\n        {\"id\": 0,\"name\": \"key\",      \"type\": \"String\", \"default\": \"Unknown\", \"isDerived\": true, \"isAscSortKey\": true}\n      ]\n    }\n    ]\n}";
+		Schema schema = new JsonSchemaConvertor().apply(json_str);
+		new SchemaValidation().check(schema);
+	}
+	
+	@Test(expectedExceptions = IllegalDerivedFieldException.class)
+	public void checkDerivedFieldCannotBeFrequentlyUsed() throws AbstractValidationException {
+		String json_str = "{\n  \"schema\": \"simple_schema\",\n  \"table_list\": [\n    {\n      \"table\": \"attribution_result_rule\",\n      \"fields\": [\n        {\"id\": 1,\"name\": \"run_num\",    \"type\": \"Byte\",   \"isRequired\": true},\n        {\"id\": 2,\"name\": \"value\",      \"type\": \"String\", \"isRequired\": true},\n        {\"id\": 0,\"name\": \"key\",      \"type\": \"String\", \"default\": \"Unknown\", \"isDerived\": true, \"isFrequentlyUsed\": true}\n      ]\n    }\n    ]\n}";
 		Schema schema = new JsonSchemaConvertor().apply(json_str);
 		new SchemaValidation().check(schema);
 	}

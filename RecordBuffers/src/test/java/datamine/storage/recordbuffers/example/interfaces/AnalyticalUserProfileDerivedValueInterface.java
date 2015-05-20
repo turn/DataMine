@@ -15,26 +15,14 @@
  */
 package datamine.storage.recordbuffers.example.interfaces;
 
-import datamine.storage.api.BaseInterface;
-
-import java.util.List;
 
 
 /**
  * DO NOT CHANGE! Auto-generated code
  */
-public interface ProviderUserIdInterface extends BaseInterface  {
+public interface AnalyticalUserProfileDerivedValueInterface {
 
-		public byte getProviderType();
-		public int getProviderId();
-
-		public void setProviderType(byte input);
-		public void setProviderId(int input);
-
-		public byte getProviderTypeDefaultValue();
-		public int getProviderIdDefaultValue();
-
-
+		public String getDay();
 
 }
 

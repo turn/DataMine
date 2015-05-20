@@ -15,10 +15,10 @@
  */
 package datamine.storage.idl.generator.java;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import com.google.common.base.CaseFormat;
+import com.google.common.collect.Maps;
 
 import datamine.storage.idl.ElementVisitor;
 import datamine.storage.idl.Field;
@@ -42,7 +42,9 @@ import datamine.storage.idl.type.PrimitiveType;
 public class InterfaceGenerator implements CodeGenerator, ElementVisitor {
 	
 	private Map<Table, CodeGenerator> templateMap = null;
+	private Map<Table, CodeGenerator> derivedTemplateMap = null;
 	private CodeTemplate currentTemplate = null;
+	private CodeTemplate currentDerivedTemplate = null;
 	private Table currentTable = null;
 	
 	private final String sourceDir;
@@ -55,17 +57,43 @@ public class InterfaceGenerator implements CodeGenerator, ElementVisitor {
 	
 	@Override
 	public void visit(Schema schema) {
-		templateMap = new HashMap<Table, CodeGenerator>();
+		templateMap = Maps.newHashMap();
+		derivedTemplateMap = Maps.newHashMap();
 	}
 
+	private void createDerivedTableTemplate(Table table) {
+		
+		if (derivedTemplateMap.containsKey(table)) {
+			return;
+		}
+		
+		String[] classCode = {
+				"public interface {interface} {",
+				"",
+				"{fieldDefaultValue}",
+				"}"
+		};
+		
+		CodeTemplate bodyTemplate = new CodeTemplate(classCode);
+		CodeTemplate importTemplate = new CodeTemplate();
+		String className = getDerivedInterfaceName(table.getName());
+		JavaCodeGenerator javaCode = new JavaCodeGenerator(sourceDir,
+				nameSpace, className, importTemplate, bodyTemplate);
+		bodyTemplate.fillFields("interface", className);
+		derivedTemplateMap.put(table, javaCode);
+		currentDerivedTemplate = bodyTemplate;
+	}
+	
 	@Override
 	public void visit(Table table) {
 		String[] classCode = {
 				"public interface {interface} extends BaseInterface {ComparableInterface} {",
 				"",
-				"{fieldGetterSetter}",
+				"{fieldGetter}",
+				"{fieldSetter}",
 				"{fieldDefaultValue}",
 				"{fieldListSize}",
+				"{setDerivedImplementation}",
 				"}"
 		};
 		
@@ -92,6 +120,13 @@ public class InterfaceGenerator implements CodeGenerator, ElementVisitor {
 		
 		FieldType type = field.getType();
 		
+		// decide if a derived interface is necessary
+		if (field.isDerived()) {
+			createDerivedTableTemplate(currentTable);
+			currentDerivedTemplate.fillFields("fieldDefaultValue", 
+					templateGenerator.getGetterTemplate());
+		}
+		
 		// generate get list size for list field
 		if (type instanceof CollectionFieldType) {
 			if (((CollectionFieldType) type).getType() == CollectionType.LIST) {
@@ -110,10 +145,22 @@ public class InterfaceGenerator implements CodeGenerator, ElementVisitor {
 		}
 				
 		//generate getter and setter for all the fields
-		currentTemplate.fillFields("fieldGetterSetter", 
-				templateGenerator.getGetterSetterTemplate());
+		currentTemplate.fillFields("fieldGetter", 
+				templateGenerator.getGetterTemplate());
 		
-		if (field.isDesSortKey()) {
+		if (!field.isDerived()) {
+			currentTemplate.fillFields("fieldSetter", 
+					templateGenerator.getSetterTemplate());	
+		} else {
+			final String[] codes = {
+				"		public void setDerivedValueImplementation({derivedInterface} derived);"
+			};
+			CodeTemplate ct = new CodeTemplate(codes);
+			ct.fillFields("derivedInterface", getDerivedInterfaceName(currentTable.getName()));
+			currentTemplate.fillFields("setDerivedImplementation", ct);
+		}
+				
+		if (field.isSortKey()) {
 			StringBuilder sb = new StringBuilder().append(", ")
 					.append("Comparable<")
 					.append(getInterfaceName(currentTable.getName()))
@@ -124,7 +171,12 @@ public class InterfaceGenerator implements CodeGenerator, ElementVisitor {
 
 	@Override
 	public void generate() {
+		// generate code for the interface
 		for (CodeGenerator entry : templateMap.values()) {
+			entry.generate();
+		}
+		// generate code for the derived fields
+		for (CodeGenerator entry : derivedTemplateMap.values()) {
 			entry.generate();
 		}
 	}
@@ -133,6 +185,19 @@ public class InterfaceGenerator implements CodeGenerator, ElementVisitor {
 		return new StringBuilder().append(
 				CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, tableName))
 				.append("Interface").toString();
+	}
+	
+	public static String getDerivedInterfaceName(String tableName) {
+		return new StringBuilder().append(
+				CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, tableName))
+				.append("DerivedValueInterface").toString();
+	}
+	
+	
+	public static String getDefaultDerivedClassName(String tableName) {
+		return new StringBuilder().append(
+				CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, tableName))
+				.append("DefaultDerivedValues").toString();
 	}
 	
 	public static String getGetterName(Field field) {
@@ -182,17 +247,28 @@ public class InterfaceGenerator implements CodeGenerator, ElementVisitor {
 			typeStr = new JavaTypeConvertor().apply(field.getType());
 		}
 		
-		public CodeTemplate getGetterSetterTemplate() {
+		public CodeTemplate getGetterTemplate() {
 			String[] codeString = {
 					"		public {fieldType} {getter}();",
+				};
+			
+			//Create Code Template for different 
+			CodeTemplate template = new CodeTemplate(codeString);
+			template.fillFields("getter", getGetterName(field));
+			template.fillFields("fieldType", this.typeStr);
+			
+			return template;
+		}
+		
+		public CodeTemplate getSetterTemplate() {
+			String[] codeString = {
 					"		public void {setter}({fieldType} input);",
 				};
 			
 			//Create Code Template for different 
 			CodeTemplate template = new CodeTemplate(codeString);
 			
-			template.fillFields("setter", getSetterName(field));
-			template.fillFields("getter", getGetterName(field));
+			template.fillFields("setter", getSetterName(field));	
 			template.fillFields("fieldType", this.typeStr);
 			
 			return template;

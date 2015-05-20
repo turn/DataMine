@@ -26,10 +26,12 @@ import java.util.List;
 public interface IdMapInterface extends BaseInterface  {
 
 		public List<ProviderUserIdInterface> getMediaProviderIds();
+
 		public void setMediaProviderIds(List<ProviderUserIdInterface> input);
 
 
 		public int getMediaProviderIdsSize();
+
 
 }
 

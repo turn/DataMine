@@ -183,11 +183,11 @@ public class Record<T extends Enum<T> & RecordMetadataInterface> {
 	
 		Field field = col.getField();
 		// when the column is sort-key or with 'hasRef' annotation 
-		if ((field.isDesSortKey() || field.hasReference()) && valueArray == null && this.buffer.getRecordBufferSize() > 0) {
+		if ((field.isSortKey() || field.isFrequentlyUsed()) && valueArray == null && this.buffer.getRecordBufferSize() > 0) {
 			FieldType type = field.getType();
 			ByteBuffer buf = buffer.getByteBuffer();
 			// find out the offset directly
-			int offset = field.isDesSortKey() ? 
+			int offset = field.isSortKey() ? 
 					operator.getSortKeyOffset(buf, 0) :
 					operator.getFieldWithReferenceOffset(col, buf, 0);
 			FieldValueOperatorInterface valueOpr = FieldValueOperatorFactory.getOperator(type);

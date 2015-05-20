@@ -53,6 +53,7 @@ public class RecordMetaWrapperGenerator implements ElementVisitor,
 
 	private Map<Table, CodeGenerator> templateMap = null;
 	private CodeTemplate currentTemplate = null;
+	private CodeTemplate derivedDefaultValueTemplate = null;
 	private Table currentTable = null;
 
 	private final String sourceDir;
@@ -113,6 +114,7 @@ public class RecordMetaWrapperGenerator implements ElementVisitor,
 				"    static final Logger LOG = LoggerFactory.getLogger({wrapperName}.class);",
 				"",
 				"    Record<{baseClassName}> value = null;",
+				"	{variable4derivedColumns}",
 				"",
 				"    public {wrapperName}() {",
 				"        value = new Record<{baseClassName}>({baseClassName}.class);",
@@ -169,6 +171,7 @@ public class RecordMetaWrapperGenerator implements ElementVisitor,
 				"{fieldDefaultValue}",
 				"{fieldListSize}",
 				"{fieldComparable}",
+				"{defaultDerivedClass}",
 				"}"
 		};
 
@@ -203,22 +206,91 @@ public class RecordMetaWrapperGenerator implements ElementVisitor,
 
 	@Override
 	public void visit(Field field) {
-		currentTemplate.fillFields("fieldGetter", new FieldGetterTemplateGenerator(currentTable).apply(field));
-		currentTemplate.fillFields("fieldSetter", new FieldSetterTemplateGenerator(currentTable).apply(field));
 		currentTemplate.fillFields("fieldDefaultValue", new FieldGetterDefaultTemplateGenerator().apply(field));
 		currentTemplate.fillFields("fieldListSize", new ListFieldSizeTemplateGenerator(currentTable).apply(field));
+		if (!field.isDerived()) {
+			currentTemplate.fillFields("fieldSetter", new FieldSetterTemplateGenerator(currentTable).apply(field));
+			currentTemplate.fillFields("fieldGetter", new FieldGetterTemplateGenerator(currentTable).apply(field));
+			
+		} else {
+			// Default value getter
+			// we will borrow the code from above
+			CodeTemplate codeTemp = new FieldGetterDefaultTemplateGenerator().apply(field);
+			// the difference is that the method is renamed as that for common getters
+			codeTemp.fillFields("interfaceGetterDefaultValueName", 
+					InterfaceGenerator.getGetterName(field));
+			createDerivedTableTemplate().fillFields("fieldDefaultValue", codeTemp);
+			
+			// Common getter
+			codeTemp = new FieldGetterTemplateGenerator(currentTable).apply(field);
+			StringBuilder sb = new StringBuilder();
+			sb.append("return derivedFieldValues.").
+			append(InterfaceGenerator.getGetterName(field)).append("();");
+			codeTemp.fillFields("returnClause", sb.toString());
+			currentTemplate.fillFields("fieldGetter", codeTemp);	
+			
+		}
 		
 		// dealing with the comparable field
-		if (field.isDesSortKey()) {
+		if (field.isSortKey()) {
 			String interfaceName = InterfaceGenerator.getInterfaceName(currentTable.getName());
 			String fieldGetter = InterfaceGenerator.getGetterName(field);
 			StringBuffer sb = new StringBuffer();
 			sb.append("\t@Override\n")
 				.append("\tpublic int compareTo(").append(interfaceName).append(" o) {\n")
-				.append("\t\t").append("return o.").append(fieldGetter).append("() - this.").append(fieldGetter).append("();\n")
+				.append("\t\t").append("return ").append(field.isAscSortKey() ? "-":"")
+				.append("(o.").append(fieldGetter).append("() - this.").append(fieldGetter).append("());\n")
 				.append("\t}\n");
 			currentTemplate.fillFields("fieldComparable", sb.toString());
 		}
+	}
+	
+	private CodeTemplate createDerivedTableTemplate() {
+		
+		if (derivedDefaultValueTemplate != null) {
+			return derivedDefaultValueTemplate;
+		}
+		
+		// declare the variable for the derived field values
+		String[] declarationCode = {
+				"",
+				"	private {derivedInterface} derivedFieldValues = new {defaultDerivedClass}();",
+				"",
+				"	public {wrapperName}(Record<{baseClassName}> record, {derivedInterface} derived) {",
+				"		value = record;",
+				"		derivedFieldValues = derived;",
+				"	}",
+				"",
+				"	public void setDerivedValueImplementation({derivedInterface} derived) {",
+				"		derivedFieldValues = derived;",
+				"	}",
+				""
+		};
+		String tableName = currentTable.getName();
+		CodeTemplate derivedFieldsTemplate = new CodeTemplate(declarationCode);
+		derivedFieldsTemplate.fillFields("derivedInterface", InterfaceGenerator.getDerivedInterfaceName(tableName));
+		derivedFieldsTemplate.fillFields("defaultDerivedClass", InterfaceGenerator.getDefaultDerivedClassName(tableName));
+		derivedFieldsTemplate.fillFields("wrapperName", getWrapperClassName(tableName));
+		derivedFieldsTemplate.fillFields("baseClassName", getBaseClassName(tableName));
+		currentTemplate.fillFields("variable4derivedColumns", derivedFieldsTemplate);
+		
+		// define the class for the derived fields
+		String[] innerClassCode = {
+				"",
+				"	public static class {class} implements {interface} {",
+				"",
+				"	{fieldGetter}",
+				"	{fieldDefaultValue}",
+				"	}"
+		};
+		
+		derivedDefaultValueTemplate = new CodeTemplate(innerClassCode);
+		derivedDefaultValueTemplate.fillFields("interface", 
+				InterfaceGenerator.getDerivedInterfaceName(tableName));
+		derivedDefaultValueTemplate.fillFields("class", 
+				InterfaceGenerator.getDefaultDerivedClassName(tableName));
+		currentTemplate.fillFields("defaultDerivedClass", derivedDefaultValueTemplate);
+		return derivedDefaultValueTemplate;		
 	}
 	
 	private void generateRecordBuilder() {

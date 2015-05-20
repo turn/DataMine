@@ -26,20 +26,21 @@ import java.util.List;
 public interface ImpressionInterface extends BaseInterface  {
 
 		public int getMediaProviderId();
-		public void setMediaProviderId(int input);
 		public short getMpTptCategoryId();
-		public void setMpTptCategoryId(short input);
 		public String getTruncatedUrl();
-		public void setTruncatedUrl(String input);
 		public boolean isBid();
-		public void setBid(boolean input);
 		public byte getBidType();
-		public void setBidType(byte input);
 		public List<AttributionResultInterface> getAttributionResults();
-		public void setAttributionResults(List<AttributionResultInterface> input);
 		public long getAllowedAdFormats();
-		public void setAllowedAdFormats(long input);
 		public double getCost();
+
+		public void setMediaProviderId(int input);
+		public void setMpTptCategoryId(short input);
+		public void setTruncatedUrl(String input);
+		public void setBid(boolean input);
+		public void setBidType(byte input);
+		public void setAttributionResults(List<AttributionResultInterface> input);
+		public void setAllowedAdFormats(long input);
 		public void setCost(double input);
 
 		public int getMediaProviderIdDefaultValue();
@@ -51,6 +52,7 @@ public interface ImpressionInterface extends BaseInterface  {
 		public double getCostDefaultValue();
 
 		public int getAttributionResultsSize();
+
 
 }
 

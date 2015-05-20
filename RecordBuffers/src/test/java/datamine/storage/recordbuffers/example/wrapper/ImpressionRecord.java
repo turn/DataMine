@@ -37,6 +37,7 @@ public class ImpressionRecord implements ImpressionInterface {
     static final Logger LOG = LoggerFactory.getLogger(ImpressionRecord.class);
 
     Record<ImpressionMetadata> value = null;
+	
 
     public ImpressionRecord() {
         value = new Record<ImpressionMetadata>(ImpressionMetadata.class);
@@ -266,6 +267,7 @@ public class ImpressionRecord implements ImpressionInterface {
 	public int getAttributionResultsSize() {
 		return this.value.getListSize(ImpressionMetadata.ATTRIBUTION_RESULTS);
 	}
+
 
 
 

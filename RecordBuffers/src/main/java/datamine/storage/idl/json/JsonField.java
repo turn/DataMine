@@ -43,12 +43,14 @@ public class JsonField implements JsonElement {
 	private String defaultValueString = INIT_DEFAULT;
 	@Expose @SerializedName("isRequired")
 	private boolean isRequired = false;
-	@Expose @SerializedName("isSortKey")
-	private boolean isSortKey = false;
-	@Expose @SerializedName("isAsc")
-	private boolean isAscSorted = false; // effective only if isSorted=true
-	@Expose @SerializedName("hasRef")
-	private boolean hasRef = false; // effective only if isSorted=true
+	@Expose @SerializedName("isAscSortKey")
+	private boolean isAscSorted = false;
+	@Expose @SerializedName("isDesSortKey")
+	private boolean isDesSorted = false; 
+	@Expose @SerializedName("isFrequentlyUsed")
+	private boolean isFrequentlyUsed = false; // effective only if isSorted=true
+	@Expose @SerializedName("isDerived")
+	private boolean isDerived = false; // effective only if isDerived=true
 	
 	public int getId() {
 		return id;
@@ -70,18 +72,26 @@ public class JsonField implements JsonElement {
 		return isRequired;
 	}
 
+	public boolean isDesSorted() {
+		return isDesSorted;
+	}
+	
 	public boolean isSorted() {
-		return isSortKey;
+		return isDesSorted || isAscSorted;
 	}
 
 	public boolean isAscSorted() {
 		return isAscSorted;
 	}
 	
-	public boolean hasRef() {
-		return hasRef;
+	public boolean isFrequentlyUsed() {
+		return isFrequentlyUsed;
 	}
 
+	public boolean isDerived() {
+		return isDerived;
+	}
+	
 	public String toString() {
 		return new GsonBuilder().setPrettyPrinting().create().toJson(this);
 	}
@@ -91,55 +101,5 @@ public class JsonField implements JsonElement {
 		visitor.visit(this);
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime
-				* result
-				+ ((defaultValueString == null) ? 0 : defaultValueString
-						.hashCode());
-		result = prime * result + id;
-		result = prime * result + (isAscSorted ? 1231 : 1237);
-		result = prime * result + (isRequired ? 1231 : 1237);
-		result = prime * result + (isSortKey ? 1231 : 1237);
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		JsonField other = (JsonField) obj;
-		if (defaultValueString == null) {
-			if (other.defaultValueString != null)
-				return false;
-		} else if (!defaultValueString.equals(other.defaultValueString))
-			return false;
-		if (id != other.id)
-			return false;
-		if (isAscSorted != other.isAscSorted)
-			return false;
-		if (isRequired != other.isRequired)
-			return false;
-		if (isSortKey != other.isSortKey)
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (type == null) {
-			if (other.type != null)
-				return false;
-		} else if (!type.equals(other.type))
-			return false;
-		return true;
-	}
+	
 }

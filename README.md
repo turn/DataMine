@@ -1,4 +1,4 @@
-# DataMine
+# DataMine  [![Build Status](https://travis-ci.org/turn/DataMine.svg?branch=master)](https://travis-ci.org/turn/DataMine)
 
 DataMine aims to provide a comprehensive solution to the challenges of information management and analytics at Turn. The diagram below illustrates the important components in DataMine.
 
@@ -6,7 +6,7 @@ DataMine aims to provide a comprehensive solution to the challenges of informati
 
 Basically it is composed of three layers. 
 
-* Storage layer is the fundation of DataMine, which defines a data schema language and provides the implementation of the data serialization / de-serialization on different data storage, such as HDFS or Memory-based File System.
+* Storage layer is the foundation of DataMine, which defines a data schema language and provides the implementation of the data serialization / de-serialization on different data storage, such as HDFS or Memory-based File System.
    
 * I/O Interface represents the data abstraction using a set of APIs, through which the application can get access to the data in the storage.
 
@@ -26,11 +26,14 @@ Please refer to [DataMine IDL](doc/DataMine_IDL.md) for more detail.
 One common requirement from the DataMine user is to add new attributes to the existing table, e.g., Impression. This requires that the data access support backward compatibility, in other words, the change must allow reading data in the old format. DataMine supports the following changes on the table schema: 
 
 <!-- TODO consider them again once the RecordBuffer-Parquet is possible! -->
-
-* No new *REQUIRED* field can be added to any existing table; adding *OPTIONAL* field is OK.
-* An *OPTIONAL* field cannot be changed to *REQUIRED*; it is OK to change a *REQUIRED* field to be *OPTIONAL*.
-* The type of existing field cannot be changed.
-* No existing field can be removed.
+* If a field is not derived, then 
+	* No new *REQUIRED* field can be added to any existing table; adding *OPTIONAL* field is OK.
+	* An *OPTIONAL* field cannot be changed to *REQUIRED*; it is OK to change a *REQUIRED* field to be *OPTIONAL*.
+	* The type of existing field cannot be changed.
+	* No existing field can be removed.
+	
+* The restrictions above are not applied to a derived field, i.e., 
+	* It is possible to change the name, type, default value, constraints of a derived field. 
 
 
 ### API-based Infrastructure
@@ -41,6 +44,9 @@ DataMine defines a set of APIs for the data access. These APIs define a way how 
 ### Code Generation
 
 DataMine follows a code generation approach to create the code for data access. Particularly, it generates a set of Java classes based on the DataMine schema. 
+
+
+* **Table Schema**: a Java Enum is generated for each table defined in DataMine schema to describe the table structure. 
 
 * **Table Interface**: a Java interface is generated for each table defined in DataMine schema, where a setter and a getter functions defined for each attribute of the table. 
 

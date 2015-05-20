@@ -26,13 +26,15 @@ import java.util.List;
 public interface AttributionResultInterface extends BaseInterface  {
 
 		public int getId();
-		public void setId(int input);
 		public List<AttributionResultRuleInterface> getRules();
+
+		public void setId(int input);
 		public void setRules(List<AttributionResultRuleInterface> input);
 
 		public int getIdDefaultValue();
 
 		public int getRulesSize();
+
 
 }
 

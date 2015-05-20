@@ -58,7 +58,7 @@ public class JsonSchemaConvertor implements JsonElementVisitor,
 		name = schema.getName();
 		tables = new ArrayList<Table>();
 	}
-
+ 
 	@Override
 	public void visit(JsonTable table) {
 		String name = table.getName();
@@ -90,10 +90,14 @@ public class JsonSchemaConvertor implements JsonElementVisitor,
 					"The sort-key column must be required! - " + field.getName());
 		}
 		
-		fields.add(new Field(fId, fName, type, defaultValue, 
-				Field.getContraintEnumSet(field.isRequired(), 
-						field.isSorted(), field.isAscSorted(),
-						field.hasRef())));
+		fields.add(Field.newBuilder(fId, fName, type).
+				withDefaultValue(defaultValue).
+				isRequired(field.isRequired()).
+				isDesSorted(field.isDesSorted()).
+				isAscSorted(field.isAscSorted()).
+				isFrequentlyUsed(field.isFrequentlyUsed()).
+				isDerived(field.isDerived()).
+				build());
 	}
 
 	private Object getDefaultValue(JsonFieldType type, String defaultValueStr) {

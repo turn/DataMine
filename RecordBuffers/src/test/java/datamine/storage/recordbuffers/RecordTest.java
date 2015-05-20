@@ -31,6 +31,8 @@ import datamine.storage.idl.type.GroupFieldType;
 import datamine.storage.recordbuffers.Record;
 import datamine.storage.recordbuffers.RecordBuffer;
 import datamine.storage.recordbuffers.example.data.AnalyticalUserProfileTestData;
+import datamine.storage.recordbuffers.example.derived.AnalyticalUserProfileDerived;
+import datamine.storage.recordbuffers.example.interfaces.AnalyticalUserProfileDerivedValueInterface;
 import datamine.storage.recordbuffers.example.interfaces.AnalyticalUserProfileInterface;
 import datamine.storage.recordbuffers.example.interfaces.AttributionResultInterface;
 import datamine.storage.recordbuffers.example.interfaces.ImpressionInterface;
@@ -153,6 +155,18 @@ public class RecordTest {
 	public void assertAll() {
 		testAupData.assertObjects(testAupList);
 	}
+	
+	@Test
+	public void derivedFields() {
+		for (AnalyticalUserProfileInterface cur : testAupList) {
+			Assert.assertEquals(cur.getDay(), cur.getDayDefaultValue());
+			AnalyticalUserProfileDerivedValueInterface derivedImpl = new 
+					AnalyticalUserProfileDerived(cur);
+			cur.setDerivedValueImplementation(derivedImpl);
+			Assert.assertEquals("Monday", cur.getDay());			
+		}
+	}
+		
 	
 //	@Test
 	public void testPerformance() {

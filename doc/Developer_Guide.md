@@ -8,6 +8,7 @@ Note that the example can be found at [..](../RecordBuffers/src/test/java/datami
 
 The table schema of the profile is defined in [JSON](../RecordBuffers/src/test/resources/SimpleSchema.json)
 
+	```json
 	{
 	  "schema": "simple_schema",
 	  "table_list": [
@@ -66,6 +67,7 @@ The table schema of the profile is defined in [JSON](../RecordBuffers/src/test/r
 	    }
 	  ]
 	}
+	```
 
 
 ## Code Generation
@@ -78,6 +80,7 @@ To simplify the example, a class [GenerateTestData.java](../RecordBuffers/src/te
 
 DataMine allows derived attribute in the table. The value of a derived field is calculated on the fly instead of stored physically. Importantly the user or table owner should define the way how this calculation is done. For example, a class should be defined to implement the interface, [AnalyticalUserProfileDerivedValueInterface.java](../RecordBuffers/src/test/java/datamine/storage/recordbuffers/example/interfaces/AnalyticalUserProfileDerivedValueInterface.java), as a derived attribute "day" is introduced in the table of *analytical_user_profile*.  The implementation can be as follows:
 
+	```java
 	public class AnalyticalUserProfileDerived implements
 			AnalyticalUserProfileDerivedValueInterface {
 	
@@ -93,28 +96,32 @@ DataMine allows derived attribute in the table. The value of a derived field is 
 		}
 	
 	}
+	```
 
 A setter function is defined to connect the implementation with the table access class. For instance, 
 
+	```java
 	aup.setDerivedValueImplementation(new AnalyticalUserProfileDerived(aup));
 	String theDay = aup.getDay();
-
+	```
 
 
 ## Read/Write RecordBuffers
 
 To create an empty record of *analytical_user_profile*, the user needs to create an instance of [RecordBuffersBuilder](../RecordBuffers/src/test/java/datamine/storage/recordbuffers/example/wrapper/builder/RecordBuffersBuilder.java). 
 
+	```java
 	AnalyticalUserProfileInterface aup = new RecordBuffersBuilder().build(AnalyticalUserProfileInterface.class);
 	aup.setUserId(10000000);
 	aup.setOsVersion("ios4");
 	...
-
+	```
 
 DataMine supports reading records from the Hadoop File System. A writable object of [*RecordBuffer*](../RecordBuffers/src/main/java/datamine/storage/recordbuffers/RecordBuffer.java) can be used for serialization and de-serialization in the HDFS.  
 
 To write a record of *analytical_user_profile* in the HDFS,
 
+	```java
 	SequenceFile.Writer writer = SequenceFile.createWriter(
 					FileSystem.get(conf), conf,  // Hadoop configuration
 					new Path("/file/to/write"),  // Output file path in the HDFS
@@ -124,9 +131,11 @@ To write a record of *analytical_user_profile* in the HDFS,
 	LongWritable id = new LongWritable(aup.getUserId());
 	RecordBuffer rb = ((Record<AnalyticalUserProfileMetadata>) aup.getBaseObject()).getRecordBuffer();
 	writer.append(id, rb);
+	```
 
 To read a record from the HDFS,
 
+	```java
 	SequenceFile.Reader reader = new SequenceFile.Reader(
 					dfs,                           // Hadoop file system handler 
 					new Path("/file/to/read"),     // Input file path in the HDFS
@@ -137,7 +146,7 @@ To read a record from the HDFS,
 	AnalyticalUserProfileInterface aup = new AnalyticalUserProfileRecord(
 					new Record<AnalyticalUserProfileMetadata>(
 							AnalyticalUserProfileMetadata.class, rBuf));
-
+	```
 
 
 ## Schema Evolution

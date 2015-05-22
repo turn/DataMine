@@ -133,4 +133,4 @@ An example below illustrates the schema of "attribution" in the JSON format.
 	}
 
 
-[^1]: A recommended naming convention can be lowercase with infix underscoresas, following the pattern:  '^\[a\-zA\-Z\]\[a\-zA\-Z0\-9\_\]\*$'.
+[^1]: A recommended naming convention can be lower case with infix underscores, following the pattern:  '^\[a\-zA\-Z\]\[a\-zA\-Z0\-9\_\]\*$'.

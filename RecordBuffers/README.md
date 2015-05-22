@@ -1,28 +1,20 @@
 # Record Buffers
 
-Record buffers are a flexible, efficient, automated mechanism for serializing structure data, especially for nested structure data. 
-It uses an interface description language (IDL) to describe the schema of data and allows the user easily to read and write the data with special generated source code. 
-Importantly record buffers support schema evolution, so it enables the deployed code for old format to work with the updated data structure.
+Record buffers are a flexible, efficient, automated mechanism for serializing structure data, especially for nested structure data. It uses an interface description language (IDL) to describe the schema of data and allows the user easily to read and write the data with special generated source code. Importantly record buffers support schema evolution, so it enables the deployed code for old format to work with the updated data structure.
 
 ## Why?
 
-Record buffers is not the only one solution while dealing with the big data problem in our case. For example, [Thrift](https://thrift.apache.org/), [Avro](http://avro.apache.org/) and [Protocol Buffers](https://code.google.com/p/protobuf/) provide the very similar ideas. However, record buffers have some advantages considering the special problem at Turn. For instance, the nested structure is normal in our application; record buffer does optimize the data accessing performance especially there is nested structure in the data. 
+Record buffers is not the only solution while dealing with the big data problem. For example, [Thrift](https://thrift.apache.org/), [Avro](http://avro.apache.org/) and [Protocol Buffers](https://code.google.com/p/protobuf/) provide the very similar ideas. However, record buffers have some advantages considering the special application at Turn. For instance, the nested structure is normal, table should be writable since the updating is a require, reading often occurs to a subset of fields of a table. Record buffers optimize the data accessing performance in these scenarios. 
 
 
-## IDL Specification
+## Table Schema
 
-Please see [DataMine IDL](../doc/DataMine_IDL.md).
+Record buffers define the table schema based on an IDL Specification. Please check the details at [DataMine IDL](../doc/DataMine_IDL.md).
 
 ## Code Generation
 <a name="code_generation"></a>
 
-
-Record buffers follow a code generation approach while building the representation layer for table access. Particularly a set of Java classes or interfaces are created automatically, including:
-
-* *Table Access Interface*: a Java interface is generated for each table defined in table schema, where the setter and getter functions are declared for each attribute of the table. 
-* *Table Access Implementation*: a Java class is generated for each table based on the file format (e.g,, row-based or column-based) and the representation in memory (e.g., POJO-class or Record Buffer).
-* *Record Builder*: a class is generated for the instance creation given a table interface. 
-* *Table Access Implementation Test*: a Java class is generated for each table defined in the table schema, to produce the data for possible unit tests. 
+Record buffers follow a code generation approach while building the representation layer for table access. Particularly a set of Java classes or interfaces are created automatically, describing table schema, table access interface, table access implementation, record builder and unit test respectively. 
 
 <img float="center" src="./doc/res/code_gen.png" width="" height="" border="0" alt="">
 
@@ -42,8 +34,8 @@ To enable such a code generation, the project POM should include the plugin belo
 						</goals>
 						<phase>${codeGenerationPhase}</phase>
 						<configuration>
-							<schemaPath>src/main/resources/AUPConf.json</schemaPath>
-							<packageName>application.package.interfaces</packageName>
+							<schemaPath>path/to/schema.json</schemaPath>				
+							<packageName>application.package.name.interfaces</packageName>
 						</configuration>
 					</execution>
 					<execution>
@@ -53,9 +45,9 @@ To enable such a code generation, the project POM should include the plugin belo
 						</goals>
 						<phase>${codeGenerationPhase}</phase>
 						<configuration>
-							<schemaPath>src/main/resources/AUPConf.json</schemaPath>
-							<packageName>application.package.operator.conversion</packageName>
-							<interfacePackageName>application.package.interfaces</interfacePackageName>
+							<schemaPath>path/to/schema.json</schemaPath>
+							<packageName>application.package.name.conversion</packageName>
+							<interfacePackageName>application.package.name.interfaces</interfacePackageName>
 						</configuration>
 					</execution>
 					<execution>
@@ -65,8 +57,8 @@ To enable such a code generation, the project POM should include the plugin belo
 						</goals>
 						<phase>${codeGenerationPhase}</phase>
 						<configuration>
-							<schemaPath>src/main/resources/AUPConf.json</schemaPath>
-							<packageName>application.package.metadata</packageName>
+							<schemaPath>path/to/schema.json</schemaPath>
+							<packageName>application.package.name.metadata</packageName>
 						</configuration>
 					</execution>
 					<execution>
@@ -76,10 +68,10 @@ To enable such a code generation, the project POM should include the plugin belo
 						</goals>
 						<phase>${codeGenerationPhase}</phase>
 						<configuration>
-							<schemaPath>src/main/resources/AUPConf.json</schemaPath>
-							<packageName>application.package.recordbuffers.wrapper</packageName>
-							<interfacePackageName>application.package.interfaces</interfacePackageName>
-							<metadataPackageName>application.package.metadata</metadataPackageName>
+							<schemaPath>path/to/schema.json</schemaPath>
+							<packageName>application.package.name.recordbuffers.wrapper</packageName>
+							<interfacePackageName>application.package.name.interfaces</interfacePackageName>
+							<metadataPackageName>application.package.name.metadata</metadataPackageName>
 						</configuration>
 					</execution>
 					<execution>
@@ -89,28 +81,10 @@ To enable such a code generation, the project POM should include the plugin belo
 						</goals>
 						<phase>${codeGenerationPhase}</phase>
 						<configuration>
-							<schemaPath>src/main/resources/AUPConf.json</schemaPath>
-							<packageName>application.package.recordbuffers.data</packageName>
-							<interfacePackageName>application.package.interfaces</interfacePackageName>
-							<metadataPackageName>application.package.metadata</metadataPackageName>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>com.turn.datamine.storage.avro</groupId>
-				<artifactId>avro-maven-plugin</artifactId>
-				<version>${datamine.version}</version>
-				<executions>
-					<execution>
-						<id>avro_parquet</id>
-						<goals>
-							<goal>avro_parquet_tables</goal>
-						</goals>
-						<phase>${codeGenerationPhase}</phase>
-						<configuration>
-							<schemaPath>src/main/resources/AUPConf.json</schemaPath>
-							<packageName>application.package.avro.parquet</packageName>
+							<schemaPath>path/to/schema.json</schemaPath>
+							<packageName>application.package.name.recordbuffers.data</packageName>
+							<interfacePackageName>application.package.name.interfaces</interfacePackageName>
+							<metadataPackageName>application.package.name.metadata</metadataPackageName>
 						</configuration>
 					</execution>
 				</executions>
@@ -119,7 +93,7 @@ To enable such a code generation, the project POM should include the plugin belo
 	</build>
 		
 
-Note that the two parameters can be configured:
+Note that there are parameters that can be configured:
 
 - *schemaPath* : the path where the schema JSON file is stored, for example, *src/main/resources/AUPConf.json*; it may be the same for all goals.
 - *packageName* : the package name of the output Java code, for example, *application.package.interfaces*; each goal may have its own unique package name. 
@@ -154,4 +128,3 @@ Currently, there are three types of attributes having their offsets in the refer
 1. The attribute as the table sort-key: it speeds up the record sorting;
 2. The attribute having the annotation of "hasRef": the attribute can be specified by the user if it is frequently accessed.
 3. The attribute of collection type (i.e., nested table): by default, any nested table has its offset stored in the referene section; according to our experience the nested table is often the hot spot. Having its offset in the reference section, it could significantly speed up some basic operations, like getting the size of the nested table. 
- 

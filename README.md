@@ -67,6 +67,10 @@ The following guides are suggested:
 * [Code style guide](http://intranet.turn.com/display/ENG/Code+style+guide)
 * [Turn Automation - Coding Guidelines](http://intranet.turn.com/display/OffshoreDocs/Turn+Automation+-+Coding+Guidelines)
 
+## Developer Guide
+
+An example can be found at the [guide](doc/Developer_Guide.md) to explain how to use DataMine in the application. 
+
 ## License
 
 ```

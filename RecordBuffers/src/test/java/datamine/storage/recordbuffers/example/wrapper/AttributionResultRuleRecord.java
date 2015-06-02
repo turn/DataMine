@@ -40,7 +40,7 @@ public class AttributionResultRuleRecord implements AttributionResultRuleInterfa
 	
 
     public AttributionResultRuleRecord() {
-        value = new Record<AttributionResultRuleMetadata>(AttributionResultRuleMetadata.class);
+        value = new WritableRecord<AttributionResultRuleMetadata>(AttributionResultRuleMetadata.class);
     }
 
     public AttributionResultRuleRecord(Record<AttributionResultRuleMetadata> value) {
@@ -74,7 +74,7 @@ public class AttributionResultRuleRecord implements AttributionResultRuleInterfa
     @Override
     public void copyFrom(BaseInterface right) {
 		// note that it may not be deep copy!!
-		this.value = new Record<AttributionResultRuleMetadata>(AttributionResultRuleMetadata.class, 
+		this.value = new WritableRecord<AttributionResultRuleMetadata>(AttributionResultRuleMetadata.class, 
 			new RecordBuffer(((Record) right.getBaseObject()).getRecordBuffer()));
     }
 
@@ -92,13 +92,13 @@ public class AttributionResultRuleRecord implements AttributionResultRuleInterfa
     @Override
     public byte getRunNum() {
         
-        return (Byte) this.value.getValue(AttributionResultRuleMetadata.RUN_NUM);
+        return this.value.getByte(AttributionResultRuleMetadata.RUN_NUM);
     }
 
     @Override
     public String getValue() {
         
-        return (String) this.value.getValue(AttributionResultRuleMetadata.VALUE);
+        return this.value.getString(AttributionResultRuleMetadata.VALUE);
     }
 
 

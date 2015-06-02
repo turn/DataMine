@@ -45,12 +45,18 @@ final public class BinaryValueOperator extends AbstractPrimitiveValueOperator {
 
 	@Override
 	public Object getValue(ByteBuffer buf, int index, int length) {
-		if (index >= 0 && length > 0) {
+		return getBinary(buf, index, length);
+	}
+	
+	public byte[] getBinary(ByteBuffer buf, int index, int length) {
+		if (index >= 0 && length >= 0) {
 			byte[] bVal = new byte[length];
 			System.arraycopy(buf.array(), index, bVal, 0, length);
 			return bVal;
-		} 
-		return null;
+		} else {
+			throw new IllegalArgumentException("The negative index/length : " 
+					+ index + "/" + length);
+		}
 	}
 	
 	@Override
@@ -64,7 +70,8 @@ final public class BinaryValueOperator extends AbstractPrimitiveValueOperator {
 	}
 
 	@Override
-	public int getMetadataSize() {
+	public int getMetadataLength() {
 		return 4;
 	}
+
 }

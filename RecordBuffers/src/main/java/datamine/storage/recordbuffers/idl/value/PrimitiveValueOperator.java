@@ -129,8 +129,8 @@ class PrimitiveValueOperator implements FieldValueOperatorInterface {
 	}
 
 	@Override
-	public int getMetadataSize() {
-		return valueOpr.getMetadataSize();
+	public int getMetadataLength() {
+		return valueOpr.getMetadataLength();
 	}
 
 	

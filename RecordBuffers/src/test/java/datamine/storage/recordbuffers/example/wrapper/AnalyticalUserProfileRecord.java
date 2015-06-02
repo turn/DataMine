@@ -52,7 +52,7 @@ public class AnalyticalUserProfileRecord implements AnalyticalUserProfileInterfa
 
 
     public AnalyticalUserProfileRecord() {
-        value = new Record<AnalyticalUserProfileMetadata>(AnalyticalUserProfileMetadata.class);
+        value = new WritableRecord<AnalyticalUserProfileMetadata>(AnalyticalUserProfileMetadata.class);
     }
 
     public AnalyticalUserProfileRecord(Record<AnalyticalUserProfileMetadata> value) {
@@ -85,8 +85,8 @@ public class AnalyticalUserProfileRecord implements AnalyticalUserProfileInterfa
 
     @Override
     public void copyFrom(BaseInterface right) {
-		// note that it may not be deep copy!!
-		this.value = new Record<AnalyticalUserProfileMetadata>(AnalyticalUserProfileMetadata.class, 
+		// note that it must be deep copy!!
+		this.value = new WritableRecord<AnalyticalUserProfileMetadata>(AnalyticalUserProfileMetadata.class, 
 			new RecordBuffer(((Record) right.getBaseObject()).getRecordBuffer()));
     }
 
@@ -104,25 +104,25 @@ public class AnalyticalUserProfileRecord implements AnalyticalUserProfileInterfa
     @Override
     public long getUserId() {
         
-        return (Long) this.value.getValue(AnalyticalUserProfileMetadata.USER_ID);
+        return this.value.getLong(AnalyticalUserProfileMetadata.USER_ID);
     }
 
     @Override
     public byte getVersion() {
         
-        return (Byte) this.value.getValue(AnalyticalUserProfileMetadata.VERSION);
+        return this.value.getByte(AnalyticalUserProfileMetadata.VERSION);
     }
 
     @Override
     public short getResolution() {
         
-        return (Short) this.value.getValue(AnalyticalUserProfileMetadata.RESOLUTION);
+        return this.value.getShort(AnalyticalUserProfileMetadata.RESOLUTION);
     }
 
     @Override
     public String getOsVersion() {
         
-        return (String) this.value.getValue(AnalyticalUserProfileMetadata.OS_VERSION);
+        return this.value.getString(AnalyticalUserProfileMetadata.OS_VERSION);
     }
 
     @Override

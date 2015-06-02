@@ -64,5 +64,5 @@ public interface FieldValueOperatorInterface {
 	 * value of type
 	 * @return the number of bytes used for the metadata when serializing the type of interested
 	 */
-	public int getMetadataSize();
+	public int getMetadataLength();
 }

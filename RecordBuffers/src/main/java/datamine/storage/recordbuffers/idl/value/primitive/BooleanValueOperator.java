@@ -42,10 +42,15 @@ final public class BooleanValueOperator extends AbstractPrimitiveValueOperator {
 
 	@Override
 	public Object getValue(ByteBuffer buf, int index, int length) {
-		if (index >= 0 && length > 0) {
+		return getBool(buf, index);
+	}
+	
+	public boolean getBool(ByteBuffer buf, int index) {
+		if (index >= 0) {
 			byte val = buf.get(index);
-			return val == 1 ? Boolean.TRUE : Boolean.FALSE;
-		} 
-		return null;
+			return val == 1 ? true : false;
+		} else {
+			throw new IllegalArgumentException("The negative index : " + index);
+		}
 	}
 }

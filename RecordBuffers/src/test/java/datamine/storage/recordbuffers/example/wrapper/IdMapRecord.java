@@ -40,7 +40,7 @@ public class IdMapRecord implements IdMapInterface {
 	
 
     public IdMapRecord() {
-        value = new Record<IdMapMetadata>(IdMapMetadata.class);
+        value = new WritableRecord<IdMapMetadata>(IdMapMetadata.class);
     }
 
     public IdMapRecord(Record<IdMapMetadata> value) {
@@ -74,7 +74,7 @@ public class IdMapRecord implements IdMapInterface {
     @Override
     public void copyFrom(BaseInterface right) {
 		// note that it may not be deep copy!!
-		this.value = new Record<IdMapMetadata>(IdMapMetadata.class, 
+		this.value = new WritableRecord<IdMapMetadata>(IdMapMetadata.class, 
 			new RecordBuffer(((Record) right.getBaseObject()).getRecordBuffer()));
     }
 

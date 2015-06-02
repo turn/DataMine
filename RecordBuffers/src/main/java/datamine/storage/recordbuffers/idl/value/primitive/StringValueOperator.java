@@ -45,12 +45,18 @@ final public class StringValueOperator extends AbstractPrimitiveValueOperator {
 
 	@Override
 	public Object getValue(ByteBuffer  buf, int index, int length) {
-		if (index >= 0 && length > 0) {
-			return new String(buf.array(), index, length);
-		} 
-		return null;
+		return getString(buf, index, length);
 	}
 	
+	public String getString(ByteBuffer buffer, int index, int length) {
+		if (index >= 0 && length >= 0) {
+			return new String(buffer.array(), index, length);			
+		} else {
+			throw new IllegalArgumentException("The negative index/length : " 
+					+ index + "/" + length);
+		}
+	}
+
 	@Override
 	public boolean hasFixedLength() {
 		return false;
@@ -62,7 +68,7 @@ final public class StringValueOperator extends AbstractPrimitiveValueOperator {
 	}
 	
 	@Override
-	public int getMetadataSize() {
+	public int getMetadataLength() {
 		return 2;
 	}
 }

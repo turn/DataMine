@@ -241,7 +241,7 @@ class CollectionValueOperator implements FieldValueOperatorInterface {
 	}
 
 	@Override
-	public int getMetadataSize() {
+	public int getMetadataLength() {
 		return 4;
 	}
 }

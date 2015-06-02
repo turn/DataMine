@@ -42,9 +42,15 @@ final public class Int16ValueOperator extends AbstractPrimitiveValueOperator {
 
 	@Override
 	public Object getValue(ByteBuffer buf, int index, int length) {
-		if (index >= 0 && length > 0) {
-			return buf.getShort(index);
-		} 
-		return null;
+		return getShort(buf, index);
 	}
+	
+	public short getShort(ByteBuffer buf, int index) {
+		if (index >= 0) {
+			return buf.getShort(index);
+		} else {
+			throw new IllegalArgumentException("The negative index : " + index);
+		}
+	}
+	
 }

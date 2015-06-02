@@ -40,7 +40,7 @@ public class AttributionResultRecord implements AttributionResultInterface {
 	
 
     public AttributionResultRecord() {
-        value = new Record<AttributionResultMetadata>(AttributionResultMetadata.class);
+        value = new WritableRecord<AttributionResultMetadata>(AttributionResultMetadata.class);
     }
 
     public AttributionResultRecord(Record<AttributionResultMetadata> value) {
@@ -74,7 +74,7 @@ public class AttributionResultRecord implements AttributionResultInterface {
     @Override
     public void copyFrom(BaseInterface right) {
 		// note that it may not be deep copy!!
-		this.value = new Record<AttributionResultMetadata>(AttributionResultMetadata.class, 
+		this.value = new WritableRecord<AttributionResultMetadata>(AttributionResultMetadata.class, 
 			new RecordBuffer(((Record) right.getBaseObject()).getRecordBuffer()));
     }
 
@@ -92,7 +92,7 @@ public class AttributionResultRecord implements AttributionResultInterface {
     @Override
     public int getId() {
         
-        return (Integer) this.value.getValue(AttributionResultMetadata.ID);
+        return this.value.getInt(AttributionResultMetadata.ID);
     }
 
     @Override

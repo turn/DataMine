@@ -20,7 +20,6 @@ package datamine.storage.api;
  * Basis table access interface
  * 
  * @author yqi
- * @date Aug 7, 2014
  */
 public interface BaseInterface {
 	public void referTo(BaseInterface right);

@@ -92,31 +92,31 @@ public class ImpressionRecord implements ImpressionInterface {
     @Override
     public int getMediaProviderId() {
         
-        return (Integer) this.value.getValue(ImpressionMetadata.MEDIA_PROVIDER_ID);
+        return this.value.getInt(ImpressionMetadata.MEDIA_PROVIDER_ID);
     }
 
     @Override
     public short getMpTptCategoryId() {
         
-        return (Short) this.value.getValue(ImpressionMetadata.MP_TPT_CATEGORY_ID);
+        return this.value.getShort(ImpressionMetadata.MP_TPT_CATEGORY_ID);
     }
 
     @Override
     public String getTruncatedUrl() {
         
-        return (String) this.value.getValue(ImpressionMetadata.TRUNCATED_URL);
+        return this.value.getString(ImpressionMetadata.TRUNCATED_URL);
     }
 
     @Override
     public boolean isBid() {
         
-        return (Boolean) this.value.getValue(ImpressionMetadata.BID);
+        return this.value.getBool(ImpressionMetadata.BID);
     }
 
     @Override
     public byte getBidType() {
         
-        return (Byte) this.value.getValue(ImpressionMetadata.BID_TYPE);
+        return this.value.getByte(ImpressionMetadata.BID_TYPE);
     }
 
     @Override
@@ -136,13 +136,13 @@ public class ImpressionRecord implements ImpressionInterface {
     @Override
     public long getAllowedAdFormats() {
         
-        return (Long) this.value.getValue(ImpressionMetadata.ALLOWED_AD_FORMATS);
+        return this.value.getLong(ImpressionMetadata.ALLOWED_AD_FORMATS);
     }
 
     @Override
     public double getCost() {
         
-        return (Double) this.value.getValue(ImpressionMetadata.COST);
+        return this.value.getDouble(ImpressionMetadata.COST);
     }
 
 

@@ -150,7 +150,7 @@ public class RecordMetaWrapperGenerator implements ElementVisitor,
 				"",
 				"    @Override",
 				"    public void copyFrom(BaseInterface right) {",
-				"		// note that it may not be deep copy!!",
+				"		// note that it must be deep copy!!",
 				"		this.value = new WritableRecord<{baseClassName}>({baseClassName}.class, ",
 				"			new RecordBuffer(((Record) right.getBaseObject()).getRecordBuffer()));",
 				"    }",
@@ -663,13 +663,43 @@ public class RecordMetaWrapperGenerator implements ElementVisitor,
 		
 		private void fromPrimitiveFieldType(PrimitiveFieldType type) {
 
-			String javaTypeStr = new JavaTypeConvertor(true).apply(type);
+//			String javaTypeStr = new JavaTypeConvertor(true).apply(type);
 			String enumName = MetadataFileGenerator.getEnumValue(field.getName());
-			
-			String returnClause = new StringBuilder().append("return (").append(javaTypeStr)
-					.append(") this.value.getValue(").append(metadataClassName).append(".")
-					.append(enumName).append(");").toString();
-			fieldGetterTemplate.fillFields("returnClause", returnClause);
+			String colName = metadataClassName + "." + enumName;
+			StringBuilder sb = new StringBuilder().append("return this.value.get");
+			switch (type.getType()) {
+			case BOOL:
+				sb.append("Bool");
+				break;
+			case BYTE:
+				sb.append("Byte");
+				break;
+			case INT16:
+				sb.append("Short");
+				break;
+			case INT32:
+				sb.append("Int");
+				break;
+			case INT64:
+				sb.append("Long");
+				break;
+			case FLOAT:
+				sb.append("Float");
+				break;
+			case DOUBLE:
+				sb.append("Double");
+				break;
+			case STRING:
+				sb.append("String");
+				break;
+			case BINARY:
+				sb.append("Binary");
+				break;
+			default:
+				throw new IllegalArgumentException("Not supported type : " + type.getType());
+			}
+			fieldGetterTemplate.fillFields("returnClause", 
+					sb.append("(").append(colName).append(");").toString());
 		}
 
 		private void fromGroupFieldType(GroupFieldType type) {

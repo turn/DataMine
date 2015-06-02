@@ -92,7 +92,7 @@ public class AttributionResultRecord implements AttributionResultInterface {
     @Override
     public int getId() {
         
-        return (Integer) this.value.getValue(AttributionResultMetadata.ID);
+        return this.value.getInt(AttributionResultMetadata.ID);
     }
 
     @Override

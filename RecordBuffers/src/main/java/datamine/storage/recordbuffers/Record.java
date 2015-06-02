@@ -81,8 +81,6 @@ public abstract class Record<T extends Enum<T> & RecordMetadataInterface> {
 	 * @return the value of the input column
 	 */
 	abstract public Object getValue(T col);
-	
-	
 
 	/**
 	 * Get the instance of {@link RecordBuffer} used to store all valid attributes of the record.
@@ -100,8 +98,8 @@ public abstract class Record<T extends Enum<T> & RecordMetadataInterface> {
 	 * @return An array of bytes used by the instance of {@link RecordBuffer}
 	 */
 	abstract public byte[] array();
-	
-	
+
+
 	/**
 	 * Get the number of elements nested in the list-type field. 
 	 * 
@@ -110,4 +108,19 @@ public abstract class Record<T extends Enum<T> & RecordMetadataInterface> {
 	 */
 	abstract public int getListSize(T col); 
 
+	///////////////////////////////////////////////////////////////////////////
+	// The following getters define approaches to get the primitive when the 
+	// selected column is primitive
+	///////////////////////////////////////////////////////////////////////////
+
+	abstract public boolean getBool(T col);
+	abstract public byte getByte(T col);
+	abstract public short getShort(T col);
+	abstract public long getLong(T col);
+	abstract public int getInt(T col);
+	abstract public float getFloat(T col);
+	abstract public double getDouble(T col);
+	abstract public byte[] getBinary(T col);
+	abstract public String getString(T col);
+	
 }

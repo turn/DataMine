@@ -15,7 +15,7 @@
  */
 package datamine.storage.recordbuffers;
 
-import java.util.Arrays;
+import java.nio.ByteBuffer;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -24,6 +24,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import datamine.storage.api.RecordMetadataInterface;
@@ -61,7 +62,6 @@ class RecordBufferMeta<T extends Enum<T> & RecordMetadataInterface> {
 		}
 	}
 
-	
 	/**
 	 * Private constructor: must create an instance from the static method (i.e.,
 	 * getRecordOperator(...)
@@ -70,9 +70,15 @@ class RecordBufferMeta<T extends Enum<T> & RecordMetadataInterface> {
 	 */
 	private RecordBufferMeta(Class<T> enumClass) {
 		dummyClass = enumClass;
-		fieldList = Arrays.asList(dummyClass.getEnumConstants());
+		fieldList = Lists.newArrayList();
+		// the derived field should be ignored 
+		for (T cur : dummyClass.getEnumConstants()) {
+			if (cur.getField().getId() > 0) {
+				fieldList.add(cur);
+			}
+		}
 
-		// sort the attr
+		// sort the field list
 		Collections.sort(fieldList,
 				new AttributeComparator<T>());
 
@@ -80,6 +86,13 @@ class RecordBufferMeta<T extends Enum<T> & RecordMetadataInterface> {
 		refSection = new ReferenceSection(fieldList); // 4 bytes for version # and # of attributes
 	}
 
+	/**
+	 * @return the ENUM defines the table schema
+	 */
+	public Class<T> getTableEnumClass() {
+		return dummyClass;
+	}
+	
 	/**
 	 * Return the number of attributes defined in the table
 	 * @return the number of attributes defined in the table
@@ -163,6 +176,96 @@ class RecordBufferMeta<T extends Enum<T> & RecordMetadataInterface> {
 	public int getSequenceOfCollectionField(int fieldId) {
 		return hasCollectionFieldInReferenceSection() 
 				? this.refSection.collectionReferenceSequenceMap.get(fieldId) : -1;
+	}
+	
+	/** 
+	 * Find out the size of the collection-type field in the record
+	 * @param col the collection-type field 
+	 * @param buffer the record buffer storing the record
+	 * @return the size of the collection-type field in the record
+	 */
+	public int getCollectionSize(T col, RecordBuffer rb) {
+		int offset = getCollectionOffset(col, rb);
+		if (offset > 0) {
+			return rb.getByteBuffer().getInt(offset + 4);
+		} else {
+			return 0;
+		}
+	}
+
+	/**
+	 * Find out the offset of the input collection-type field
+	 * @param col the collection-type field
+	 * @param rb the record buffer storing the record
+	 * @return the offset of the input field in the record buffer
+	 */
+	public int getCollectionOffset(T col, RecordBuffer rb) {
+		ByteBuffer byteBuffer = rb.getByteBuffer();
+		int initOffset = 0;
+		int id = col.getField().getId();
+		int seqenceNo = this.getSequenceOfCollectionField(id);
+		if (seqenceNo >= 0) {
+			int offset = initOffset + 4 + 2 + (this.hasSortedKey() ? 4 : 0);
+			int numOfCollectionsInRecord = byteBuffer.get(offset);
+			offset += 1; // for the number of collection-type fields
+
+			if (seqenceNo < numOfCollectionsInRecord) {
+				offset += 4 * seqenceNo; // the position of the reference
+				return byteBuffer.getInt(offset);
+			} 
+		}
+		return -1;
+	}
+	
+	/**
+	 * Get the offset of the field with 'hasRef' annotation.
+	 * 
+	 * @param col the field with 'hasRef' annotation
+	 * @return the offset of the field with 'hasRef' annotation.
+	 */
+	public int getFieldWithReferenceOffset(T col, RecordBuffer rb) {
+		
+		ByteBuffer byteBuffer = rb.getByteBuffer();
+		int initOffset = 0;
+		
+		int id = col.getField().getId();
+		int length = byteBuffer.getShort(initOffset + 4);
+		if (length > 2) {
+
+			int offset = initOffset +  
+					4 + // version # + # of attributes
+					2 + // length of reference section
+					(this.hasSortedKey() ? 4 : 0);
+
+			int numOfCollectionType = byteBuffer.get(offset);
+			offset += 1 + // the # of collection-type fields
+					4 * numOfCollectionType;
+
+			int refereceFieldNum = byteBuffer.get(offset);
+			offset += 1;
+			for (int i = 0; i < refereceFieldNum; ++i) {
+				if (id == byteBuffer.getShort(offset)) {
+					return byteBuffer.getInt(offset + 2);
+				}
+				offset += 2 + 4;
+			}
+		}
+		return -1;
+	}
+	
+	/**
+	 * Get the offset of the sort-key field in the record buffer
+	 * @param buffer the byte buffer storing the record
+	 * @param initOffset the starting position of the record
+	 * @return the offset of the sort-key field in the record buffer
+	 */
+	public int getSortKeyOffset(RecordBuffer rb) {
+		if (this.hasSortedKey()) {
+			// 2 bytes for the length of the reference section
+			return rb.getByteBuffer().getInt(4 + 2); 
+		} else {
+			return -1;
+		}
 	}
 	
 	/**

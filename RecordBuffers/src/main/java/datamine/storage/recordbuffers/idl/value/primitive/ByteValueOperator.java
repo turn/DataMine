@@ -41,9 +41,15 @@ final public class ByteValueOperator extends AbstractPrimitiveValueOperator {
 
 	@Override
 	public Object getValue(ByteBuffer buf, int index, int length) {
-		if (index >= 0 && length > 0) {
+		return getByte(buf, index);
+	}
+	
+	@Override
+	public byte getByte(ByteBuffer buf, int index) {
+		if (index >= 0) {
 			return buf.get(index);
-		} 
-		return null;
+		} else {
+			throw new IllegalArgumentException("The negative index : " + index);
+		}
 	}
 }

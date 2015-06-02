@@ -38,7 +38,7 @@ import datamine.storage.recordbuffers.idl.value.FieldValueOperatorFactory;
 /**
  * @author yqi
  */
-public final class WritableRecord<T extends Enum<T> & RecordMetadataInterface> extends Record<T> {
+public class WritableRecord<T extends Enum<T> & RecordMetadataInterface> extends Record<T> {
 
 	public static final Logger LOG = LoggerFactory.getLogger(WritableRecord.class);
 	
@@ -60,12 +60,6 @@ public final class WritableRecord<T extends Enum<T> & RecordMetadataInterface> e
 	 * Any attribute/field with valid value has an object in the array. Any update
 	 * would be done to the corresponding slot in the array.   
 	 * </p>
-	 * 
-	 * <p> 
-	 * Note that the length of the array is larger than the number of 
-	 * attributes by one, as the last one is an integer to record the result of
-	 * {@link getNumOfBytes()}.
-	 * </p> 
 	 */
 	private Object[] valueArray = null;
 	
@@ -74,6 +68,11 @@ public final class WritableRecord<T extends Enum<T> & RecordMetadataInterface> e
 	 */
 	private int numOfBytes = 0;
 	
+	/**
+	 * Handling reading if no writing is necessary
+	 */
+	private ReadOnlyRecord<T> readOnlyRecord = null;
+	
 	public WritableRecord(Class<T> clazz) {
 		super(clazz);
 	}
@@ -81,10 +80,13 @@ public final class WritableRecord<T extends Enum<T> & RecordMetadataInterface> e
 	public WritableRecord(Class<T> clazz, RecordBuffer buf) {
 		super(clazz, buf);
 		this.numOfBytes = buf.getRecordBufferSize();
+		readOnlyRecord = new ReadOnlyRecord<T>(clazz, buf);
 	}
 
 	/**
 	 * Update the value of the input field
+	 * 
+	 * TODO (Yan) support the deletion by making col null.
 	 * 
 	 * @param col the field of interest
 	 * @param val the new value of the concerned field
@@ -124,35 +126,15 @@ public final class WritableRecord<T extends Enum<T> & RecordMetadataInterface> e
 	@Override
 	public Object getValue(T col) {
 	
-		Field field = col.getField();
-		// when the column is sort-key or with 'hasRef' annotation 
-		if ((field.isDesSortKey() || field.isFrequentlyUsed()) && valueArray == null && this.buffer.getRecordBufferSize() > 0) {
-			FieldType type = field.getType();
-			ByteBuffer buf = buffer.getByteBuffer();
-			// find out the offset directly
-			int offset = field.isDesSortKey() ? 
-					getSortKeyOffset() :
-					getFieldWithReferenceOffset(col);
-			FieldValueOperatorInterface valueOpr = FieldValueOperatorFactory.getOperator(type);
-			if (type instanceof PrimitiveFieldType) {
-				PrimitiveType priType = ((PrimitiveFieldType) type).getType();
-				switch (priType) {
-				case STRING:
-					return valueOpr.getValue(buf, offset + 2, buf.getShort(offset));
-				case BINARY:
-					return valueOpr.getValue(buf, offset + 4, buf.getInt(offset));
-				default:
-					return valueOpr.getValue(buf, offset, valueOpr.getNumOfBytes(null));
-				}
-			} else if (type instanceof GroupFieldType || type instanceof CollectionFieldType) {
-				return valueOpr.getValue(buf, offset + 4, buf.getInt(offset));
-			} 
-		}
-		// for fields without 'hasRef' annotation, a full deserialization is applied
-		if (valueArray == null) {
-			initValueArray();
+		if (valueArray == null && readOnlyRecord == null && buffer != null) {
+			readOnlyRecord = new ReadOnlyRecord<T>(meta.getTableEnumClass(), buffer);
 		}
 		
+		if (readOnlyRecord != null) {
+			return readOnlyRecord.getValue(col);
+		}
+				
+		Field field = col.getField();
 		int id = field.getId() - 1; // note that id starts at 1.
  		Object result = valueArray != null && valueArray.length > id ? valueArray[id] : null;
 		if (result == null) { // never return NULL
@@ -217,7 +199,7 @@ public final class WritableRecord<T extends Enum<T> & RecordMetadataInterface> e
 				col.getField().getType() instanceof CollectionFieldType);
 		//2. read the size directly from the byte array with the offset
 		if (valueArray == null) {
-			return getCollectionSize(col);
+			return this.meta.getCollectionSize(col, this.buffer);
 		}
 		//3. read the size from the intermediate object array
 		int id = col.getField().getId() - 1;
@@ -229,90 +211,6 @@ public final class WritableRecord<T extends Enum<T> & RecordMetadataInterface> e
 	}
 	
 	
-	//////////////////////////////////////////////////////////////////////////
-	// private methods below
-	//////////////////////////////////////////////////////////////////////////
-	
-	/**
-	 * Get the offset of the field with 'hasRef' annotation.
-	 * 
-	 * @param col the field with 'hasRef' annotation
-	 * @return the offset of the field with 'hasRef' annotation.
-	 */
-	private int getFieldWithReferenceOffset(T col) {
-		
-		ByteBuffer byteBuffer = this.buffer.getByteBuffer();
-		int initOffset = 0;
-		
-		int id = col.getField().getId();
-		int length = byteBuffer.getShort(initOffset + 4);
-		if (length > 2) {
-
-			int offset = initOffset +  
-					4 + // version # + # of attributes
-					2 + // length of reference section
-					(this.meta.hasSortedKey() ? 4 : 0);
-
-			int numOfCollectionType = byteBuffer.get(offset);
-			offset += 1 + // the # of collection-type fields
-					4 * numOfCollectionType;
-
-			int refereceFieldNum = byteBuffer.get(offset);
-			offset += 1;
-			for (int i = 0; i < refereceFieldNum; ++i) {
-				if (id == byteBuffer.getShort(offset)) {
-					return byteBuffer.getInt(offset + 2);
-				}
-				offset += 2 + 4;
-			}
-		}
-		return -1;
-	}
-	
-	/**
-	 * Get the offset of the sort-key field in the record buffer
-	 * @param buffer the byte buffer storing the record
-	 * @param initOffset the starting position of the record
-	 * @return the offset of the sort-key field in the record buffer
-	 */
-	public int getSortKeyOffset() {
-		if (this.meta.hasSortedKey()) {
-			// 2 bytes for the length of the reference section
-			return this.buffer.getByteBuffer().getInt(4 + 2); 
-		} else {
-			return -1;
-		}
-	}
-	
-	/** 
-	 * Find out the size of the collection-type field in the record
-	 * @param col the collection-type field 
-	 * @param buffer the byte buffer storing the record
-	 * @param initOffset the starting position of the record in the record buffer
-	 * @return the size of the collection-type field in the record
-	 */
-	private int getCollectionSize(T col) {
-		ByteBuffer byteBuffer = this.buffer.getByteBuffer();
-		int initOffset = 0;
-		int id = col.getField().getId();
-		int seqenceNo = this.meta.getSequenceOfCollectionField(id);
-		if (seqenceNo >= 0) {
-			int offset = initOffset + 4 + 2 + (this.meta.hasSortedKey() ? 4 : 0);
-			int numOfCollectionsInRecord = byteBuffer.get(offset);
-			offset += 1; // for the number of collection-type fields
-
-			if (seqenceNo < numOfCollectionsInRecord) {
-				offset += 4 * seqenceNo; // the position of the reference
-				int valOffset = byteBuffer.getInt(offset);
-				if (valOffset > 0) {
-					return byteBuffer.getInt(valOffset + 4);
-				} 
-			} 
-		}
-		return 0;
-	}
-
-	
 	/**
 	 * Initiate the value array for all valid values in the record buffer.
 	 * 
@@ -321,6 +219,9 @@ public final class WritableRecord<T extends Enum<T> & RecordMetadataInterface> e
 	 * </p>
 	 */
 	private void initValueArray() {
+		// either readOnlyRecord or valueArray must be null
+		readOnlyRecord = null;
+		
 		if (buffer != null && this.buffer.getRecordBufferSize() > 0) {
 			constructValueArrayFromRecordBuffer();
 			if (buffer.getRecordBufferSize() > RESERVE_BUFFER_CAP) {
@@ -605,5 +506,78 @@ public final class WritableRecord<T extends Enum<T> & RecordMetadataInterface> e
 		this.numOfBytes = out.length;
 		this.buffer = new RecordBuffer();
 		this.buffer.wrap(out, 0, out.length);
+	}
+	
+	//////////////////////////////////////////////////////////////////////////
+	
+	public boolean getBool(T col) {
+		if (readOnlyRecord != null) {
+			return readOnlyRecord.getBool(col);
+		}
+		return (Boolean) getValue(col);
+	}
+
+	
+	public byte getByte(T col) {
+		if (readOnlyRecord != null) {
+			return readOnlyRecord.getByte(col);
+		}
+		return (Byte) getValue(col);
+	}
+
+	
+	public short getShort(T col) {
+		if (readOnlyRecord != null) {
+			return readOnlyRecord.getShort(col);
+		}
+		return (Short) getValue(col);
+	}
+
+	
+	public long getLong(T col) {
+		if (readOnlyRecord != null) {
+			return readOnlyRecord.getLong(col);
+		}
+		return (Long) getValue(col);
+	}
+
+	
+	public int getInt(T col) {
+		if (readOnlyRecord != null) {
+			return readOnlyRecord.getInt(col);
+		}
+		return (Integer) getValue(col);
+	}
+
+	
+	public float getFloat(T col) {
+		if (readOnlyRecord != null) {
+			return readOnlyRecord.getFloat(col);
+		}
+		return (Float) getValue(col);
+	}
+
+	
+	public double getDouble(T col) {
+		if (readOnlyRecord != null) {
+			return readOnlyRecord.getDouble(col);
+		}
+		return (Double) getValue(col);
+	}
+
+	
+	public byte[] getBinary(T col) {
+		if (readOnlyRecord != null) {
+			return readOnlyRecord.getBinary(col);
+		}
+		return (byte[]) getValue(col);
+	}
+
+	
+	public String getString(T col) {
+		if (readOnlyRecord != null) {
+			return readOnlyRecord.getString(col);
+		}
+		return (String) getValue(col);
 	}
 }

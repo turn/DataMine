@@ -20,8 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import junit.framework.Assert;
-
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -50,7 +49,7 @@ public class RecordTest {
 	@SuppressWarnings("rawtypes")
 	private List<Record> recordList = Lists.newArrayList();
 	private int testAupNum = 3;
-	
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@BeforeMethod
 	private void prepareRecord() {
@@ -61,7 +60,8 @@ public class RecordTest {
 		recordList.clear();
 		for (AnalyticalUserProfileInterface cur : testAupList) {
 			Record<AnalyticalUserProfileMetadata> record = (Record<AnalyticalUserProfileMetadata>) cur.getBaseObject();
-			recordList.add(new WritableRecord(AnalyticalUserProfileMetadata.class, record.getRecordBuffer()));
+			//			recordList.add(new WritableRecord(AnalyticalUserProfileMetadata.class, record.getRecordBuffer()));
+			recordList.add(new ReadOnlyRecord(AnalyticalUserProfileMetadata.class, record.getRecordBuffer()));
 		}
 		testRecord = recordList.get(0);
 	}
@@ -74,7 +74,7 @@ public class RecordTest {
 		testRecord.getValue(AnalyticalUserProfileMetadata.IMPRESSIONS);
 		Assert.assertEquals(testRecord.getNumOfBytes(), len);
 	}
-	
+
 	@Test
 	public void recordCreation() {
 		// create the record
@@ -108,15 +108,15 @@ public class RecordTest {
 		int impSize = aupRecord.getListSize(AnalyticalUserProfileMetadata.IMPRESSIONS);
 		int idSize = aupRecord.getListSize(AnalyticalUserProfileMetadata.TIME_LIST);
 		aupRecord.getValue(AnalyticalUserProfileMetadata.ID_MAPS);
-		
+
 		Assert.assertEquals(impSize, aup.getImpressionsSize());
 		Assert.assertEquals(idSize, aup.getTimeList().size());
-		
+
 		GroupFieldType gft = new GroupFieldType("AUP", AnalyticalUserProfileMetadata.class);
 		Assert.assertEquals(len, FieldValueOperatorFactory.getOperator(gft).getNumOfBytes(aupRecord));
 	}
-	
-	
+
+
 	@Test
 	public void getListSize() {
 		Assert.assertEquals(testAupNum, testAupList.size());
@@ -132,30 +132,32 @@ public class RecordTest {
 	@Test
 	public void getValue() {
 		Collections.sort(testAupList);
-		
+
 		Assert.assertTrue(testRecord.getValue(AnalyticalUserProfileMetadata.USER_ID) != null);		
-		
+
 		Assert.assertTrue((byte)testAupList.get(0).getVersion() >= (byte)testAupList.get(1).getVersion());
 		Assert.assertTrue((byte)testAupList.get(1).getVersion() >= (byte)testAupList.get(2).getVersion());
-		
+
 		@SuppressWarnings("unchecked")
 		List<Object> imps = (List<Object>) testRecord.getValue(AnalyticalUserProfileMetadata.IMPRESSIONS);
 		Assert.assertEquals(imps.size(), testAupNum);
-		
+
 		Assert.assertTrue(testRecord.getValue(AnalyticalUserProfileMetadata.OS_VERSION) instanceof String);
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test
 	public void setValue() {
-		testRecord.setValue(AnalyticalUserProfileMetadata.USER_ID, 123L);
-		Assert.assertEquals(testRecord.getValue(AnalyticalUserProfileMetadata.USER_ID), 123L);	
+		Record record = (Record) testAupList.get(0).getBaseObject();
+		record.setValue(AnalyticalUserProfileMetadata.USER_ID, 123L);
+		Assert.assertEquals(record.getValue(AnalyticalUserProfileMetadata.USER_ID), 123L);	
 	}
-	
+
 	@Test
 	public void assertAll() {
 		testAupData.assertObjects(testAupList);
 	}
-	
+
 	@Test
 	public void derivedFields() {
 		for (AnalyticalUserProfileInterface cur : testAupList) {
@@ -166,19 +168,68 @@ public class RecordTest {
 			Assert.assertEquals("Monday", cur.getDay());			
 		}
 	}
-		
-	
-//	@Test
+
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Test
 	public void testPerformance() {
-		for (int i=0; i<10000; ++i) {
-			prepareRecord();
-			getListSize();
-			prepareRecord();
-			getRecordBuffer();
-			prepareRecord();
-			getValue();
-			prepareRecord();
-			setValue();
+
+		int repeatNo = 1000000;
+		// get the record to test
+		RecordBuffer rb = testRecord.getRecordBuffer();
+		long start_ts = 0;
+
+		// ReadOnlyRecord
+		// warming up
+		for (int i=0; i<repeatNo; ++i) {
+			Record record = new ReadOnlyRecord(AnalyticalUserProfileMetadata.class, rb);
+			record.getLong(AnalyticalUserProfileMetadata.USER_ID);
+			record.getString(AnalyticalUserProfileMetadata.OS_VERSION);
 		}
+
+		// WritableRecord
+		// warming up
+		for (int i=0; i<repeatNo; ++i) {
+			Record record = new WritableRecord(AnalyticalUserProfileMetadata.class, rb);
+			record.getLong(AnalyticalUserProfileMetadata.USER_ID);
+			record.getString(AnalyticalUserProfileMetadata.OS_VERSION);
+		}
+
+
+		/// Start measuring
+
+		// ReadOnlyRecord
+		start_ts = System.nanoTime();
+		for (int i=0; i<repeatNo; ++i) {
+			Record record = new ReadOnlyRecord(AnalyticalUserProfileMetadata.class, rb);
+			record.getLong(AnalyticalUserProfileMetadata.USER_ID);
+		}
+		System.out.println("Ts for read-only-record reading (user_id): " + (System.nanoTime() - start_ts));
+
+		// 2. the other fields
+		start_ts = System.nanoTime();
+		for (int i=0; i<repeatNo; ++i) {
+			Record record = new ReadOnlyRecord(AnalyticalUserProfileMetadata.class, rb);
+			record.getString(AnalyticalUserProfileMetadata.OS_VERSION);
+		}
+		System.out.println("Ts for read-only-record reading (os_version): " + (System.nanoTime() - start_ts));
+
+		// WritableRecord
+		// 1. the field having its offset in the Reference Section
+		start_ts = System.nanoTime();
+		for (int i=0; i<repeatNo; ++i) {
+			Record record = new WritableRecord(AnalyticalUserProfileMetadata.class, rb);
+			record.getLong(AnalyticalUserProfileMetadata.USER_ID);
+		}
+		System.out.println("Ts for writable-record reading (user_id): " + (System.nanoTime() - start_ts));
+
+		// 2. the other fields
+		start_ts = System.nanoTime();
+		for (int i=0; i<repeatNo; ++i) {
+			Record record = new WritableRecord(AnalyticalUserProfileMetadata.class, rb);
+			record.getString(AnalyticalUserProfileMetadata.OS_VERSION);
+		}
+		System.out.println("Ts for writable-record reading (os_version): " + (System.nanoTime() - start_ts));
+
 	}
 }

@@ -92,13 +92,13 @@ public class AttributionResultRuleRecord implements AttributionResultRuleInterfa
     @Override
     public byte getRunNum() {
         
-        return (Byte) this.value.getValue(AttributionResultRuleMetadata.RUN_NUM);
+        return this.value.getByte(AttributionResultRuleMetadata.RUN_NUM);
     }
 
     @Override
     public String getValue() {
         
-        return (String) this.value.getValue(AttributionResultRuleMetadata.VALUE);
+        return this.value.getString(AttributionResultRuleMetadata.VALUE);
     }
 
 

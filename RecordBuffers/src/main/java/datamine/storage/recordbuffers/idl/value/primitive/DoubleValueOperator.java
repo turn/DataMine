@@ -47,9 +47,16 @@ final public class DoubleValueOperator extends AbstractPrimitiveValueOperator {
 
 	@Override
 	public Object getValue(ByteBuffer buf, int index, int length) {
-		if (index >= 0 && length > 0) {
-			return buf.getDouble(index);
-		} 
-		return null;
+		return getDouble(buf, index);
 	}
+	
+	@Override
+	public double getDouble(ByteBuffer buf, int index) {
+		if (index >= 0) {
+			return buf.getDouble(index);
+		} else {
+			throw new IllegalArgumentException("The negative index : " + index);
+		}
+	}
+	
 }

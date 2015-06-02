@@ -92,13 +92,13 @@ public class ProviderUserIdRecord implements ProviderUserIdInterface {
     @Override
     public byte getProviderType() {
         
-        return (Byte) this.value.getValue(ProviderUserIdMetadata.PROVIDER_TYPE);
+        return this.value.getByte(ProviderUserIdMetadata.PROVIDER_TYPE);
     }
 
     @Override
     public int getProviderId() {
         
-        return (Integer) this.value.getValue(ProviderUserIdMetadata.PROVIDER_ID);
+        return this.value.getInt(ProviderUserIdMetadata.PROVIDER_ID);
     }
 
 

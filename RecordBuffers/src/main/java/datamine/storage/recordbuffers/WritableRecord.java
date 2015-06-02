@@ -221,7 +221,6 @@ public class WritableRecord<T extends Enum<T> & RecordMetadataInterface> extends
 	private void initValueArray() {
 		// either readOnlyRecord or valueArray must be null
 		readOnlyRecord = null;
-		
 		if (buffer != null && this.buffer.getRecordBufferSize() > 0) {
 			constructValueArrayFromRecordBuffer();
 			if (buffer.getRecordBufferSize() > RESERVE_BUFFER_CAP) {

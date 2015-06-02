@@ -170,7 +170,7 @@ public class RecordTest {
 
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@Test
+//	@Test
 	public void testPerformance() {
 
 		int repeatNo = 1000000;

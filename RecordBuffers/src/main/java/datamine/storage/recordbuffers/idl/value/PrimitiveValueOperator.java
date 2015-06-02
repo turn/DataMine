@@ -34,7 +34,7 @@ import datamine.storage.recordbuffers.idl.value.primitive.StringValueOperator;
  * 
  * @author yqi
  */
-class PrimitiveValueOperator extends FieldValueOperatorHelper {
+class PrimitiveValueOperator implements FieldValueOperatorInterface {
 
 	private final FieldValueOperatorInterface valueOpr;
 	private final PrimitiveFieldType primitiveType;

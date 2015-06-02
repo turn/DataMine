@@ -44,7 +44,6 @@ final public class ByteValueOperator extends AbstractPrimitiveValueOperator {
 		return getByte(buf, index);
 	}
 	
-	@Override
 	public byte getByte(ByteBuffer buf, int index) {
 		if (index >= 0) {
 			return buf.get(index);

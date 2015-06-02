@@ -88,7 +88,6 @@ class RecordBufferMeta<T extends Enum<T> & RecordMetadataInterface> {
 	}
 
 	/**
-<<<<<<< HEAD
 	 * @return the ENUM defines the table schema
 	 */
 	public Class<T> getTableEnumClass() {
@@ -96,8 +95,6 @@ class RecordBufferMeta<T extends Enum<T> & RecordMetadataInterface> {
 	}
 	
 	/**
-=======
->>>>>>> 78f1d707a58a91c72e0198a9da460cf4da9bf918
 	 * Return the number of attributes defined in the table
 	 * @return the number of attributes defined in the table
 	 */

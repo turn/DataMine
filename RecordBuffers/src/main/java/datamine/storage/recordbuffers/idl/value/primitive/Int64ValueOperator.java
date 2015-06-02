@@ -45,7 +45,6 @@ final public class Int64ValueOperator extends AbstractPrimitiveValueOperator {
 		return getLong(buf, index);
 	}
 
-	@Override
 	public long getLong(ByteBuffer buf, int index) {
 		if (index >= 0) {
 			return buf.getLong(index);

@@ -48,7 +48,6 @@ final public class StringValueOperator extends AbstractPrimitiveValueOperator {
 		return getString(buf, index, length);
 	}
 	
-	@Override
 	public String getString(ByteBuffer buffer, int index, int length) {
 		if (index >= 0 && length >= 0) {
 			return new String(buffer.array(), index, length);			

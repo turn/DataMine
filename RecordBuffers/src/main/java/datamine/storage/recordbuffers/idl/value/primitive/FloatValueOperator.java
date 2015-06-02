@@ -49,7 +49,6 @@ final public class FloatValueOperator extends AbstractPrimitiveValueOperator {
 		return getFloat(buf, index);
 	}
 	
-	@Override
 	public float getFloat(ByteBuffer buf, int index) {
 		if (index >= 0) {
 			return buf.getFloat(index);

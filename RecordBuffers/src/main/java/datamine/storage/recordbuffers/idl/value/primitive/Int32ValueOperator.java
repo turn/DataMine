@@ -45,7 +45,6 @@ final public class Int32ValueOperator extends AbstractPrimitiveValueOperator {
 		return getInt(buf, index);
 	}
 	
-	@Override
 	public int getInt(ByteBuffer buf, int index) {
 		if (index >= 0) {
 			return buf.getInt(index);

@@ -45,7 +45,6 @@ final public class BooleanValueOperator extends AbstractPrimitiveValueOperator {
 		return getBool(buf, index);
 	}
 	
-	@Override
 	public boolean getBool(ByteBuffer buf, int index) {
 		if (index >= 0) {
 			byte val = buf.get(index);

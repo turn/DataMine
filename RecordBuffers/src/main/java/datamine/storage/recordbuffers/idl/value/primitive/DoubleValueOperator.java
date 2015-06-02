@@ -50,7 +50,6 @@ final public class DoubleValueOperator extends AbstractPrimitiveValueOperator {
 		return getDouble(buf, index);
 	}
 	
-	@Override
 	public double getDouble(ByteBuffer buf, int index) {
 		if (index >= 0) {
 			return buf.getDouble(index);

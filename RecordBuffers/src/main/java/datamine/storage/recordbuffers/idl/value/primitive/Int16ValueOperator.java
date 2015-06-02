@@ -45,7 +45,6 @@ final public class Int16ValueOperator extends AbstractPrimitiveValueOperator {
 		return getShort(buf, index);
 	}
 	
-	@Override
 	public short getShort(ByteBuffer buf, int index) {
 		if (index >= 0) {
 			return buf.getShort(index);

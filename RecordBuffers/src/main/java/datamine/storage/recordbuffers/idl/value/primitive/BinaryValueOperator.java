@@ -48,7 +48,6 @@ final public class BinaryValueOperator extends AbstractPrimitiveValueOperator {
 		return getBinary(buf, index, length);
 	}
 	
-	@Override
 	public byte[] getBinary(ByteBuffer buf, int index, int length) {
 		if (index >= 0 && length >= 0) {
 			byte[] bVal = new byte[length];

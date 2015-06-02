@@ -38,7 +38,7 @@ import datamine.storage.idl.type.PrimitiveType;
  * 
  * @author yqi
  */
-class CollectionValueOperator extends FieldValueOperatorHelper {
+class CollectionValueOperator implements FieldValueOperatorInterface {
 
 	private static final Logger LOG = LoggerFactory.getLogger(
 			CollectionValueOperator.class);

@@ -53,19 +53,6 @@ public interface FieldValueOperatorInterface {
 	public Object getValue(ByteBuffer buffer, int index, int length);
 	
 	/**
-	 * The following getters define the approach to get the primitive as it is
-	 */
-	public boolean getBool(ByteBuffer buffer, int index);
-	public byte getByte(ByteBuffer buffer, int index);
-	public short getShort(ByteBuffer buffer, int index);
-	public long getLong(ByteBuffer buffer, int index);
-	public int getInt(ByteBuffer buffer, int index);
-	public float getFloat(ByteBuffer buffer, int index);
-	public double getDouble(ByteBuffer buffer, int index);
-	public byte[] getBinary(ByteBuffer buffer, int index, int length);
-	public String getString(ByteBuffer buffer, int index, int length);
-	
-	/**
 	 * Get the number of bytes used by the input
 	 * @param val the input object
 	 * @return the number of bytes used by the input

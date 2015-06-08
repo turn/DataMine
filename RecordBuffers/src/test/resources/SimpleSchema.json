@@ -51,6 +51,7 @@
         {"id": 5,"name": "impressions",            "type": "List:impression"},
         {"id": 6,"name": "id_maps",                "type": "id_map"},
 		{"id": 7, "name": "time_list",     "type": "List:Integer"},
+		{"id": 8, "name": "data",     "type": "Binary"},
 		{"id": 0, "name": "day",     "type": "String", "isDerived": true, "default": "Unknown"}
       ]
     }

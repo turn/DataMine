@@ -32,6 +32,7 @@ public interface AnalyticalUserProfileInterface extends BaseInterface , Comparab
 		public List<ImpressionInterface> getImpressions();
 		public IdMapInterface getIdMaps();
 		public List<Integer> getTimeList();
+		public byte[] getData();
 		public String getDay();
 
 		public void setUserId(long input);
@@ -41,6 +42,7 @@ public interface AnalyticalUserProfileInterface extends BaseInterface , Comparab
 		public void setImpressions(List<ImpressionInterface> input);
 		public void setIdMaps(IdMapInterface input);
 		public void setTimeList(List<Integer> input);
+		public void setData(byte[] input);
 
 		public long getUserIdDefaultValue();
 		public byte getVersionDefaultValue();

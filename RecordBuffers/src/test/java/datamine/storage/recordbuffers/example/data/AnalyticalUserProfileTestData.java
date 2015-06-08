@@ -75,6 +75,10 @@ public class AnalyticalUserProfileTestData extends AbstractTestData<AnalyticalUs
 				record.setTimeList((List) cur.get(AnalyticalUserProfileMetadata.TIME_LIST));
 			}
 
+			if (cur.containsKey(AnalyticalUserProfileMetadata.DATA)) {
+				record.setData((byte[]) cur.get(AnalyticalUserProfileMetadata.DATA));
+			}
+
 			records.add(record);
 		}
 		return records;
@@ -112,6 +116,10 @@ public class AnalyticalUserProfileTestData extends AbstractTestData<AnalyticalUs
 
 			if (data.get(i).containsKey(AnalyticalUserProfileMetadata.TIME_LIST)) {
 				Assert.assertEquals((List) objectList.get(i).getTimeList(), data.get(i).get(AnalyticalUserProfileMetadata.TIME_LIST));
+			}
+
+			if (data.get(i).containsKey(AnalyticalUserProfileMetadata.DATA)) {
+				Assert.assertEquals(objectList.get(i).getData(), data.get(i).get(AnalyticalUserProfileMetadata.DATA));
 			}
 
 			if (data.get(i).containsKey(AnalyticalUserProfileMetadata.DAY)) {
@@ -172,6 +180,13 @@ public class AnalyticalUserProfileTestData extends AbstractTestData<AnalyticalUs
 				Object val = RandomValueGenerator.getValueArrayOf(((PrimitiveFieldType) ((CollectionFieldType)AnalyticalUserProfileMetadata.TIME_LIST.getField().getType()).getElementType()).getType(), num);
 				if (val != null && !((List) val).isEmpty()) {
 					dataMap.put(AnalyticalUserProfileMetadata.TIME_LIST, val);
+				}
+			}
+
+			{
+				Object val = RandomValueGenerator.getValueOf(((PrimitiveFieldType)AnalyticalUserProfileMetadata.DATA.getField().getType()).getType());
+				if (val != null) {
+					dataMap.put(AnalyticalUserProfileMetadata.DATA, val);
 				}
 			}
 

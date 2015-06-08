@@ -139,7 +139,7 @@ public class InterfaceGenerator implements CodeGenerator, ElementVisitor {
 		}
 		
 		//generate getDefault function only for primitive field
-		if (type instanceof PrimitiveFieldType) {
+		if (type instanceof PrimitiveFieldType && ((PrimitiveFieldType) type).getType() != PrimitiveType.BINARY) {
 			currentTemplate.fillFields("fieldDefaultValue", 
 					templateGenerator.getDefaultValueTemplate());
 		}

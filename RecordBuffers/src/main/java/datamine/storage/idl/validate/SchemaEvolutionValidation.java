@@ -28,6 +28,7 @@ import datamine.storage.idl.Schema;
 import datamine.storage.idl.Table;
 import datamine.storage.idl.Field.Constraint;
 import datamine.storage.idl.type.PrimitiveFieldType;
+import datamine.storage.idl.type.PrimitiveType;
 import datamine.storage.idl.validate.exceptions.AbstractValidationException;
 import datamine.storage.idl.validate.exceptions.FieldConstraintModifiedInSchemaEvolutionException;
 import datamine.storage.idl.validate.exceptions.FieldDefaultValueModifiedInSchemaEvolutionException;
@@ -114,7 +115,7 @@ public class SchemaEvolutionValidation implements ValidateInterface<Schema> {
 		
 		//2.1 ensure all fields in the current table do exist still
 		if (fieldsInCurrentTable.size() > fieldsInNextTable.size()) {
-			throw new FieldDeletionInSchemaEvolutionException("Some");
+			throw new FieldDeletionInSchemaEvolutionException("Some old fields");
 		}
 		
 		for (Field cur : fieldsInCurrentTable) {
@@ -171,11 +172,9 @@ public class SchemaEvolutionValidation implements ValidateInterface<Schema> {
 
 		// check the default value
 		if (!current.isRequired() && current.getType() instanceof PrimitiveFieldType &&
+			((PrimitiveFieldType) current.getType()).getType() != PrimitiveType.BINARY && 
 			!current.getDefaultValue().equals(next.getDefaultValue())) {
 			throw new FieldDefaultValueModifiedInSchemaEvolutionException(current.getName());
 		}
-			
-		
 	}
-	
 }

@@ -15,6 +15,10 @@
  */
 package datamine.storage.idl.json;
 
+import org.apache.commons.lang3.ArrayUtils;
+
+import com.google.common.collect.Lists;
+
 /**
  * The ENUM defines all types in the JSON schema. 
  * 
@@ -22,7 +26,7 @@ package datamine.storage.idl.json;
  * @date Dec 11, 2014
  */
 public enum JsonFieldType {
-	
+
 	Boolean("Boolean", true) {
 		@Override
 		Object parseValue(java.lang.String valueStr) {
@@ -71,30 +75,51 @@ public enum JsonFieldType {
 			return valueStr;
 		}
 	},
+	Binary("Binary", true) {
+		@Override
+		Object parseValue(java.lang.String valueStr) {
+			// verify the input
+			if (!valueStr.startsWith("[") || !valueStr.endsWith("]")) {
+				throw new IllegalArgumentException("A value of binary should start "
+						+ "with '[' and end with ']', e.g., [2, 3]");
+			}
+			// convert the input into a value
+			String[] byteValues = valueStr.substring(1, valueStr.length() - 1).split(",");
+			java.util.List<Byte> list = Lists.newArrayList();
+
+			for (String cur : byteValues) {
+				if (cur.trim().isEmpty()) {
+					continue;
+				}
+				list.add(java.lang.Byte.parseByte(cur.trim()));
+			}
+			return ArrayUtils.toPrimitive(list.toArray(new Byte[list.size()]));
+		}
+	},
 	Struct("Struct", false) {
 		@Override
 		Object parseValue(java.lang.String valueStr) {
-			return valueStr;
+			throw new IllegalAccessError("Conversion from String to Struct is not supported!");
 		}
 	},
 	List("List", false) {
 		@Override
 		Object parseValue(java.lang.String valueStr) {
-			return valueStr;
+			throw new IllegalAccessError("Conversion from String to List is not supported!");
 		}
 	};
-	
+
 	static final String JSON_LIST_ELEMENT_TYPE_DELIMITER = ":";
 	String name;
 	boolean isPrimitive;
-	
+
 	private JsonFieldType(String name, boolean isPrimitive) {
 		this.name = name;
 		this.isPrimitive = isPrimitive;
 	}
-	
+
 	abstract Object parseValue(String valueStr);
-	
+
 	/**
 	 * Get the corresponding type given a text input. 
 	 * <p>
@@ -117,7 +142,7 @@ public enum JsonFieldType {
 			return JsonFieldType.Struct;
 		}
 	}
-		
+
 	/**
 	 * Return the JSON field type of the element in a LIST structure.
 	 * @param name the text representation of a JSON LIST type. 
@@ -126,7 +151,7 @@ public enum JsonFieldType {
 	public static JsonFieldType getElementTypeInList(String name) {
 		return getType(getElementTypeNameInList(name));
 	}
-	
+
 	/**
 	 * Get the type name of the element in a LIST structure.
 	 * @param name the text representation of a JSON LIST type.

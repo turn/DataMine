@@ -28,4 +28,27 @@ public class JsonFieldTypeTest {
 		Assert.assertEquals(JsonFieldType.getElementTypeInList(type),
 				JsonFieldType.Struct);
 	}
+	
+	@Test
+	public void getBinaryDefault() {
+		String value = "[]";
+		byte[] result = (byte[]) JsonFieldType.Binary.parseValue(value);
+		Assert.assertEquals(result.length, 0);
+		
+		value = "[2, 3]";
+		result = (byte[]) JsonFieldType.Binary.parseValue(value);
+		Assert.assertEquals(result.length, 2);
+	}
+	
+	@Test (expectedExceptions=IllegalAccessError.class)
+	public void parseString2Struct() {
+		String value = "qw2asfq245";
+		JsonFieldType.Struct.parseValue(value);
+	}
+	
+	@Test (expectedExceptions=IllegalAccessError.class)
+	public void parseString2List() {
+		String value = "qw2asfq245";
+		JsonFieldType.List.parseValue(value);
+	}
 }

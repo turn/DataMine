@@ -58,6 +58,8 @@ public class AnalyticalUserProfileInterfaceConvertor implements UnaryOperatorInt
 		}
 		output.setTimeList(input.getTimeList());
 
+		output.setData(input.getData());
+
 
 		return output;
 	}

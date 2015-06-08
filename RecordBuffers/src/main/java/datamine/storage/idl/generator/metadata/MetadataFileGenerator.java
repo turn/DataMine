@@ -159,7 +159,8 @@ public class MetadataFileGenerator implements ElementVisitor,
 		
 		FieldType type = field.getType();
 		// the field does not have the default unless it is optional and primitive
-		if (field.isRequired() || !(type instanceof PrimitiveFieldType)) {
+		if (field.isRequired() || !(type instanceof PrimitiveFieldType) ||
+			(type instanceof PrimitiveFieldType && ((PrimitiveFieldType)type).getType() == PrimitiveType.BINARY)) {
 			sb.append("null"); // default value
 			
 		} else {

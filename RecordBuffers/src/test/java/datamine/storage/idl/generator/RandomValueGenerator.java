@@ -19,9 +19,9 @@ import java.util.List;
 import java.util.Random;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.testng.collections.Lists;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 
 import datamine.storage.idl.type.PrimitiveType;
 
@@ -60,7 +60,7 @@ public class RandomValueGenerator {
 		case STRING:
 			return "abasf_"+System.currentTimeMillis();//rand2.random(256);
 		case BINARY:
-			byte[] ret = new byte[(Integer) getValueOf(PrimitiveType.INT32)];
+			byte[] ret = new byte[1000];
 			rand1.nextBytes(ret);
 			return ret;
 		case UNKNOWN:

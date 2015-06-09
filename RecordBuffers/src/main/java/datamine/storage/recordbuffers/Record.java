@@ -25,7 +25,25 @@ import datamine.storage.api.RecordMetadataInterface;
  * @author yqi
  */
 public abstract class Record<T extends Enum<T> & RecordMetadataInterface> {
-		
+	
+	/**
+	 * Static members for the performance profiling
+	 */
+	protected static final boolean IS_DEBUG_ENABLED = true;
+	protected static int recursionLevel = 0;
+	protected static long readingTimeCostMiliSeconds = 0;
+	
+	public static void clearTimeCostCounter() {
+		if (IS_DEBUG_ENABLED) {
+			recursionLevel = 0;
+			readingTimeCostMiliSeconds = 0;
+		}
+	}
+	
+	public static long getTimeCostInMilliSecond() {
+		return readingTimeCostMiliSeconds;
+	}
+	
 	/**
 	 * The storage metadata about the recordbuffer is final
 	 */

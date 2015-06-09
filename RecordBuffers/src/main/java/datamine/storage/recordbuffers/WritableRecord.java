@@ -126,6 +126,14 @@ public class WritableRecord<T extends Enum<T> & RecordMetadataInterface> extends
 	@Override
 	public Object getValue(T col) {
 	
+		long ts = 0;
+		if (IS_DEBUG_ENABLED) {
+			if (recursionLevel == 0) {
+				ts = System.currentTimeMillis();
+			}
+			recursionLevel++;
+		}
+		
 		if (valueArray == null && readOnlyRecord == null && buffer != null) {
 			readOnlyRecord = new ReadOnlyRecord<T>(meta.getTableEnumClass(), buffer);
 		}
@@ -137,6 +145,14 @@ public class WritableRecord<T extends Enum<T> & RecordMetadataInterface> extends
 		Field field = col.getField();
 		int id = field.getId() - 1; // note that id starts at 1.
  		Object result = valueArray != null && valueArray.length > id ? valueArray[id] : null;
+ 		
+ 		if (IS_DEBUG_ENABLED) {
+ 			recursionLevel--;
+			if (recursionLevel == 0) {
+				readingTimeCostMiliSeconds += System.currentTimeMillis() - ts;
+			} 
+		}
+ 		
 		if (result == null) { // never return NULL
 			return col.getField().getDefaultValue();
 		} else {

@@ -109,6 +109,14 @@ public class ReadOnlyRecord<T extends Enum<T> & RecordMetadataInterface> extends
 	@Override
 	public Object getValue(T col) {
 	
+		long ts = 0;
+		if (IS_DEBUG_ENABLED) {
+			if (recursionLevel == 0) {
+				ts = System.currentTimeMillis();
+			}
+			recursionLevel++;
+		}
+		
 		Field field = col.getField();
 		FieldType type = field.getType();
 		FieldValueOperatorInterface valueOpr = FieldValueOperatorFactory.getOperator(type);
@@ -131,6 +139,13 @@ public class ReadOnlyRecord<T extends Enum<T> & RecordMetadataInterface> extends
 			result = valueOpr.getValue(buf, offset + 4, buf.getInt(offset));
 		} 
 		
+		if (IS_DEBUG_ENABLED) {
+			recursionLevel--;
+			if (recursionLevel == 0) {
+				readingTimeCostMiliSeconds += System.currentTimeMillis() - ts;
+			} 
+		}
+		
 		// never return NULL
 		if (result == null) { 
 			return col.getField().getDefaultValue();
@@ -140,97 +155,260 @@ public class ReadOnlyRecord<T extends Enum<T> & RecordMetadataInterface> extends
 	}
 	
 	public boolean getBool(T col) {
-		int offset = getOffset(col);
-		if (offset > 0) {
-			return buffer.getByteBuffer().get(offset) == 1 ? true : false;
-		} else {
-			return (Boolean) col.getField().getDefaultValue();
+		
+		long ts = 0;
+		if (IS_DEBUG_ENABLED) {
+			if (recursionLevel == 0) {
+				ts = System.currentTimeMillis();
+			}
+			recursionLevel++;
 		}
+		
+		int offset = getOffset(col);
+		boolean result;
+		if (offset > 0) {
+			result = buffer.getByteBuffer().get(offset) == 1 ? true : false;
+		} else {
+			result = (Boolean) col.getField().getDefaultValue();
+		}
+		
+		if (IS_DEBUG_ENABLED) {
+			recursionLevel--;
+			if (recursionLevel == 0) {
+				readingTimeCostMiliSeconds += System.currentTimeMillis() - ts;
+			} 
+		}
+		
+		return result;
 	}
 
 	
 	public byte getByte(T col) {
-		int offset = getOffset(col);
-		if (offset > 0) {
-			return buffer.getByteBuffer().get(offset);
-		} else {
-			return (Byte) col.getField().getDefaultValue();
+		long ts = 0;
+		if (IS_DEBUG_ENABLED) {
+			if (recursionLevel == 0) {
+				ts = System.currentTimeMillis();
+			}
+			recursionLevel++;
 		}
+		
+		int offset = getOffset(col);
+		byte result;
+		if (offset > 0) {
+			result = buffer.getByteBuffer().get(offset);
+		} else {
+			result = (Byte) col.getField().getDefaultValue();
+		}
+		
+		if (IS_DEBUG_ENABLED) {
+			recursionLevel--;
+			if (recursionLevel == 0) {
+				readingTimeCostMiliSeconds += System.currentTimeMillis() - ts;
+			} 
+		}
+		
+		return result;
 	}
 
 	
 	public short getShort(T col) {
-		int offset = getOffset(col);
-		if (offset > 0) {
-			return buffer.getByteBuffer().getShort(offset);
-		} else {
-			return (Short) col.getField().getDefaultValue();
+		long ts = 0;
+		if (IS_DEBUG_ENABLED) {
+			if (recursionLevel == 0) {
+				ts = System.currentTimeMillis();
+			}
+			recursionLevel++;
 		}
+		
+		int offset = getOffset(col);
+		short result;
+		if (offset > 0) {
+			result = buffer.getByteBuffer().getShort(offset);
+		} else {
+			result = (Short) col.getField().getDefaultValue();
+		}
+		
+		if (IS_DEBUG_ENABLED) {
+			recursionLevel--;
+			if (recursionLevel == 0) {
+				readingTimeCostMiliSeconds += System.currentTimeMillis() - ts;
+			} 
+		}
+		
+		return result;
 	}
 
 	
 	public long getLong(T col) {
-		int offset = getOffset(col);
-		if (offset > 0) {
-			return buffer.getByteBuffer().getLong(offset);
-		} else {
-			return (Long) col.getField().getDefaultValue();
+		long ts = 0;
+		if (IS_DEBUG_ENABLED) {
+			if (recursionLevel == 0) {
+				ts = System.currentTimeMillis();
+			}
+			recursionLevel++;
 		}
+		
+		int offset = getOffset(col);
+		long result;
+		if (offset > 0) {
+			result = buffer.getByteBuffer().getLong(offset);
+		} else {
+			result = (Long) col.getField().getDefaultValue();
+		}
+		
+		if (IS_DEBUG_ENABLED) {
+			recursionLevel--;
+			if (recursionLevel == 0) {
+				readingTimeCostMiliSeconds += System.currentTimeMillis() - ts;
+			} 
+		}
+		
+		return result;
 	}
 
 	
 	public int getInt(T col) {
-		int offset = getOffset(col);
-		if (offset > 0) {
-			return buffer.getByteBuffer().getInt(offset);
-		} else {
-			return (Integer) col.getField().getDefaultValue();
+		long ts = 0;
+		if (IS_DEBUG_ENABLED) {
+			if (recursionLevel == 0) {
+				ts = System.currentTimeMillis();
+			}
+			recursionLevel++;
 		}
+		
+		int offset = getOffset(col);
+		int result;
+		if (offset > 0) {
+			result = buffer.getByteBuffer().getInt(offset);
+		} else {
+			result = (Integer) col.getField().getDefaultValue();
+		}
+		
+		if (IS_DEBUG_ENABLED) {
+			recursionLevel--;
+			if (recursionLevel == 0) {
+				readingTimeCostMiliSeconds += System.currentTimeMillis() - ts;
+			} 
+		}
+		
+		return result;
 	}
 
 	
 	public float getFloat(T col) {
-		int offset = getOffset(col);
-		if (offset > 0) {
-			return buffer.getByteBuffer().getFloat(offset);
-		} else {
-			return (Float) col.getField().getDefaultValue();
+		long ts = 0;
+		if (IS_DEBUG_ENABLED) {
+			if (recursionLevel == 0) {
+				ts = System.currentTimeMillis();
+			}
+			recursionLevel++;
 		}
+		
+		int offset = getOffset(col);
+		float result;
+		if (offset > 0) {
+			result = buffer.getByteBuffer().getFloat(offset);
+		} else {
+			result = (Float) col.getField().getDefaultValue();
+		}
+		
+		if (IS_DEBUG_ENABLED) {
+			recursionLevel--;
+			if (recursionLevel == 0) {
+				readingTimeCostMiliSeconds += System.currentTimeMillis() - ts;
+			} 
+		}
+		
+		return result;
 	}
 
 	
 	public double getDouble(T col) {
-		int offset = getOffset(col);
-		if (offset > 0) {
-			return buffer.getByteBuffer().getDouble(offset);
-		} else {
-			return (Double) col.getField().getDefaultValue();
+		long ts = 0;
+		if (IS_DEBUG_ENABLED) {
+			if (recursionLevel == 0) {
+				ts = System.currentTimeMillis();
+			}
+			recursionLevel++;
 		}
+		
+		int offset = getOffset(col);
+		double result;
+		if (offset > 0) {
+			result = buffer.getByteBuffer().getDouble(offset);
+		} else {
+			result = (Double) col.getField().getDefaultValue();
+		}
+		
+		if (IS_DEBUG_ENABLED) {
+			recursionLevel--;
+			if (recursionLevel == 0) {
+				readingTimeCostMiliSeconds += System.currentTimeMillis() - ts;
+			} 
+		}
+		
+		return result;
 	}
 
 	
 	public byte[] getBinary(T col) {
+		long ts = 0;
+		if (IS_DEBUG_ENABLED) {
+			if (recursionLevel == 0) {
+				ts = System.currentTimeMillis();
+			}
+			recursionLevel++;
+		}
+		
 		int offset = getOffset(col);
+		byte[] result;
 		if (offset > 0) {
 			int length = buffer.getByteBuffer().getInt(offset);
 			byte[] out = new byte[length];
 			byte[] src = buffer.getByteBuffer().array();
 			System.arraycopy(src, offset + 4, out, 0, length);
-			return out;
+			result = out;
 		} else {
-			return (byte[]) col.getField().getDefaultValue();
+			result = (byte[]) col.getField().getDefaultValue();
 		}
+		
+		if (IS_DEBUG_ENABLED) {
+			recursionLevel--;
+			if (recursionLevel == 0) {
+				readingTimeCostMiliSeconds += System.currentTimeMillis() - ts;
+			} 
+		}
+		
+		return result;
 	}
 
 	
 	public String getString(T col) {
+		long ts = 0;
+		if (IS_DEBUG_ENABLED) {
+			if (recursionLevel == 0) {
+				ts = System.currentTimeMillis();
+			}
+			recursionLevel++;
+		}
+		
 		int offset = getOffset(col);
+		String result;
 		if (offset > 0) {
 			int length = buffer.getByteBuffer().getShort(offset);
-			return new String(buffer.getByteBuffer().array(), offset + 2, length);
+			result = new String(buffer.getByteBuffer().array(), offset + 2, length);
 		} else {
-			return (String) col.getField().getDefaultValue();
+			result = (String) col.getField().getDefaultValue();
 		}
+		
+		if (IS_DEBUG_ENABLED) {
+			recursionLevel--;
+			if (recursionLevel == 0) {
+				readingTimeCostMiliSeconds += System.currentTimeMillis() - ts;
+			} 
+		}
+		
+		return result;
 	}
 	
 	/**

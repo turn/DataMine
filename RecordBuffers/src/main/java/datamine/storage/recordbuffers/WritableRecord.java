@@ -269,7 +269,7 @@ public class WritableRecord<T extends Enum<T> & RecordMetadataInterface> extends
 					case STRING:
 						// string requires a SHORT to store its length (max < 32k)
 						short arrayLength = bytebuffer.getShort(offset);
-						if (arrayLength > 0) {
+						if (arrayLength >= 0) {
 							valueArray[id] = valueOpr.getValue(bytebuffer, offset + 2, arrayLength);
 							offset += 2 + arrayLength;	
 						}
@@ -277,7 +277,7 @@ public class WritableRecord<T extends Enum<T> & RecordMetadataInterface> extends
 					case BINARY:
 						// other types require a INT to store its length info
 						int arrayLength2 = bytebuffer.getInt(offset);
-						if (arrayLength2 > 0) {
+						if (arrayLength2 >= 0) {
 							valueArray[id] = valueOpr.getValue(bytebuffer, offset + 4, arrayLength2);
 							offset += 4 + arrayLength2;	
 						}
@@ -411,7 +411,7 @@ public class WritableRecord<T extends Enum<T> & RecordMetadataInterface> extends
 							!curField.equalToDefaultValue(val)) {
 
 						byte[] byteArray = valOpr.getByteArray(val);
-						if (byteArray.length > 0) {
+						if (byteArray.length >= 0) { // a dummy '0' must be written even if it has no value
 
 							hasValidValue = true;
 

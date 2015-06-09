@@ -19,11 +19,9 @@ import org.testng.annotations.Test;
 
 import datamine.storage.idl.Schema;
 import datamine.storage.idl.json.JsonSchemaConvertor;
-import datamine.storage.idl.validate.SchemaValidation;
 import datamine.storage.idl.validate.exceptions.AbstractValidationException;
 import datamine.storage.idl.validate.exceptions.IdentityDuplicationException;
 import datamine.storage.idl.validate.exceptions.IllegalDerivedFieldException;
-import datamine.storage.idl.validate.exceptions.IllegalFieldDefaultValueException;
 import datamine.storage.idl.validate.exceptions.IllegalFieldIdentityException;
 import datamine.storage.idl.validate.exceptions.IllegalNamingConversionException;
 import datamine.storage.idl.validate.exceptions.IllegalTableVersionException;
@@ -90,7 +88,7 @@ public class SchemaValidationTest {
 	
 	@Test(expectedExceptions = IllegalDerivedFieldException.class)
 	public void checkDerivedFieldMustBePrimitive() throws AbstractValidationException {
-		String json_str = "{\n  \"schema\": \"simple_schema\",\n  \"table_list\": [\n    {\n      \"table\": \"attribution_result_rule\",\n      \"fields\": [\n        {\"id\": 1,\"name\": \"run_num\",    \"type\": \"Byte\",   \"isRequired\": true},\n        {\"id\": 2,\"name\": \"value\",      \"type\": \"String\", \"isRequired\": true, \"isAscSortKey\": true},\n        {\"id\": 0,\"name\": \"key\",      \"type\": \"List:Integer\", \"default\": \"Unknown\", \"isDerived\": true}\n      ]\n    }\n    ]\n}";
+		String json_str = "{\n  \"schema\": \"simple_schema\",\n  \"table_list\": [\n    {\n      \"table\": \"attribution_result_rule\",\n      \"fields\": [\n        {\"id\": 1,\"name\": \"run_num\",    \"type\": \"Byte\",   \"isRequired\": true},\n        {\"id\": 2,\"name\": \"value\",      \"type\": \"String\", \"isRequired\": true, \"isAscSortKey\": true},\n        {\"id\": 0,\"name\": \"key\",      \"type\": \"List:Integer\", \"isDerived\": true}\n      ]\n    }\n    ]\n}";
 		Schema schema = new JsonSchemaConvertor().apply(json_str);
 		new SchemaValidation().check(schema);
 	}

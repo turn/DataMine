@@ -21,6 +21,7 @@ import datamine.storage.idl.Field;
 import datamine.storage.idl.Field.Constraint;
 import datamine.storage.idl.type.FieldType;
 import datamine.storage.idl.type.PrimitiveFieldType;
+import datamine.storage.idl.type.PrimitiveType;
 import datamine.storage.idl.validate.exceptions.AbstractValidationException;
 import datamine.storage.idl.validate.exceptions.IllegalDerivedFieldException;
 import datamine.storage.idl.validate.exceptions.IllegalFieldDefaultValueException;
@@ -82,11 +83,15 @@ class FieldValidation implements ValidateInterface<Field> {
 		// validate its type and default value
 		Object defaultVal = input.getDefaultValue();
 		
-		if (type instanceof PrimitiveFieldType && !input.isRequired()) {
+		if (type instanceof PrimitiveFieldType && 
+			((PrimitiveFieldType) type).getType() != PrimitiveType.BINARY && 
+			!input.isRequired()) {
+			
 			if (!FieldValueOperatorFactory.getOperator(type).isValid(defaultVal)) {
 				throw new IllegalFieldDefaultValueException(
 						fieldName, defaultVal + " is not valid!");
 			}
+			
 		} else {
 			if (defaultVal != null) {
 				throw new IllegalFieldDefaultValueException(

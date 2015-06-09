@@ -48,9 +48,74 @@ public class SchemaEvolutionValidationTest {
 		validate.check(nextSchema);
 	}
 	
+	/**
+	 * The exception is thrown out from datamine.storage.idl.json.JsonSchemaConvertor
+	 * 
+	 * @throws AbstractValidationException
+	 */
 	@Test(expectedExceptions = IllegalArgumentException.class)
 	public void checkNextSchema() throws AbstractValidationException {
-		String json_schema = "{\n  \"schema\": \"simple_schema\",\n  \"table_list\": [\n    {\n      \"table\": \"attribution_result_rule\",\n      \"fields\": [\n        {\"id\": 1,\"name\": \"run_num\",    \"type\": \"Byte\",   \"isRequired\": true},\n        {\"id\": 2,\"name\": \"value\",      \"type\": \"String\", \"default\": \"Unknown\"}\n      ]\n    },\n    {\n      \"table\": \"attribution_result\",\n      \"fields\": [\n        {\"id\": 1,\"name\": \"id\",\"type\": \"Integer\",\"isRequired\": true},\n        {\"id\": 2,\"name\": \"rules\",      \"type\": \"List:attribution_result_rule\", \"isRequired\": true}\n      ]\n    },\n    {\n      \"table\": \"impression\",\n      \"fields\": [\n        {\"id\": 1, \"name\": \"media_provider_id\", \"type\": \"Integer\",\"isRequired\": true},\n        {\"id\": 2,\"name\": \"mp_tpt_category_id\",\"type\": \"Short\",  \"default\": \"-1\"},\n        {\"id\": 3,\"name\": \"truncated_url\",     \"type\": \"String\", \"default\": \"Unknown\"},\n        {\"id\": 4,\"name\": \"bid\",         \"type\": \"Boolean\",  \"default\": \"true\"},\n        {\"id\": 5,\"name\": \"bid_type\",          \"type\": \"Byte\",   \"default\": \"-1\"},\n        {\"id\": 6,\"name\": \"attribution_results\",\"type\": \"List:attribution_result\"},\n        {\"id\": 7,\"name\": \"allowed_ad_formats\",\"type\": \"Long\",   \"default\": \"-1\"},\n\t\t{\"id\": 8,\"name\": \"cost\",\"type\": \"Double\",   \"default\": \"0\"}\n\t\t]\n    },\n    {\n      \"table\": \"provider_user_id\",\n      \"fields\": [\n        {\"id\": 1,\"name\": \"provider_type\",          \"type\": \"Byte\",   \"isRequired\": true},\n        {\"id\": 2,\"name\": \"provider_id\",            \"type\": \"Integer\",\"isRequired\": true}\n      ]\n    },\n    {\n      \"table\": \"analytical_user_profile\",\n      \"fields\": [\n        {\"id\": 1,\"name\": \"user_id\",                 \"type\": \"Long\",   \"isRequired\": true, \"isFrequentlyUsed\": true},\n        {\"id\": 2,\"name\": \"version\",         \"type\": \"Byte\", \"isRequired\": true, \"isDesSortKey\": true},\n        {\"id\": 3,\"name\": \"resolution\",      \"type\": \"Short\",  \"default\": \"-1\"},\n        {\"id\": 4,\"name\": \"os_version\",      \"type\": \"String\", \"default\": \"Unknown\"},\n        {\"id\": 5,\"name\": \"impressions\",            \"type\": \"List:impression\"},\n        {\"id\": 6,\"name\": \"id_maps\",                \"type\": \"id_map\"},\n\t\t{\"id\": 7, \"name\": \"time_list\",     \"type\": \"List:Integer\"}\n      ]\n    }\n  ]\n}";
+		String json_schema = "{\r\n" + 
+				"  \"schema\": \"simple_schema\",\r\n" + 
+				"  \"table_list\": [\r\n" + 
+				"    {\r\n" + 
+				"      \"table\": \"attribution_result_rule\",\r\n" + 
+				"      \"fields\": [\r\n" + 
+				"        {\"id\": 1,\"name\": \"run_num\",    \"type\": \"Byte\",   \"isRequired\": true},\r\n" + 
+				"        {\"id\": 2,\"name\": \"value\",      \"type\": \"String\", \"default\": \"Unknown\"}\r\n" + 
+				"      ]\r\n" + 
+				"    },\r\n" + 
+				"    {\r\n" + 
+				"      \"table\": \"attribution_result\",\r\n" + 
+				"      \"fields\": [\r\n" + 
+				"        {\"id\": 1,\"name\": \"id\",\"type\": \"Integer\",\"isRequired\": true},\r\n" + 
+				"        {\"id\": 2,\"name\": \"rules\",      \"type\": \"List:attribution_result_rule\", \"isRequired\": true}\r\n" + 
+				"      ]\r\n" + 
+				"    },\r\n" + 
+				"    {\r\n" + 
+				"      \"table\": \"impression\",\r\n" + 
+				"      \"fields\": [\r\n" + 
+				"        {\"id\": 1, \"name\": \"media_provider_id\", \"type\": \"Integer\",\"isRequired\": true},\r\n" + 
+				"        {\"id\": 2,\"name\": \"mp_tpt_category_id\",\"type\": \"Short\",  \"default\": \"-1\"},\r\n" + 
+				"        {\"id\": 3,\"name\": \"truncated_url\",     \"type\": \"String\", \"default\": \"Unknown\"},\r\n" + 
+				"        {\"id\": 4,\"name\": \"bid\",         \"type\": \"Boolean\",  \"default\": \"true\"},\r\n" + 
+				"        {\"id\": 5,\"name\": \"bid_type\",          \"type\": \"Byte\",   \"default\": \"-1\"},\r\n" + 
+				"        {\"id\": 6,\"name\": \"attribution_results\",\"type\": \"List:attribution_result\"},\r\n" + 
+				"        {\"id\": 7,\"name\": \"allowed_ad_formats\",\"type\": \"Long\",   \"default\": \"-1\"},\r\n" + 
+				"		{\"id\": 8,\"name\": \"cost\",\"type\": \"Double\",   \"default\": \"0\"}\r\n" + 
+				"		]\r\n" + 
+				"    },\r\n" + 
+				"    {\r\n" + 
+				"      \"table\": \"provider_user_id\",\r\n" + 
+				"      \"fields\": [\r\n" + 
+				"        {\"id\": 1,\"name\": \"provider_type\",          \"type\": \"Byte\",   \"isRequired\": true},\r\n" + 
+				"        {\"id\": 2,\"name\": \"provider_id\",            \"type\": \"Integer\",\"isRequired\": true}\r\n" + 
+				"      ]\r\n" + 
+				"    },\r\n" + 
+//				"    {\r\n" + 
+//				"      \"table\": \"id_map\",\r\n" + 
+//				"      \"fields\": [\r\n" + 
+//				"        {\"id\": 1,\"name\": \"media_provider_ids\",\"type\": \"List:provider_user_id\"}\r\n" + 
+//				"      ]\r\n" + 
+//				"    },\r\n" + 
+				"    {\r\n" + 
+				"      \"table\": \"analytical_user_profile\",\r\n" + 
+				"      \"fields\": [\r\n" + 
+				"        {\"id\": 1,\"name\": \"user_id\",                 \"type\": \"Long\",   \"isRequired\": true, \"isFrequentlyUsed\": true},\r\n" + 
+				"        {\"id\": 2,\"name\": \"version\",         \"type\": \"Byte\", \"isRequired\": true, \"isDesSortKey\": true},\r\n" + 
+				"        {\"id\": 3,\"name\": \"resolution\",      \"type\": \"Short\",  \"default\": \"-1\"},\r\n" + 
+				"        {\"id\": 4,\"name\": \"os_version\",      \"type\": \"String\", \"default\": \"Unknown\"},\r\n" + 
+				"        {\"id\": 5,\"name\": \"impressions\",            \"type\": \"List:impression\"},\r\n" + 
+				"        {\"id\": 6,\"name\": \"id_maps\",                \"type\": \"id_map\"},\r\n" + 
+				"		{\"id\": 7, \"name\": \"time_list\",     \"type\": \"List:Integer\"},\r\n" + 
+				"		{\"id\": 8, \"name\": \"data\",     \"type\": \"Binary\"},\r\n" + 
+				"		{\"id\": 0, \"name\": \"day\",     \"type\": \"String\", \"isDerived\": true, \"default\": \"Unknown\"}\r\n" + 
+				"      ]\r\n" + 
+				"    }\r\n" + 
+				"  ]\r\n" + 
+				"}\r\n" + 
+				"";
+		
 		Schema nextSchema = new JsonSchemaConvertor().apply(json_schema);
 		SchemaEvolutionValidation validate = 
 				new SchemaEvolutionValidation(currentSchema);
@@ -59,7 +124,66 @@ public class SchemaEvolutionValidationTest {
 	
 	@Test(expectedExceptions = FieldDeletionInSchemaEvolutionException.class)
 	public void checkFieldSchema() throws AbstractValidationException {
-		String json_schema = "{\n  \"schema\": \"simple_schema\",\n  \"table_list\": [\n    {\n      \"table\": \"attribution_result_rule\",\n      \"fields\": [\n        {\"id\": 1,\"name\": \"run_num\",    \"type\": \"Byte\",   \"isRequired\": true},\n        {\"id\": 2,\"name\": \"value\",      \"type\": \"String\", \"default\": \"Unknown\"}\n      ]\n    },\n    {\n      \"table\": \"attribution_result\",\n      \"fields\": [\n        {\"id\": 1,\"name\": \"id\",\"type\": \"Integer\",\"isRequired\": true},\n        {\"id\": 2,\"name\": \"rules\",      \"type\": \"List:attribution_result_rule\", \"isRequired\": true}\n      ]\n    },\n    {\n      \"table\": \"impression\",\n      \"fields\": [\n        {\"id\": 1, \"name\": \"media_provider_id\", \"type\": \"Integer\",\"isRequired\": true},\n        {\"id\": 2,\"name\": \"mp_tpt_category_id\",\"type\": \"Short\",  \"default\": \"-1\"},\n        {\"id\": 3,\"name\": \"truncated_url\",     \"type\": \"String\", \"default\": \"Unknown\"},\n        {\"id\": 4,\"name\": \"bid\",         \"type\": \"Boolean\",  \"default\": \"true\"},\n        {\"id\": 5,\"name\": \"bid_type\",          \"type\": \"Byte\",   \"default\": \"-1\"},\n        {\"id\": 6,\"name\": \"attribution_results\",\"type\": \"List:attribution_result\"},\n        {\"id\": 7,\"name\": \"allowed_ad_formats\",\"type\": \"Long\",   \"default\": \"-1\"}\n\t\t]\n    },\n    {\n      \"table\": \"provider_user_id\",\n      \"fields\": [\n        {\"id\": 1,\"name\": \"provider_type\",          \"type\": \"Byte\",   \"isRequired\": true},\n        {\"id\": 2,\"name\": \"provider_id\",            \"type\": \"Integer\",\"isRequired\": true}\n      ]\n    },\n    {\n      \"table\": \"id_map\",\n      \"fields\": [\n        {\"id\": 1,\"name\": \"media_provider_ids\",\"type\": \"List:provider_user_id\"}\n      ]\n    },\n    {\n      \"table\": \"analytical_user_profile\",\n      \"fields\": [\n        {\"id\": 1,\"name\": \"user_id\",                 \"type\": \"Long\",   \"isRequired\": true, \"isFrequentlyUsed\": true},\n        {\"id\": 2,\"name\": \"version\",         \"type\": \"Byte\", \"isRequired\": true, \"isDesSortKey\": true},\n        {\"id\": 3,\"name\": \"resolution\",      \"type\": \"Short\",  \"default\": \"-1\"},\n        {\"id\": 4,\"name\": \"os_version\",      \"type\": \"String\", \"default\": \"Unknown\"},\n        {\"id\": 5,\"name\": \"impressions\",            \"type\": \"List:impression\"},\n        {\"id\": 6,\"name\": \"id_maps\",                \"type\": \"id_map\"},\n\t\t{\"id\": 7, \"name\": \"time_list\",     \"type\": \"List:Integer\"}\n      ]\n    }\n  ]\n}";
+		String json_schema = "{\r\n" + 
+				"  \"schema\": \"simple_schema\",\r\n" + 
+				"  \"table_list\": [\r\n" + 
+				"    {\r\n" + 
+				"      \"table\": \"attribution_result_rule\",\r\n" + 
+				"      \"fields\": [\r\n" + 
+				"        {\"id\": 1,\"name\": \"run_num\",    \"type\": \"Byte\",   \"isRequired\": true},\r\n" + 
+				"        {\"id\": 2,\"name\": \"value\",      \"type\": \"String\", \"default\": \"Unknown\"}\r\n" + 
+				"      ]\r\n" + 
+				"    },\r\n" + 
+				"    {\r\n" + 
+				"      \"table\": \"attribution_result\",\r\n" + 
+				"      \"fields\": [\r\n" + 
+				"        {\"id\": 1,\"name\": \"id\",\"type\": \"Integer\",\"isRequired\": true},\r\n" + 
+				"        {\"id\": 2,\"name\": \"rules\",      \"type\": \"List:attribution_result_rule\", \"isRequired\": true}\r\n" + 
+				"      ]\r\n" + 
+				"    },\r\n" + 
+				"    {\r\n" + 
+				"      \"table\": \"impression\",\r\n" + 
+				"      \"fields\": [\r\n" + 
+				"        {\"id\": 1, \"name\": \"media_provider_id\", \"type\": \"Integer\",\"isRequired\": true},\r\n" + 
+				"        {\"id\": 2,\"name\": \"mp_tpt_category_id\",\"type\": \"Short\",  \"default\": \"-1\"},\r\n" + 
+				"        {\"id\": 3,\"name\": \"truncated_url\",     \"type\": \"String\", \"default\": \"Unknown\"},\r\n" + 
+				"        {\"id\": 4,\"name\": \"bid\",         \"type\": \"Boolean\",  \"default\": \"true\"},\r\n" + 
+				"        {\"id\": 5,\"name\": \"bid_type\",          \"type\": \"Byte\",   \"default\": \"-1\"},\r\n" + 
+				"        {\"id\": 6,\"name\": \"attribution_results\",\"type\": \"List:attribution_result\"},\r\n" + 
+				"        {\"id\": 7,\"name\": \"allowed_ad_formats\",\"type\": \"Long\",   \"default\": \"-1\"},\r\n" + 
+				"		{\"id\": 8,\"name\": \"cost\",\"type\": \"Double\",   \"default\": \"0\"}\r\n" + 
+				"		]\r\n" + 
+				"    },\r\n" + 
+				"    {\r\n" + 
+				"      \"table\": \"provider_user_id\",\r\n" + 
+				"      \"fields\": [\r\n" + 
+				"        {\"id\": 1,\"name\": \"provider_type\",          \"type\": \"Byte\",   \"isRequired\": true},\r\n" + 
+				"        {\"id\": 2,\"name\": \"provider_id\",            \"type\": \"Integer\",\"isRequired\": true}\r\n" + 
+				"      ]\r\n" + 
+				"    },\r\n" + 
+				"    {\r\n" + 
+				"      \"table\": \"id_map\",\r\n" + 
+				"      \"fields\": [\r\n" + 
+				"        {\"id\": 1,\"name\": \"media_provider_ids\",\"type\": \"List:provider_user_id\"}\r\n" + 
+				"      ]\r\n" + 
+				"    },\r\n" + 
+				"    {\r\n" + 
+				"      \"table\": \"analytical_user_profile\",\r\n" + 
+				"      \"fields\": [\r\n" + 
+				"        {\"id\": 1,\"name\": \"user_id\",                 \"type\": \"Long\",   \"isRequired\": true, \"isFrequentlyUsed\": true},\r\n" + 
+				"        {\"id\": 2,\"name\": \"version\",         \"type\": \"Byte\", \"isRequired\": true, \"isDesSortKey\": true},\r\n" + 
+				"        {\"id\": 3,\"name\": \"resolution\",      \"type\": \"Short\",  \"default\": \"-1\"},\r\n" + 
+				"        {\"id\": 4,\"name\": \"os_version\",      \"type\": \"String\", \"default\": \"Unknown\"},\r\n" + 
+				"        {\"id\": 5,\"name\": \"impressions\",            \"type\": \"List:impression\"},\r\n" + 
+				"        {\"id\": 6,\"name\": \"id_maps\",                \"type\": \"id_map\"},\r\n" + 
+				"		{\"id\": 7, \"name\": \"time_list\",     \"type\": \"List:Integer\"},\r\n" + 
+				"		{\"id\": 0, \"name\": \"day\",     \"type\": \"String\", \"isDerived\": true, \"default\": \"Unknown\"}\r\n" + 
+				"      ]\r\n" + 
+				"    }\r\n" + 
+				"  ]\r\n" + 
+				"}\r\n" + 
+				"";
+				
 		Schema nextSchema = new JsonSchemaConvertor().apply(json_schema);
 		SchemaEvolutionValidation validate = 
 				new SchemaEvolutionValidation(currentSchema);
@@ -68,7 +192,67 @@ public class SchemaEvolutionValidationTest {
 	
 	@Test(expectedExceptions = FieldTypeModifiedInSchemaEvolutionException.class)
 	public void checkFieldTypeChangedSchema() throws AbstractValidationException {
-		String json_schema = "{\n  \"schema\": \"simple_schema\",\n  \"table_list\": [\n    {\n      \"table\": \"attribution_result_rule\",\n      \"fields\": [\n        {\"id\": 1,\"name\": \"run_num\",    \"type\": \"Byte\",   \"isRequired\": true},\n        {\"id\": 2,\"name\": \"value\",      \"type\": \"String\", \"default\": \"Unknown\"}\n      ]\n    },\n    {\n      \"table\": \"attribution_result\",\n      \"fields\": [\n        {\"id\": 1,\"name\": \"id\",\"type\": \"Integer\",\"isRequired\": true},\n        {\"id\": 2,\"name\": \"rules\",      \"type\": \"List:attribution_result_rule\", \"isRequired\": true}\n      ]\n    },\n    {\n      \"table\": \"impression\",\n      \"fields\": [\n        {\"id\": 1, \"name\": \"media_provider_id\", \"type\": \"Float\",\"isRequired\": true},\n        {\"id\": 2,\"name\": \"mp_tpt_category_id\",\"type\": \"Short\",  \"default\": \"-1\"},\n        {\"id\": 3,\"name\": \"truncated_url\",     \"type\": \"String\", \"default\": \"Unknown\"},\n        {\"id\": 4,\"name\": \"bid\",         \"type\": \"Boolean\",  \"default\": \"true\"},\n        {\"id\": 5,\"name\": \"bid_type\",          \"type\": \"Byte\",   \"default\": \"-1\"},\n        {\"id\": 6,\"name\": \"attribution_results\",\"type\": \"List:attribution_result\"},\n        {\"id\": 7,\"name\": \"allowed_ad_formats\",\"type\": \"Long\",   \"default\": \"-1\"},\n\t\t{\"id\": 8,\"name\": \"cost\",\"type\": \"Double\",   \"default\": \"0\"}\n\t\t]\n    },\n    {\n      \"table\": \"provider_user_id\",\n      \"fields\": [\n        {\"id\": 1,\"name\": \"provider_type\",          \"type\": \"Byte\",   \"isRequired\": true},\n        {\"id\": 2,\"name\": \"provider_id\",            \"type\": \"Integer\",\"isRequired\": true}\n      ]\n    },\n    {\n      \"table\": \"id_map\",\n      \"fields\": [\n        {\"id\": 1,\"name\": \"media_provider_ids\",\"type\": \"List:provider_user_id\"}\n      ]\n    },\n    {\n      \"table\": \"analytical_user_profile\",\n      \"fields\": [\n        {\"id\": 1,\"name\": \"user_id\",                 \"type\": \"Long\",   \"isRequired\": true, \"isFrequentlyUsed\": true},\n        {\"id\": 2,\"name\": \"version\",         \"type\": \"Byte\", \"isRequired\": true, \"isDesSortKey\": true},\n        {\"id\": 3,\"name\": \"resolution\",      \"type\": \"Short\",  \"default\": \"-1\"},\n        {\"id\": 4,\"name\": \"os_version\",      \"type\": \"String\", \"default\": \"Unknown\"},\n        {\"id\": 5,\"name\": \"impressions\",            \"type\": \"List:impression\"},\n        {\"id\": 6,\"name\": \"id_maps\",                \"type\": \"id_map\"},\n\t\t{\"id\": 7, \"name\": \"time_list\",     \"type\": \"List:Integer\"}\n      ]\n    }\n  ]\n}";
+		String json_schema = "{\r\n" + 
+				"  \"schema\": \"simple_schema\",\r\n" + 
+				"  \"table_list\": [\r\n" + 
+				"    {\r\n" + 
+				"      \"table\": \"attribution_result_rule\",\r\n" + 
+				"      \"fields\": [\r\n" + 
+				"        {\"id\": 1,\"name\": \"run_num\",    \"type\": \"Byte\",   \"isRequired\": true},\r\n" + 
+				"        {\"id\": 2,\"name\": \"value\",      \"type\": \"String\", \"default\": \"Unknown\"}\r\n" + 
+				"      ]\r\n" + 
+				"    },\r\n" + 
+				"    {\r\n" + 
+				"      \"table\": \"attribution_result\",\r\n" + 
+				"      \"fields\": [\r\n" + 
+				"        {\"id\": 1,\"name\": \"id\",\"type\": \"Integer\",\"isRequired\": true},\r\n" + 
+				"        {\"id\": 2,\"name\": \"rules\",      \"type\": \"List:attribution_result_rule\", \"isRequired\": true}\r\n" + 
+				"      ]\r\n" + 
+				"    },\r\n" + 
+				"    {\r\n" + 
+				"      \"table\": \"impression\",\r\n" + 
+				"      \"fields\": [\r\n" + 
+				"        {\"id\": 1, \"name\": \"media_provider_id\", \"type\": \"Integer\",\"isRequired\": true},\r\n" + 
+				"        {\"id\": 2,\"name\": \"mp_tpt_category_id\",\"type\": \"Short\",  \"default\": \"-1\"},\r\n" + 
+				"        {\"id\": 3,\"name\": \"truncated_url\",     \"type\": \"String\", \"default\": \"Unknown\"},\r\n" + 
+				"        {\"id\": 4,\"name\": \"bid\",         \"type\": \"Boolean\",  \"default\": \"true\"},\r\n" + 
+				"        {\"id\": 5,\"name\": \"bid_type\",          \"type\": \"Byte\",   \"default\": \"-1\"},\r\n" + 
+				"        {\"id\": 6,\"name\": \"attribution_results\",\"type\": \"List:attribution_result\"},\r\n" + 
+				"        {\"id\": 7,\"name\": \"allowed_ad_formats\",\"type\": \"Long\",   \"default\": \"-1\"},\r\n" + 
+				"		{\"id\": 8,\"name\": \"cost\",\"type\": \"Double\",   \"default\": \"0\"}\r\n" + 
+				"		]\r\n" + 
+				"    },\r\n" + 
+				"    {\r\n" + 
+				"      \"table\": \"provider_user_id\",\r\n" + 
+				"      \"fields\": [\r\n" + 
+				"        {\"id\": 1,\"name\": \"provider_type\",          \"type\": \"Byte\",   \"isRequired\": true},\r\n" + 
+				"        {\"id\": 2,\"name\": \"provider_id\",            \"type\": \"Integer\",\"isRequired\": true}\r\n" + 
+				"      ]\r\n" + 
+				"    },\r\n" + 
+				"    {\r\n" + 
+				"      \"table\": \"id_map\",\r\n" + 
+				"      \"fields\": [\r\n" + 
+				"        {\"id\": 1,\"name\": \"media_provider_ids\",\"type\": \"List:provider_user_id\"}\r\n" + 
+				"      ]\r\n" + 
+				"    },\r\n" + 
+				"    {\r\n" + 
+				"      \"table\": \"analytical_user_profile\",\r\n" + 
+				"      \"fields\": [\r\n" + 
+				"        {\"id\": 1,\"name\": \"user_id\",                 \"type\": \"Integer\",   \"isRequired\": true, \"isFrequentlyUsed\": true},\r\n" + 
+				"        {\"id\": 2,\"name\": \"version\",         \"type\": \"Byte\", \"isRequired\": true, \"isDesSortKey\": true},\r\n" + 
+				"        {\"id\": 3,\"name\": \"resolution\",      \"type\": \"Short\",  \"default\": \"-1\"},\r\n" + 
+				"        {\"id\": 4,\"name\": \"os_version\",      \"type\": \"String\", \"default\": \"Unknown\"},\r\n" + 
+				"        {\"id\": 5,\"name\": \"impressions\",            \"type\": \"List:impression\"},\r\n" + 
+				"        {\"id\": 6,\"name\": \"id_maps\",                \"type\": \"id_map\"},\r\n" + 
+				"		{\"id\": 7, \"name\": \"time_list\",     \"type\": \"List:Integer\"},\r\n" + 
+				"		{\"id\": 8, \"name\": \"data\",     \"type\": \"Binary\"},\r\n" + 
+				"		{\"id\": 0, \"name\": \"day\",     \"type\": \"String\", \"isDerived\": true, \"default\": \"Unknown\"}\r\n" + 
+				"      ]\r\n" + 
+				"    }\r\n" + 
+				"  ]\r\n" + 
+				"}\r\n" + 
+				"";
+		
 		Schema nextSchema = new JsonSchemaConvertor().apply(json_schema);
 		SchemaEvolutionValidation validate = 
 				new SchemaEvolutionValidation(currentSchema);
@@ -77,7 +261,66 @@ public class SchemaEvolutionValidationTest {
 	
 	@Test(expectedExceptions = FieldDefaultValueModifiedInSchemaEvolutionException.class)
 	public void checkFieldDefaultValueChangedSchema() throws AbstractValidationException {
-		String json_schema = "{\n  \"schema\": \"simple_schema\",\n  \"table_list\": [\n    {\n      \"table\": \"attribution_result_rule\",\n      \"fields\": [\n        {\"id\": 1,\"name\": \"run_num\",    \"type\": \"Byte\",   \"isRequired\": true},\n        {\"id\": 2,\"name\": \"value\",      \"type\": \"String\", \"default\": \"Unknown\"}\n      ]\n    },\n    {\n      \"table\": \"attribution_result\",\n      \"fields\": [\n        {\"id\": 1,\"name\": \"id\",\"type\": \"Integer\",\"isRequired\": true},\n        {\"id\": 2,\"name\": \"rules\",      \"type\": \"List:attribution_result_rule\", \"isRequired\": true}\n      ]\n    },\n    {\n      \"table\": \"impression\",\n      \"fields\": [\n        {\"id\": 1, \"name\": \"media_provider_id\", \"type\": \"Integer\",\"isRequired\": true},\n        {\"id\": 2,\"name\": \"mp_tpt_category_id\",\"type\": \"Short\",  \"default\": \"-1\"},\n        {\"id\": 3,\"name\": \"truncated_url\",     \"type\": \"String\", \"default\": \"Unknown\"},\n        {\"id\": 4,\"name\": \"bid\",         \"type\": \"Boolean\",  \"default\": \"false\"},\n        {\"id\": 5,\"name\": \"bid_type\",          \"type\": \"Byte\",   \"default\": \"-1\"},\n        {\"id\": 6,\"name\": \"attribution_results\",\"type\": \"List:attribution_result\"},\n        {\"id\": 7,\"name\": \"allowed_ad_formats\",\"type\": \"Long\",   \"default\": \"-1\"},\n\t\t{\"id\": 8,\"name\": \"cost\",\"type\": \"Double\",   \"default\": \"0\"}\n\t\t]\n    },\n    {\n      \"table\": \"provider_user_id\",\n      \"fields\": [\n        {\"id\": 1,\"name\": \"provider_type\",          \"type\": \"Byte\",   \"isRequired\": true},\n        {\"id\": 2,\"name\": \"provider_id\",            \"type\": \"Integer\",\"isRequired\": true}\n      ]\n    },\n    {\n      \"table\": \"id_map\",\n      \"fields\": [\n        {\"id\": 1,\"name\": \"media_provider_ids\",\"type\": \"List:provider_user_id\"}\n      ]\n    },\n    {\n      \"table\": \"analytical_user_profile\",\n      \"fields\": [\n        {\"id\": 1,\"name\": \"user_id\",                 \"type\": \"Long\",   \"isRequired\": true, \"isFrequentlyUsed\": true},\n        {\"id\": 2,\"name\": \"version\",         \"type\": \"Byte\", \"isRequired\": true, \"isDesSortKey\": true},\n        {\"id\": 3,\"name\": \"resolution\",      \"type\": \"Short\",  \"default\": \"-1\"},\n        {\"id\": 4,\"name\": \"os_version\",      \"type\": \"String\", \"default\": \"Unknown\"},\n        {\"id\": 5,\"name\": \"impressions\",            \"type\": \"List:impression\"},\n        {\"id\": 6,\"name\": \"id_maps\",                \"type\": \"id_map\"},\n\t\t{\"id\": 7, \"name\": \"time_list\",     \"type\": \"List:Integer\"}\n      ]\n    }\n  ]\n}";
+		String json_schema = "{\r\n" + 
+				"  \"schema\": \"simple_schema\",\r\n" + 
+				"  \"table_list\": [\r\n" + 
+				"    {\r\n" + 
+				"      \"table\": \"attribution_result_rule\",\r\n" + 
+				"      \"fields\": [\r\n" + 
+				"        {\"id\": 1,\"name\": \"run_num\",    \"type\": \"Byte\",   \"isRequired\": true},\r\n" + 
+				"        {\"id\": 2,\"name\": \"value\",      \"type\": \"String\", \"default\": \"Unknown\"}\r\n" + 
+				"      ]\r\n" + 
+				"    },\r\n" + 
+				"    {\r\n" + 
+				"      \"table\": \"attribution_result\",\r\n" + 
+				"      \"fields\": [\r\n" + 
+				"        {\"id\": 1,\"name\": \"id\",\"type\": \"Integer\",\"isRequired\": true},\r\n" + 
+				"        {\"id\": 2,\"name\": \"rules\",      \"type\": \"List:attribution_result_rule\", \"isRequired\": true}\r\n" + 
+				"      ]\r\n" + 
+				"    },\r\n" + 
+				"    {\r\n" + 
+				"      \"table\": \"impression\",\r\n" + 
+				"      \"fields\": [\r\n" + 
+				"        {\"id\": 1, \"name\": \"media_provider_id\", \"type\": \"Integer\",\"isRequired\": true},\r\n" + 
+				"        {\"id\": 2,\"name\": \"mp_tpt_category_id\",\"type\": \"Short\",  \"default\": \"100\"},\r\n" + 
+				"        {\"id\": 3,\"name\": \"truncated_url\",     \"type\": \"String\", \"default\": \"Unknown\"},\r\n" + 
+				"        {\"id\": 4,\"name\": \"bid\",         \"type\": \"Boolean\",  \"default\": \"true\"},\r\n" + 
+				"        {\"id\": 5,\"name\": \"bid_type\",          \"type\": \"Byte\",   \"default\": \"-1\"},\r\n" + 
+				"        {\"id\": 6,\"name\": \"attribution_results\",\"type\": \"List:attribution_result\"},\r\n" + 
+				"        {\"id\": 7,\"name\": \"allowed_ad_formats\",\"type\": \"Long\",   \"default\": \"-1\"},\r\n" + 
+				"		{\"id\": 8,\"name\": \"cost\",\"type\": \"Double\",   \"default\": \"0\"}\r\n" + 
+				"		]\r\n" + 
+				"    },\r\n" + 
+				"    {\r\n" + 
+				"      \"table\": \"provider_user_id\",\r\n" + 
+				"      \"fields\": [\r\n" + 
+				"        {\"id\": 1,\"name\": \"provider_type\",          \"type\": \"Byte\",   \"isRequired\": true},\r\n" + 
+				"        {\"id\": 2,\"name\": \"provider_id\",            \"type\": \"Integer\",\"isRequired\": true}\r\n" + 
+				"      ]\r\n" + 
+				"    },\r\n" + 
+				"    {\r\n" + 
+				"      \"table\": \"id_map\",\r\n" + 
+				"      \"fields\": [\r\n" + 
+				"        {\"id\": 1,\"name\": \"media_provider_ids\",\"type\": \"List:provider_user_id\"}\r\n" + 
+				"      ]\r\n" + 
+				"    },\r\n" + 
+				"    {\r\n" + 
+				"      \"table\": \"analytical_user_profile\",\r\n" + 
+				"      \"fields\": [\r\n" + 
+				"        {\"id\": 1,\"name\": \"user_id\",                 \"type\": \"Long\",   \"isRequired\": true, \"isFrequentlyUsed\": true},\r\n" + 
+				"        {\"id\": 2,\"name\": \"version\",         \"type\": \"Byte\", \"isRequired\": true, \"isDesSortKey\": true},\r\n" + 
+				"        {\"id\": 3,\"name\": \"resolution\",      \"type\": \"Short\",  \"default\": \"-1\"},\r\n" + 
+				"        {\"id\": 4,\"name\": \"os_version\",      \"type\": \"String\", \"default\": \"Unknown\"},\r\n" + 
+				"        {\"id\": 5,\"name\": \"impressions\",            \"type\": \"List:impression\"},\r\n" + 
+				"        {\"id\": 6,\"name\": \"id_maps\",                \"type\": \"id_map\"},\r\n" + 
+				"		{\"id\": 7, \"name\": \"time_list\",     \"type\": \"List:Integer\"},\r\n" + 
+				"		{\"id\": 8, \"name\": \"data\",     \"type\": \"Binary\"},\r\n" + 
+				"		{\"id\": 0, \"name\": \"day\",     \"type\": \"String\", \"isDerived\": true, \"default\": \"Unknown\"}\r\n" + 
+				"      ]\r\n" + 
+				"    }\r\n" + 
+				"  ]\r\n" + 
+				"}\r\n";
+		
 		Schema nextSchema = new JsonSchemaConvertor().apply(json_schema);
 		SchemaEvolutionValidation validate = 
 				new SchemaEvolutionValidation(currentSchema);
@@ -138,7 +381,8 @@ public class SchemaEvolutionValidationTest {
 				"        {\"id\": 4,\"name\": \"os_version\",      \"type\": \"String\", \"default\": \"Unknown\"},\r\n" + 
 				"        {\"id\": 5,\"name\": \"impressions\",            \"type\": \"List:impression\"},\r\n" + 
 				"        {\"id\": 6,\"name\": \"id_maps\",                \"type\": \"id_map\"},\r\n" + 
-				"		{\"id\": 7, \"name\": \"time_list\",     \"type\": \"List:Integer\"}\r\n" + 
+				"		{\"id\": 7, \"name\": \"time_list\",     \"type\": \"List:Integer\"},\r\n" + 
+				"		{\"id\": 8, \"name\": \"data\",     \"type\": \"Binary\"}\r\t" + 
 				"      ]\r\n" + 
 				"    }\r\n" + 
 				"  ]\r\n" + 
@@ -203,7 +447,8 @@ public class SchemaEvolutionValidationTest {
 				"        {\"id\": 4,\"name\": \"os_version\",      \"type\": \"String\", \"default\": \"Unknown\"},\r\n" + 
 				"        {\"id\": 5,\"name\": \"impressions\",            \"type\": \"List:impression\"},\r\n" + 
 				"        {\"id\": 6,\"name\": \"id_maps\",                \"type\": \"id_map\"},\r\n" + 
-				"		{\"id\": 7, \"name\": \"time_list\",     \"type\": \"List:Integer\"}\r\n" + 
+				"		{\"id\": 7, \"name\": \"time_list\",     \"type\": \"List:Integer\"},\r\n" + 
+				"		{\"id\": 8, \"name\": \"data\",     \"type\": \"Binary\"}\r\t" +
 				"      ]\r\n" + 
 				"    }\r\n" + 
 				"  ]\r\n" + 
@@ -268,7 +513,8 @@ public class SchemaEvolutionValidationTest {
 				"        {\"id\": 4,\"name\": \"os_version\",      \"type\": \"String\", \"default\": \"Unknown\"},\r\n" + 
 				"        {\"id\": 5,\"name\": \"impressions\",            \"type\": \"List:impression\"},\r\n" + 
 				"        {\"id\": 6,\"name\": \"id_maps\",                \"type\": \"id_map\"},\r\n" + 
-				"		{\"id\": 7, \"name\": \"time_list\",     \"type\": \"List:Integer\"}\r\n" + 
+				"		{\"id\": 7, \"name\": \"time_list\",     \"type\": \"List:Integer\"},\r\n" +
+				"		{\"id\": 8, \"name\": \"data\",     \"type\": \"Binary\"}\r\n" +
 				"      ]\r\n" + 
 				"    }\r\n" + 
 				"  ]\r\n" + 

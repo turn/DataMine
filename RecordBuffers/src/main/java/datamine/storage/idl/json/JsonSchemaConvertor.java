@@ -80,8 +80,10 @@ public class JsonSchemaConvertor implements JsonElementVisitor,
 		// Sanity check: 
 		/// 1. an optional primitive field must have a default value
 		if (defaultValue == null && type instanceof PrimitiveFieldType && !field.isRequired()) {
-			throw new IllegalArgumentException("Default value " +
-					"is required for the optional primitive column - " + field.getName());
+			if (((PrimitiveFieldType) type).getType() != PrimitiveType.BINARY) {
+				throw new IllegalArgumentException("Default value " +
+						"is required for the optional primitive column - " + field.getName());				
+			}
 		}
 		
 		/// 2. sort-key column must be required
@@ -125,7 +127,9 @@ public class JsonSchemaConvertor implements JsonElementVisitor,
 		case Double:
 			return new PrimitiveFieldType(PrimitiveType.DOUBLE); 
 		case String:
-			return new PrimitiveFieldType(PrimitiveType.STRING); 
+			return new PrimitiveFieldType(PrimitiveType.STRING);
+		case Binary:
+			return new PrimitiveFieldType(PrimitiveType.BINARY);
 		case Struct:
 			embededTableName.add(typeStr);
 			return new GroupFieldType(typeStr, null);

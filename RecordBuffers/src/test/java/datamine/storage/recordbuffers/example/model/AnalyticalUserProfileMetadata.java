@@ -35,6 +35,7 @@ public enum AnalyticalUserProfileMetadata implements RecordMetadataInterface {
 	IMPRESSIONS((short)5, "impressions", FieldTypeFactory.getListType(FieldTypeFactory.getGroupType(ImpressionMetadata.class)), false, null, false, false, false, false),
 	ID_MAPS((short)6, "id_maps", FieldTypeFactory.getGroupType(IdMapMetadata.class), false, null, false, false, false, false),
 	TIME_LIST((short)7, "time_list", FieldTypeFactory.getListType(FieldTypeFactory.getPrimitiveType(PrimitiveType.INT32)), false, null, false, false, false, false),
+	DATA((short)8, "data", FieldTypeFactory.getPrimitiveType(PrimitiveType.BINARY), false, null, false, false, false, false),
 	DAY((short)0, "day", FieldTypeFactory.getPrimitiveType(PrimitiveType.STRING), false, (String)"Unknown", false, false, false, true),
 ;
 

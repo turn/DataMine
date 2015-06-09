@@ -608,7 +608,7 @@ public class RecordMetaWrapperGenerator implements ElementVisitor,
 			field = input;
 			FieldType type = input.getType();
 			
-			if (type instanceof PrimitiveFieldType) {
+			if (type instanceof PrimitiveFieldType && ((PrimitiveFieldType) type).getType() != PrimitiveType.BINARY) {
 				fieldGetterTemplate = new CodeTemplate(code);
 				
 				String javaTypeStr = new JavaTypeConvertor().apply(type);

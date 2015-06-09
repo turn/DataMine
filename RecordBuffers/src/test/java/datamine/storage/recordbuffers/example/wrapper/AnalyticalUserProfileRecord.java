@@ -167,6 +167,12 @@ public class AnalyticalUserProfileRecord implements AnalyticalUserProfileInterfa
     }
 
     @Override
+    public byte[] getData() {
+        
+        return this.value.getBinary(AnalyticalUserProfileMetadata.DATA);
+    }
+
+    @Override
     public String getDay() {
         
         return derivedFieldValues.getDay();
@@ -251,6 +257,15 @@ public class AnalyticalUserProfileRecord implements AnalyticalUserProfileInterfa
 		this.value.setValue(AnalyticalUserProfileMetadata.TIME_LIST, list);
 
 			
+		}
+	}
+
+
+	@Override
+	public void setData(byte[] input) {
+		if (1 == 1) {
+			
+			this.value.setValue(AnalyticalUserProfileMetadata.DATA, input);
 		}
 	}
 

@@ -73,7 +73,7 @@ public class ProviderUserIdRecord implements ProviderUserIdInterface {
 
     @Override
     public void copyFrom(BaseInterface right) {
-		// note that it may not be deep copy!!
+		// note that it must be deep copy!!
 		this.value = new WritableRecord<ProviderUserIdMetadata>(ProviderUserIdMetadata.class, 
 			new RecordBuffer(((Record) right.getBaseObject()).getRecordBuffer()));
     }

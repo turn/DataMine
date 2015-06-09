@@ -39,8 +39,8 @@ public class RecordBuffersBuilder implements RecordBuilderInterface {
 
 		try {
 			
-		if (tableClass == IdMapInterface.class) {
-			return (T) IdMapRecord.class.newInstance();
+		if (tableClass == AttributionResultInterface.class) {
+			return (T) AttributionResultRecord.class.newInstance();
 		}
 		else
 		if (tableClass == ImpressionInterface.class) {
@@ -51,16 +51,16 @@ public class RecordBuffersBuilder implements RecordBuilderInterface {
 			return (T) AnalyticalUserProfileRecord.class.newInstance();
 		}
 		else
-		if (tableClass == AttributionResultInterface.class) {
-			return (T) AttributionResultRecord.class.newInstance();
+		if (tableClass == ProviderUserIdInterface.class) {
+			return (T) ProviderUserIdRecord.class.newInstance();
 		}
 		else
 		if (tableClass == AttributionResultRuleInterface.class) {
 			return (T) AttributionResultRuleRecord.class.newInstance();
 		}
 		else
-		if (tableClass == ProviderUserIdInterface.class) {
-			return (T) ProviderUserIdRecord.class.newInstance();
+		if (tableClass == IdMapInterface.class) {
+			return (T) IdMapRecord.class.newInstance();
 		}
 
 		} catch (InstantiationException e) {

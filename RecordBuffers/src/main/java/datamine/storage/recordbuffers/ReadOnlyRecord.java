@@ -309,14 +309,14 @@ public class ReadOnlyRecord<T extends Enum<T> & RecordMetadataInterface> extends
 					case STRING:
 						// string requires a SHORT to store its length (max < 32k)
 						short arrayLength = bytebuffer.getShort(offset);
-						if (arrayLength >= 0) {
+						if (arrayLength > 0) {
 							offset += 2 + arrayLength;	
 						}
 						break;
 					case BINARY:
 						// other types require a INT to store its length info
 						int arrayLength2 = bytebuffer.getInt(offset);
-						if (arrayLength2 >= 0) {
+						if (arrayLength2 > 0) {
 							offset += 4 + arrayLength2;	
 						}
 						break;
@@ -327,12 +327,12 @@ public class ReadOnlyRecord<T extends Enum<T> & RecordMetadataInterface> extends
 					}
 				} else if (fieldType instanceof GroupFieldType) {
 					int arrayLength2 = bytebuffer.getInt(offset);
-					if (arrayLength2 >= 0) {
+					if (arrayLength2 > 0) {
 						offset += 4 + arrayLength2;	
 					}
 				} else if (fieldType instanceof CollectionFieldType) {
 					int arrayLength2 = bytebuffer.getInt(offset);
-					if (arrayLength2 >= 0) {
+					if (arrayLength2 > 0) {
 						offset += 4 + arrayLength2;	
 					}
 				}

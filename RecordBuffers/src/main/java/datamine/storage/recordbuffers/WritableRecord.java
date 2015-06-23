@@ -101,7 +101,7 @@ public class WritableRecord<T extends Enum<T> & RecordMetadataInterface> extends
 	 * 
 	 * TODO (Yan) support the deletion by making col null.
 	 * 
-	 * @param col the field of interest
+	 * @param Field the field of interest
 	 * @param val the new value of the concerned field
 	 */
 	@Override

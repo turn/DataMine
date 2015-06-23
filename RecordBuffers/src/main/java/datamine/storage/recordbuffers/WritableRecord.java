@@ -93,15 +93,28 @@ public class WritableRecord<T extends Enum<T> & RecordMetadataInterface> extends
 	 */
 	@Override
 	public void setValue(T col, Object val) {
+		setValue(col.getField(), val);
+	}
+	
+	/**
+	 * Update the value of the input field
+	 * 
+	 * TODO (Yan) support the deletion by making col null.
+	 * 
+	 * @param Field the field of interest
+	 * @param val the new value of the concerned field
+	 */
+	@Override
+	public void setValue(Field field, Object val) {
 		if (val != null) {
 			//1. prepare the intermediate structure 
 			if (valueArray == null) {
 				initValueArray();	
 			}
 			//2. find out the number of bytes used for new value
-			int id = col.getField().getId() - 1; // note that id starts at 1
+			int id = field.getId() - 1; // note that id starts at 1
 			int size = 0;
-			FieldType type = col.getField().getType();
+			FieldType type = field.getType();
 			FieldValueOperatorInterface valOpr = FieldValueOperatorFactory.getOperator(type);
 
 			if (valueArray[id] != null) {
@@ -124,24 +137,28 @@ public class WritableRecord<T extends Enum<T> & RecordMetadataInterface> extends
 	}
 
 	@Override
-	public Object getValue(T col) {
+	public Object getValue(Field field) {
 	
 		if (valueArray == null && readOnlyRecord == null && buffer != null) {
 			readOnlyRecord = new ReadOnlyRecord<T>(meta.getTableEnumClass(), buffer);
 		}
 		
 		if (readOnlyRecord != null) {
-			return readOnlyRecord.getValue(col);
+			return readOnlyRecord.getValue(field);
 		}
 				
-		Field field = col.getField();
 		int id = field.getId() - 1; // note that id starts at 1.
  		Object result = valueArray != null && valueArray.length > id ? valueArray[id] : null;
 		if (result == null) { // never return NULL
-			return col.getField().getDefaultValue();
+			return field.getDefaultValue();
 		} else {
 			return result;
 		}
+	}
+	
+	@Override
+	public Object getValue(T col) {
+		return getValue(col.getField());
 	}
 	
 	/**
@@ -193,21 +210,26 @@ public class WritableRecord<T extends Enum<T> & RecordMetadataInterface> extends
 
 	@SuppressWarnings("rawtypes")
 	@Override
-	public int getListSize(T col) {
+	public int getListSize(Field field) {
 		//1. the input must be a collection-type field
 		Preconditions.checkArgument(
-				col.getField().getType() instanceof CollectionFieldType);
+				field.getType() instanceof CollectionFieldType);
 		//2. read the size directly from the byte array with the offset
 		if (valueArray == null) {
-			return this.meta.getCollectionSize(col, this.buffer);
+			return this.meta.getCollectionSize(field, this.buffer);
 		}
 		//3. read the size from the intermediate object array
-		int id = col.getField().getId() - 1;
+		int id = field.getId() - 1;
 		if (this.valueArray[id] != null) {
 			return ((List) this.valueArray[id]).size();	
 		} else {
 			return 0;
 		}
+	}
+	
+	@Override
+	public int getListSize(T col) {
+		return getListSize(col.getField());
 	}
 	
 	
@@ -509,74 +531,103 @@ public class WritableRecord<T extends Enum<T> & RecordMetadataInterface> extends
 	
 	//////////////////////////////////////////////////////////////////////////
 	
+	public boolean getBool(Field field) {
+		if (readOnlyRecord != null) {
+			return readOnlyRecord.getBool(field);
+		}
+		return (Boolean) getValue(field);
+	}
+
 	public boolean getBool(T col) {
+		return getBool(col.getField());
+	}
+	
+	public byte getByte(Field field) {
 		if (readOnlyRecord != null) {
-			return readOnlyRecord.getBool(col);
+			return readOnlyRecord.getByte(field);
 		}
-		return (Boolean) getValue(col);
+		return (Byte) getValue(field);
 	}
 
-	
 	public byte getByte(T col) {
+		return getByte(col.getField());
+	}
+	
+	public short getShort(Field field) {
 		if (readOnlyRecord != null) {
-			return readOnlyRecord.getByte(col);
+			return readOnlyRecord.getShort(field);
 		}
-		return (Byte) getValue(col);
+		return (Short) getValue(field);
 	}
 
-	
 	public short getShort(T col) {
+		return getShort(col.getField());
+	}
+	
+	public long getLong(Field field) {
 		if (readOnlyRecord != null) {
-			return readOnlyRecord.getShort(col);
+			return readOnlyRecord.getLong(field);
 		}
-		return (Short) getValue(col);
+		return (Long) getValue(field);
 	}
 
-	
 	public long getLong(T col) {
+		return getLong(col.getField());
+	}
+	
+	public int getInt(Field field) {
 		if (readOnlyRecord != null) {
-			return readOnlyRecord.getLong(col);
+			return readOnlyRecord.getInt(field);
 		}
-		return (Long) getValue(col);
+		return (Integer) getValue(field);
 	}
 
-	
 	public int getInt(T col) {
+		return getInt(col.getField());
+	}
+	
+	public float getFloat(Field field) {
 		if (readOnlyRecord != null) {
-			return readOnlyRecord.getInt(col);
+			return readOnlyRecord.getFloat(field);
 		}
-		return (Integer) getValue(col);
+		return (Float) getValue(field);
 	}
 
-	
 	public float getFloat(T col) {
+		return getFloat(col.getField());
+	}
+	
+	public double getDouble(Field field) {
 		if (readOnlyRecord != null) {
-			return readOnlyRecord.getFloat(col);
+			return readOnlyRecord.getDouble(field);
 		}
-		return (Float) getValue(col);
+		return (Double) getValue(field);
 	}
 
-	
 	public double getDouble(T col) {
-		if (readOnlyRecord != null) {
-			return readOnlyRecord.getDouble(col);
-		}
-		return (Double) getValue(col);
+		return getDouble(col.getField());
 	}
 
 	
-	public byte[] getBinary(T col) {
+	public byte[] getBinary(Field field) {
 		if (readOnlyRecord != null) {
-			return readOnlyRecord.getBinary(col);
+			return readOnlyRecord.getBinary(field);
 		}
-		return (byte[]) getValue(col);
+		return (byte[]) getValue(field);
 	}
 
+	public byte[] getBinary(T col) {
+		return getBinary(col.getField());
+	}
+	
+	public String getString(Field field) {
+		if (readOnlyRecord != null) {
+			return readOnlyRecord.getString(field);
+		}
+		return (String) getValue(field);
+	}
 	
 	public String getString(T col) {
-		if (readOnlyRecord != null) {
-			return readOnlyRecord.getString(col);
-		}
-		return (String) getValue(col);
+		return getString(col.getField());
 	}
 }

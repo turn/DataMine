@@ -76,8 +76,18 @@ public class ReadOnlyRecord<T extends Enum<T> & RecordMetadataInterface> extends
 		throw new IllegalAccessError("No change is allowed for the read-only record!");
 	}
 
-	private int getOffset(T col) {
-		Field field = col.getField();
+	/**
+	 * Update the value of the input field
+	 * 
+	 * @param col the field of interest
+	 * @param val the new value of the concerned field
+	 */
+	@Override
+	public void setValue(Field field, Object val) {
+		throw new IllegalAccessError("No change is allowed for the read-only record!");
+	}
+	
+	private int getOffset(Field  field) {
 
 		// when the column has its offset in the reference section
 		FieldType type = field.getType();
@@ -89,11 +99,11 @@ public class ReadOnlyRecord<T extends Enum<T> & RecordMetadataInterface> extends
 			}
 				
 			if (field.isFrequentlyUsed()) {
-				return this.meta.getFieldWithReferenceOffset(col, buffer);
+				return this.meta.getFieldWithReferenceOffset(field, buffer);
 			}
 					
 			// a collection-type field
-			return this.meta.getCollectionOffset(col, buffer);
+			return this.meta.getCollectionOffset(field, buffer);
 		}
 		
 		// other fields
@@ -108,13 +118,17 @@ public class ReadOnlyRecord<T extends Enum<T> & RecordMetadataInterface> extends
 	
 	@Override
 	public Object getValue(T col) {
+		return getValue(col.getField());
+	}
 	
-		Field field = col.getField();
+	@Override
+	public Object getValue(Field field) {
+	
 		FieldType type = field.getType();
 		FieldValueOperatorInterface valueOpr = FieldValueOperatorFactory.getOperator(type);
 		ByteBuffer buf = buffer.getByteBuffer();
 		Object result = null;
-		int offset = getOffset(col);
+		int offset = getOffset(field);
 		if (offset > 0 && type instanceof PrimitiveFieldType) {
 			PrimitiveType priType = ((PrimitiveFieldType) type).getType();
 			switch (priType) {
@@ -133,84 +147,105 @@ public class ReadOnlyRecord<T extends Enum<T> & RecordMetadataInterface> extends
 		
 		// never return NULL
 		if (result == null) { 
-			return col.getField().getDefaultValue();
+			return field.getDefaultValue();
 		} else {
 			return result;
 		}
 	}
 	
-	public boolean getBool(T col) {
-		int offset = getOffset(col);
+	public boolean getBool(Field field) {
+		int offset = getOffset(field);
 		if (offset > 0) {
 			return buffer.getByteBuffer().get(offset) == 1 ? true : false;
 		} else {
-			return (Boolean) col.getField().getDefaultValue();
+			return (Boolean) field.getDefaultValue();
 		}
 	}
 
+	public boolean getBool(T col) {
+		return getBool(col.getField());
+	}
 	
-	public byte getByte(T col) {
-		int offset = getOffset(col);
+	public byte getByte(Field field) {
+		int offset = getOffset(field);
 		if (offset > 0) {
 			return buffer.getByteBuffer().get(offset);
 		} else {
-			return (Byte) col.getField().getDefaultValue();
+			return (Byte) field.getDefaultValue();
 		}
 	}
 
+	public byte getByte(T col) {
+		return getByte(col.getField());
+	}
 	
-	public short getShort(T col) {
-		int offset = getOffset(col);
+	public short getShort(Field field) {
+		int offset = getOffset(field);
 		if (offset > 0) {
 			return buffer.getByteBuffer().getShort(offset);
 		} else {
-			return (Short) col.getField().getDefaultValue();
+			return (Short) field.getDefaultValue();
 		}
 	}
 
+	public short getShort(T col) {
+		return getShort(col.getField());
+	}
 	
-	public long getLong(T col) {
-		int offset = getOffset(col);
+	public long getLong(Field field) {
+		int offset = getOffset(field);
 		if (offset > 0) {
 			return buffer.getByteBuffer().getLong(offset);
 		} else {
-			return (Long) col.getField().getDefaultValue();
+			return (Long) field.getDefaultValue();
 		}
 	}
 
+	public long getLong(T col) {
+		return getLong(col.getField());
+	}
 	
-	public int getInt(T col) {
-		int offset = getOffset(col);
+	public int getInt(Field field) {
+		int offset = getOffset(field);
 		if (offset > 0) {
 			return buffer.getByteBuffer().getInt(offset);
 		} else {
-			return (Integer) col.getField().getDefaultValue();
+			return (Integer) field.getDefaultValue();
 		}
 	}
 
+	public int getInt(T col) {
+		return getInt(col.getField());
+	}
 	
-	public float getFloat(T col) {
-		int offset = getOffset(col);
+	public float getFloat(Field field) {
+		int offset = getOffset(field);
 		if (offset > 0) {
 			return buffer.getByteBuffer().getFloat(offset);
 		} else {
-			return (Float) col.getField().getDefaultValue();
+			return (Float) field.getDefaultValue();
 		}
 	}
 
+	public float getFloat(T col) {
+		return getFloat(col.getField());
+	}
 	
-	public double getDouble(T col) {
-		int offset = getOffset(col);
+	public double getDouble(Field field) {
+		int offset = getOffset(field);
 		if (offset > 0) {
 			return buffer.getByteBuffer().getDouble(offset);
 		} else {
-			return (Double) col.getField().getDefaultValue();
+			return (Double) field.getDefaultValue();
 		}
 	}
 
+	public double getDouble(T col) {
+		return getDouble(col.getField());
+	}
 	
-	public byte[] getBinary(T col) {
-		int offset = getOffset(col);
+	public byte[] getBinary(Field field) {
+		int offset = getOffset(field);
 		if (offset > 0) {
 			int length = buffer.getByteBuffer().getInt(offset);
 			byte[] out = new byte[length];
@@ -218,19 +253,26 @@ public class ReadOnlyRecord<T extends Enum<T> & RecordMetadataInterface> extends
 			System.arraycopy(src, offset + 4, out, 0, length);
 			return out;
 		} else {
-			return (byte[]) col.getField().getDefaultValue();
+			return (byte[]) field.getDefaultValue();
 		}
 	}
 
+	public byte[] getBinary(T col) {
+		return getBinary(col.getField());
+	}
 	
-	public String getString(T col) {
-		int offset = getOffset(col);
+	public String getString(Field field) {
+		int offset = getOffset(field);
 		if (offset > 0) {
 			int length = buffer.getByteBuffer().getShort(offset);
 			return new String(buffer.getByteBuffer().array(), offset + 2, length);
 		} else {
-			return (String) col.getField().getDefaultValue();
+			return (String) field.getDefaultValue();
 		}
+	}
+	
+	public String getString(T col) {
+		return getString(col.getField());
 	}
 	
 	/**
@@ -260,14 +302,18 @@ public class ReadOnlyRecord<T extends Enum<T> & RecordMetadataInterface> extends
 
 	@Override
 	public int getListSize(T col) {
-		//1. the input must be a collection-type field
-		Preconditions.checkArgument(
-				col.getField().getType() instanceof CollectionFieldType);
-		
-		//2. read the size directly from the byte array with the offset
-		return this.meta.getCollectionSize(col, this.buffer);
+		return getListSize(col.getField());
 	}
 	
+	@Override
+	public int getListSize(Field field) {
+		//1. the input must be a collection-type field
+		Preconditions.checkArgument(
+				field.getType() instanceof CollectionFieldType);
+		
+		//2. read the size directly from the byte array with the offset
+		return this.meta.getCollectionSize(field, this.buffer);
+	}
 	
 	/**
 	 * Initiate the offset array for all valid values in the record buffer.

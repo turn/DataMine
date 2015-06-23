@@ -18,6 +18,7 @@ package datamine.storage.recordbuffers;
 import com.google.common.base.Preconditions;
 
 import datamine.storage.api.RecordMetadataInterface;
+import datamine.storage.idl.Field;
 
 /**
  * The definition of record for each tuple stored in the table. 
@@ -74,6 +75,7 @@ public abstract class Record<T extends Enum<T> & RecordMetadataInterface> {
 	 * @param val the new value of the concerned field
 	 */
 	abstract public void setValue(T col, Object val);
+	abstract public void setValue(Field field, Object val);
 	
 	/**
 	 * Get the value of the input column
@@ -81,6 +83,7 @@ public abstract class Record<T extends Enum<T> & RecordMetadataInterface> {
 	 * @return the value of the input column
 	 */
 	abstract public Object getValue(T col);
+	abstract public Object getValue(Field field);
 	
 	
 	/**
@@ -107,6 +110,7 @@ public abstract class Record<T extends Enum<T> & RecordMetadataInterface> {
 	 * @return the number of elements nested in the list-type field.
 	 */
 	abstract public int getListSize(T col); 
+	abstract public int getListSize(Field field); 
 
 	///////////////////////////////////////////////////////////////////////////
 	// The following getters define approaches to get the primitive when the 
@@ -122,5 +126,15 @@ public abstract class Record<T extends Enum<T> & RecordMetadataInterface> {
 	abstract public double getDouble(T col);
 	abstract public byte[] getBinary(T col);
 	abstract public String getString(T col);
+	
+	abstract public boolean getBool(Field field);
+	abstract public byte getByte(Field field);
+	abstract public short getShort(Field field);
+	abstract public long getLong(Field field);
+	abstract public int getInt(Field field);
+	abstract public float getFloat(Field field);
+	abstract public double getDouble(Field field);
+	abstract public byte[] getBinary(Field field);
+	abstract public String getString(Field field);
 
 }

@@ -186,14 +186,24 @@ class RecordBufferMeta<T extends Enum<T> & RecordMetadataInterface> {
 	 * @return the size of the collection-type field in the record
 	 */
 	public int getCollectionSize(T col, RecordBuffer rb) {
-		int offset = getCollectionOffset(col, rb);
+		return getCollectionSize(col.getField(), rb);
+	}
+
+	/** 
+	 * Find out the size of the collection-type field in the record
+	 * @param field the collection-type field 
+	 * @param buffer the record buffer storing the record
+	 * @return the size of the collection-type field in the record
+	 */
+	public int getCollectionSize(Field field, RecordBuffer rb) {
+		int offset = getCollectionOffset(field, rb);
 		if (offset > 0) {
 			return rb.getByteBuffer().getInt(offset + 4);
 		} else {
 			return 0;
 		}
 	}
-
+	
 	/**
 	 * Find out the offset of the input collection-type field
 	 * @param col the collection-type field
@@ -201,9 +211,19 @@ class RecordBufferMeta<T extends Enum<T> & RecordMetadataInterface> {
 	 * @return the offset of the input field in the record buffer
 	 */
 	public int getCollectionOffset(T col, RecordBuffer rb) {
+		return getCollectionOffset(col.getField(), rb);
+	}
+	
+	/**
+	 * Find out the offset of the input collection-type field
+	 * @param field the collection-type field
+	 * @param rb the record buffer storing the record
+	 * @return the offset of the input field in the record buffer
+	 */
+	public int getCollectionOffset(Field field, RecordBuffer rb) {
 		ByteBuffer byteBuffer = rb.getByteBuffer();
 		int initOffset = 0;
-		int id = col.getField().getId();
+		int id = field.getId();
 		int seqenceNo = this.getSequenceOfCollectionField(id);
 		if (seqenceNo >= 0) {
 			int offset = initOffset + 4 + 2 + (this.hasSortedKey() ? 4 : 0);
@@ -225,11 +245,21 @@ class RecordBufferMeta<T extends Enum<T> & RecordMetadataInterface> {
 	 * @return the offset of the field with 'hasRef' annotation.
 	 */
 	public int getFieldWithReferenceOffset(T col, RecordBuffer rb) {
+		return getFieldWithReferenceOffset(col.getField(), rb);
+	}
+	
+	/**
+	 * Get the offset of the field with 'hasRef' annotation.
+	 * 
+	 * @param field the field with 'hasRef' annotation
+	 * @return the offset of the field with 'hasRef' annotation.
+	 */
+	public int getFieldWithReferenceOffset(Field field, RecordBuffer rb) {
 		
 		ByteBuffer byteBuffer = rb.getByteBuffer();
 		int initOffset = 0;
 		
-		int id = col.getField().getId();
+		int id = field.getId();
 		int length = byteBuffer.getShort(initOffset + 4);
 		if (length > 2) {
 

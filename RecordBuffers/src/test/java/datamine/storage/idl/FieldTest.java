@@ -32,9 +32,11 @@ public class FieldTest {
 		boolean isAscSorted = false;
 		boolean isFrequentlyUsed = false;
 		boolean isDerived = false;
+		boolean hasLargeList = false;
 		
 		EnumSet<Field.Constraint> constraints = Field.getContraintEnumSet(
-				isRequired, isDesSorted, isAscSorted, isFrequentlyUsed, isDerived);
+				isRequired, isDesSorted, isAscSorted, isFrequentlyUsed, 
+				isDerived, hasLargeList);
 		Assert.assertEquals(constraints, EnumSet.of(Field.Constraint.OPTIONAL));
 		
 		isRequired = true;
@@ -42,7 +44,8 @@ public class FieldTest {
 		isAscSorted = false;
 		
 		constraints = Field.getContraintEnumSet(
-				isRequired, isDesSorted, isAscSorted, isFrequentlyUsed, isDerived);
+				isRequired, isDesSorted, isAscSorted, isFrequentlyUsed, 
+				isDerived, hasLargeList);
 		Assert.assertEquals(constraints, EnumSet.of(Field.Constraint.REQUIRED));
 		
 		isRequired = true;
@@ -50,7 +53,8 @@ public class FieldTest {
 		isAscSorted = false;
 		
 		constraints = Field.getContraintEnumSet(
-				isRequired, isDesSorted, isAscSorted, isFrequentlyUsed, isDerived);
+				isRequired, isDesSorted, isAscSorted, isFrequentlyUsed, 
+				isDerived, hasLargeList);
 		Assert.assertEquals(constraints, EnumSet.of(Field.Constraint.REQUIRED, 
 				Field.Constraint.DES_SORTED));
 	}
@@ -59,6 +63,7 @@ public class FieldTest {
 	void checkDerived() {
 		boolean isDesSorted = true;
 		boolean isAscSorted = true;
-		Field.getContraintEnumSet(false, isDesSorted, isAscSorted, false, false);
+		Field.getContraintEnumSet(false, isDesSorted, isAscSorted, false, 
+				false, false);
 	}
 }

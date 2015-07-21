@@ -39,16 +39,16 @@ public class RecordBuffersBuilder implements RecordBuilderInterface {
 
 		try {
 			
+		if (tableClass == AnalyticalUserProfileInterface.class) {
+			return (T) AnalyticalUserProfileRecord.class.newInstance();
+		}
+		else
 		if (tableClass == AttributionResultInterface.class) {
 			return (T) AttributionResultRecord.class.newInstance();
 		}
 		else
 		if (tableClass == ImpressionInterface.class) {
 			return (T) ImpressionRecord.class.newInstance();
-		}
-		else
-		if (tableClass == AnalyticalUserProfileInterface.class) {
-			return (T) AnalyticalUserProfileRecord.class.newInstance();
 		}
 		else
 		if (tableClass == ProviderUserIdInterface.class) {

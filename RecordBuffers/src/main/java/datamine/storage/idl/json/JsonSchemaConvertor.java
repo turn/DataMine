@@ -82,7 +82,7 @@ public class JsonSchemaConvertor implements JsonElementVisitor,
 		if (defaultValue == null && type instanceof PrimitiveFieldType && !field.isRequired()) {
 			if (((PrimitiveFieldType) type).getPrimitiveType() != PrimitiveType.BINARY) {
 				throw new IllegalArgumentException("Default value " +
-						"is required for the optional primitive column - " + field.getName());				
+						"is required for the optional (non-binary) primitive column - " + field.getName());				
 			}
 		}
 		

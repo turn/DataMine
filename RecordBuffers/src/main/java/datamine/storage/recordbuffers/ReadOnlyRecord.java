@@ -145,7 +145,7 @@ public class ReadOnlyRecord<T extends Enum<T> & RecordMetadataInterface> extends
 			result = valueOpr.getValue(buf, offset + 4, buf.getInt(offset));
 		} 
 		
-		// never return NULL
+		// try to return non-null as much as possible
 		if (result == null) { 
 			return field.getDefaultValue();
 		} else {

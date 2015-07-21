@@ -34,11 +34,14 @@ The element, *field* describes the attributes of a column in the table. Particul
 - *id* is for the ID of the field. 
 - *name* is the name of the field.
 - *type* defines the type information.
-- *default value* specifies the default value of the field if it is not a required field. 
+- *default value* specifies the default value of the field if it is not a required field.
+	-  a *required* field does not have a default value,
+	-  a *optional* primitive field (except *BINARY* field) must have a non-null default value, 
+	-  other fields should not have default values.  
 - *constraints* depicts the constraints enforced upon the field. It could be one or multiple of the following:
 	- isRequired: it is true if the field is required.
 	- isAscSortKey or isDesSortKey: it is true if the field is used for sorting records. Note that a table has at most one field to be sort key and it must define its sort key while initialization. A table cannot get rid of its sort key once defined. 
-	- isFrequentlyUsed: it is introduced to improve the reading performance of the field.
+	- isFrequentlyUsed: it is introduced to improve the reading performance of the field; note that it cannot be removed once introduced.
 	- isDerived: it is true when the field has its value calculated on the fly according to the application; now a derived field must be optional and primitive and all derived fields have the same *id* (e.g., 0).
 
 ### type

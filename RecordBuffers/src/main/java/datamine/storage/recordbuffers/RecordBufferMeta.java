@@ -385,7 +385,6 @@ public class RecordBufferMeta<T extends Enum<T> & RecordMetadataInterface> {
 	 * We want to keep the order of field list in every scenario
 	 * 
 	 * @author yqi
-	 * @date Jan 9, 2015
 	 */
 	public static class AttributeComparator<T extends Enum<T> & RecordMetadataInterface> 
 	implements Comparator<T> {

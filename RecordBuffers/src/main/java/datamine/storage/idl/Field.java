@@ -33,7 +33,8 @@ public class Field implements Element {
 	public static final int DERIVED_FIELD_ID = 0;
 	
 	public enum Constraint {
-		REQUIRED, ASC_SORTED, DES_SORTED, OPTIONAL, FREQUENTLY_USED, DERIVED
+		REQUIRED, ASC_SORTED, DES_SORTED, OPTIONAL, FREQUENTLY_USED, DERIVED,
+		LARGE_LIST
 	}
 	
 	private final int id;
@@ -50,7 +51,7 @@ public class Field implements Element {
 		this.constraints = getContraintEnumSet(
 				builder.isRequired, builder.isDesSorted, 
 				builder.isAscSorted, builder.isCommonlyUsed,
-				builder.isDerived);
+				builder.isDerived, builder.hasLargeList);
 	}
 
 	public static class Builder {
@@ -66,6 +67,7 @@ public class Field implements Element {
 		private boolean isAscSorted = false;
 		private boolean isCommonlyUsed = false;
 		private boolean isDerived = false;
+		private boolean hasLargeList = false;
 		
 		private Builder(int id, String name, FieldType type) {
 			this.id = id;
@@ -103,6 +105,11 @@ public class Field implements Element {
 			return this;
 		}
 		
+		public Builder hasLargeList(boolean hll) {
+			this.hasLargeList = hll;
+			return this;
+		}
+		
 		public Field build() {
 			return new Field(this);
 		}
@@ -122,7 +129,7 @@ public class Field implements Element {
 	 */
 	public static EnumSet<Constraint> getContraintEnumSet(boolean isRequired,
 			boolean isDesSorted, boolean isAscSorted, boolean isFrequentlyUsed, 
-			boolean isDerived) {
+			boolean isDerived, boolean hasLargeList) {
 		
 		Preconditions.checkArgument(!(isDesSorted && isAscSorted), 
 				"No way to keep ASC sorting and DES sorting at the same time");
@@ -143,7 +150,7 @@ public class Field implements Element {
 			ret.add(Constraint.ASC_SORTED);
 		}
 		
-		//3. hasRef?
+		//3. is frequently used?
 		if (isFrequentlyUsed) {
 			ret.add(Constraint.FREQUENTLY_USED);
 		}
@@ -153,6 +160,10 @@ public class Field implements Element {
 			ret.add(Constraint.DERIVED);
 		}
 		
+		//5. hasLargeList?
+		if (hasLargeList) {
+			ret.add(Constraint.LARGE_LIST);
+		}
 		return ret;
 	}
 	
@@ -194,6 +205,10 @@ public class Field implements Element {
 	
 	public boolean isAscSortKey() {
 		return constraints.contains(Constraint.ASC_SORTED);
+	}
+	
+	public boolean hasLargeList() {
+		return constraints.contains(Constraint.LARGE_LIST);
 	}
 	
 	public boolean isSortKey() {

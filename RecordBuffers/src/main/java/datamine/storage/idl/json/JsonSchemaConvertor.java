@@ -99,6 +99,7 @@ public class JsonSchemaConvertor implements JsonElementVisitor,
 				isAscSorted(field.isAscSorted()).
 				isFrequentlyUsed(field.isFrequentlyUsed()).
 				isDerived(field.isDerived()).
+				hasLargeList(field.hasLargeList()).
 				build());
 	}
 

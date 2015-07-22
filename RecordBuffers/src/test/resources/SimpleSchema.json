@@ -48,7 +48,7 @@
         {"id": 2,"name": "version",         "type": "Byte", "isRequired": true, "isDesSortKey": true},
         {"id": 3,"name": "resolution",      "type": "Short",  "default": "-1"},
         {"id": 4,"name": "os_version",      "type": "String", "default": "Unknown"},
-        {"id": 5,"name": "impressions",            "type": "List:impression"},
+        {"id": 5,"name": "impressions",            "type": "List:impression", "hasLargeList": true},
         {"id": 6,"name": "id_maps",                "type": "id_map"},
 		{"id": 7, "name": "time_list",     "type": "List:Integer"},
 		{"id": 8, "name": "data",     "type": "Binary"},

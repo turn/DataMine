@@ -48,48 +48,93 @@ public class JsonField implements JsonElement {
 	@Expose @SerializedName("isDesSortKey")
 	private boolean isDesSorted = false; 
 	@Expose @SerializedName("isFrequentlyUsed")
-	private boolean isFrequentlyUsed = false; // effective only if isSorted=true
+	private boolean isFrequentlyUsed = false; 
 	@Expose @SerializedName("isDerived")
-	private boolean isDerived = false; // effective only if isDerived=true
+	private boolean isDerived = false; 
+	@Expose @SerializedName("hasLargeList")
+	private boolean hasLargeList = false;
 	
+	/**
+	 * @return the ID of the field
+	 */
 	public int getId() {
 		return id;
 	}
 
+	/**
+	 * @return the name of the field
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * @return the type of the field
+	 */
 	public String getType() {
 		return type;
 	}
 
+	/**
+	 * @return the default value in the format of text
+	 */
 	public String getDefaultValueString() {
 		return defaultValueString;
 	}
 
+	/**
+	 * @return true if it is a required field
+	 */
 	public boolean isRequired() {
 		return isRequired;
 	}
 
+	/**
+	 * @return true if the values of the field are sorted in the descending order
+	 */
 	public boolean isDesSorted() {
 		return isDesSorted;
 	}
 	
+	/**
+	 * @return true if the values of the field are sorted
+	 */
 	public boolean isSorted() {
 		return isDesSorted || isAscSorted;
 	}
 
+	/**
+	 * @return true if the values of the field are sorted in the ascending order
+	 */
 	public boolean isAscSorted() {
 		return isAscSorted;
 	}
 	
+	/**
+	 * Note that it is a hint which can be used to improve the reading performance
+	 * 
+	 * @return true if the field is frequently used
+	 */
 	public boolean isFrequentlyUsed() {
 		return isFrequentlyUsed;
 	}
 
+	/**
+	 * Note that a derived field does not have its value stored physically
+	 * 
+	 * @return true if the field is derived
+	 */
 	public boolean isDerived() {
 		return isDerived;
+	}
+	
+	/**
+	 * Note that it is a hint which can be used to improve the reading performance
+	 * 
+	 * @return true if the field is type of collection and could have a long list as value
+	 */
+	public boolean hasLargeList() {
+		return hasLargeList;
 	}
 	
 	public String toString() {
@@ -100,6 +145,4 @@ public class JsonField implements JsonElement {
 	public void accept(JsonElementVisitor visitor) {
 		visitor.visit(this);
 	}
-
-	
 }

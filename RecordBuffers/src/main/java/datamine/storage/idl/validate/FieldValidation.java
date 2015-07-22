@@ -19,6 +19,7 @@ import java.util.EnumSet;
 
 import datamine.storage.idl.Field;
 import datamine.storage.idl.Field.Constraint;
+import datamine.storage.idl.type.CollectionFieldType;
 import datamine.storage.idl.type.FieldType;
 import datamine.storage.idl.type.PrimitiveFieldType;
 import datamine.storage.idl.type.PrimitiveType;
@@ -26,6 +27,7 @@ import datamine.storage.idl.validate.exceptions.AbstractValidationException;
 import datamine.storage.idl.validate.exceptions.IllegalDerivedFieldException;
 import datamine.storage.idl.validate.exceptions.IllegalFieldDefaultValueException;
 import datamine.storage.idl.validate.exceptions.IllegalFieldIdentityException;
+import datamine.storage.idl.validate.exceptions.IllegalFieldRestrictionException;
 import datamine.storage.idl.validate.exceptions.OptionalSortKeyException;
 import datamine.storage.recordbuffers.idl.value.FieldValueOperatorFactory;
 
@@ -105,9 +107,16 @@ class FieldValidation implements ValidateInterface<Field> {
 			if (!constraints.contains(Constraint.REQUIRED)) {
 				throw new OptionalSortKeyException(fieldName);
 			}
-
-		}		
+		}
 		
+		// validate the constraints for hints
+		if (constraints.contains(Constraint.LARGE_LIST)) {
+			if (!(type instanceof CollectionFieldType)) {
+				String msg = Constraint.LARGE_LIST + " cannot be applied to a non-collection type field";
+				throw new IllegalFieldRestrictionException(msg);
+			}
+		}
+
 	}
 
 }

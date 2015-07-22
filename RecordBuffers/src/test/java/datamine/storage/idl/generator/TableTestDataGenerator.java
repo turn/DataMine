@@ -238,7 +238,7 @@ public class TableTestDataGenerator implements ElementVisitor,
 
 			FieldType elementType = type.getElementType();
 
-			switch (type.getType()) {
+			switch (type.getCollectionType()) {
 			case LIST:
 
 				if (elementType instanceof PrimitiveFieldType) {
@@ -269,7 +269,7 @@ public class TableTestDataGenerator implements ElementVisitor,
 				break;
 
 			default:
-				throw new IllegalArgumentException("Not support for the type of " + type.getType());
+				throw new IllegalArgumentException("Not support for the type of " + type.getCollectionType());
 			}
 
 		}
@@ -332,7 +332,7 @@ public class TableTestDataGenerator implements ElementVisitor,
 				.append("RandomValueGenerator.getValueOf(((PrimitiveFieldType)")
 				.append(metadataClassName).append(".")
 				.append(MetadataFileGenerator.getEnumValue(field.getName()))
-				.append(".getField().getType()).getType())").toString();
+				.append(".getField().getType()).getPrimitiveType())").toString();
 			fieldSetterTemplate.fillFields("getFieldValue", returnClause);
 			fieldSetterTemplate.fillFields("checkConditions", "val != null");
 		}
@@ -351,7 +351,7 @@ public class TableTestDataGenerator implements ElementVisitor,
 
 			FieldType elementType = type.getElementType();
 
-			switch (type.getType()) {
+			switch (type.getCollectionType()) {
 			case LIST:
 
 				if (elementType instanceof PrimitiveFieldType) {
@@ -360,7 +360,7 @@ public class TableTestDataGenerator implements ElementVisitor,
 					.append("RandomValueGenerator.getValueArrayOf(((PrimitiveFieldType) ((CollectionFieldType)")
 					.append(metadataClassName).append(".")
 					.append(MetadataFileGenerator.getEnumValue(field.getName()))
-					.append(".getField().getType()).getElementType()).getType(), num)").toString();
+					.append(".getField().getType()).getElementType()).getPrimitiveType(), num)").toString();
 					
 					fieldSetterTemplate.fillFields("getFieldValue", returnClause);
 					
@@ -385,7 +385,7 @@ public class TableTestDataGenerator implements ElementVisitor,
 				break;
 
 			default:
-				throw new IllegalArgumentException("Not support for the type of " + type.getType());
+				throw new IllegalArgumentException("Not support for the type of " + type.getCollectionType());
 			}
 
 		}
@@ -487,7 +487,7 @@ public class TableTestDataGenerator implements ElementVisitor,
 			} else if (type instanceof CollectionFieldType) {
 
 				FieldType elementType = ((CollectionFieldType) type).getElementType();
-				switch (((CollectionFieldType) type).getType()) {
+				switch (((CollectionFieldType) type).getCollectionType()) {
 				case LIST:
 					if (elementType instanceof PrimitiveFieldType) {
 
@@ -521,7 +521,7 @@ public class TableTestDataGenerator implements ElementVisitor,
 					break;
 				default:
 					throw new IllegalArgumentException("Not support for the type of " + 
-							((CollectionFieldType) type).getType());
+							((CollectionFieldType) type).getCollectionType());
 				}
 				
 			} else {

@@ -130,7 +130,7 @@ public class ReadOnlyRecord<T extends Enum<T> & RecordMetadataInterface> extends
 		Object result = null;
 		int offset = getOffset(field);
 		if (offset > 0 && type instanceof PrimitiveFieldType) {
-			PrimitiveType priType = ((PrimitiveFieldType) type).getType();
+			PrimitiveType priType = ((PrimitiveFieldType) type).getPrimitiveType();
 			switch (priType) {
 			case STRING:
 				result = valueOpr.getValue(buf, offset + 2, buf.getShort(offset));
@@ -351,7 +351,7 @@ public class ReadOnlyRecord<T extends Enum<T> & RecordMetadataInterface> extends
 				FieldType fieldType = curField.getField().getType();
 				FieldValueOperatorInterface valueOpr = FieldValueOperatorFactory.getOperator(fieldType);
 				if (fieldType instanceof PrimitiveFieldType) {
-					switch (((PrimitiveFieldType) fieldType).getType()) {
+					switch (((PrimitiveFieldType) fieldType).getPrimitiveType()) {
 					case STRING:
 						// string requires a SHORT to store its length (max < 32k)
 						short arrayLength = bytebuffer.getShort(offset);

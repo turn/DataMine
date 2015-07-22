@@ -160,7 +160,7 @@ public class MetadataFileGenerator implements ElementVisitor,
 		FieldType type = field.getType();
 		// the field does not have the default unless it is optional and primitive
 		if (field.isRequired() || !(type instanceof PrimitiveFieldType) ||
-			(type instanceof PrimitiveFieldType && ((PrimitiveFieldType)type).getType() == PrimitiveType.BINARY)) {
+			(type instanceof PrimitiveFieldType && ((PrimitiveFieldType)type).getPrimitiveType() == PrimitiveType.BINARY)) {
 			sb.append("null"); // default value
 			
 		} else {
@@ -168,7 +168,7 @@ public class MetadataFileGenerator implements ElementVisitor,
 			Object defVal = field.getDefaultValue();
 			String valueStr = defVal.toString();
 			if (type instanceof PrimitiveFieldType && 
-			   ((PrimitiveFieldType) type).getType() == PrimitiveType.STRING) {
+			   ((PrimitiveFieldType) type).getPrimitiveType() == PrimitiveType.STRING) {
 				valueStr = "\"" + valueStr + "\"";
 				
 			}

@@ -129,17 +129,17 @@ public class InterfaceGenerator implements CodeGenerator, ElementVisitor {
 		
 		// generate get list size for list field
 		if (type instanceof CollectionFieldType) {
-			if (((CollectionFieldType) type).getType() == CollectionType.LIST) {
+			if (((CollectionFieldType) type).getCollectionType() == CollectionType.LIST) {
 				currentTemplate.fillFields("fieldListSize", 
 						templateGenerator.getListSizeTemplate());	
 			} else {
 				throw new IllegalArgumentException("Not support the type of " + 
-						((CollectionFieldType) type).getType());
+						((CollectionFieldType) type).getCollectionType());
 			}
 		}
 		
 		//generate getDefault function only for primitive field
-		if (type instanceof PrimitiveFieldType && ((PrimitiveFieldType) type).getType() != PrimitiveType.BINARY) {
+		if (type instanceof PrimitiveFieldType && ((PrimitiveFieldType) type).getPrimitiveType() != PrimitiveType.BINARY) {
 			currentTemplate.fillFields("fieldDefaultValue", 
 					templateGenerator.getDefaultValueTemplate());
 		}
@@ -203,7 +203,7 @@ public class InterfaceGenerator implements CodeGenerator, ElementVisitor {
 	public static String getGetterName(Field field) {
 		FieldType type = field.getType();
 		if (type instanceof PrimitiveFieldType &&
-		    ((PrimitiveFieldType) type).getType() == PrimitiveType.BOOL) {
+		    ((PrimitiveFieldType) type).getPrimitiveType() == PrimitiveType.BOOL) {
 			return new StringBuilder().append("is").append(CaseFormat.LOWER_UNDERSCORE
 					.to(CaseFormat.UPPER_CAMEL, field.getName())).toString();
 		}

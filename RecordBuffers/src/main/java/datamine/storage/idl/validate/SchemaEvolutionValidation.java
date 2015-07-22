@@ -172,7 +172,7 @@ public class SchemaEvolutionValidation implements ValidateInterface<Schema> {
 
 		// check the default value
 		if (!current.isRequired() && current.getType() instanceof PrimitiveFieldType &&
-			((PrimitiveFieldType) current.getType()).getType() != PrimitiveType.BINARY && 
+			((PrimitiveFieldType) current.getType()).getPrimitiveType() != PrimitiveType.BINARY && 
 			!current.getDefaultValue().equals(next.getDefaultValue())) {
 			throw new FieldDefaultValueModifiedInSchemaEvolutionException(current.getName());
 		}

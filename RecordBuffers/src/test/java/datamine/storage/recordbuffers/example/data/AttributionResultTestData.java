@@ -83,7 +83,7 @@ public class AttributionResultTestData extends AbstractTestData<AttributionResul
 			EnumMap<AttributionResultMetadata, Object> dataMap = Maps.newEnumMap(AttributionResultMetadata.class);
 			
 			{
-				Object val = RandomValueGenerator.getValueOf(((PrimitiveFieldType)AttributionResultMetadata.ID.getField().getType()).getType());
+				Object val = RandomValueGenerator.getValueOf(((PrimitiveFieldType)AttributionResultMetadata.ID.getField().getType()).getPrimitiveType());
 				if (val != null) {
 					dataMap.put(AttributionResultMetadata.ID, val);
 				}

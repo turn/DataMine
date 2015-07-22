@@ -135,28 +135,28 @@ public class AnalyticalUserProfileTestData extends AbstractTestData<AnalyticalUs
 			EnumMap<AnalyticalUserProfileMetadata, Object> dataMap = Maps.newEnumMap(AnalyticalUserProfileMetadata.class);
 			
 			{
-				Object val = RandomValueGenerator.getValueOf(((PrimitiveFieldType)AnalyticalUserProfileMetadata.USER_ID.getField().getType()).getType());
+				Object val = RandomValueGenerator.getValueOf(((PrimitiveFieldType)AnalyticalUserProfileMetadata.USER_ID.getField().getType()).getPrimitiveType());
 				if (val != null) {
 					dataMap.put(AnalyticalUserProfileMetadata.USER_ID, val);
 				}
 			}
 
 			{
-				Object val = RandomValueGenerator.getValueOf(((PrimitiveFieldType)AnalyticalUserProfileMetadata.VERSION.getField().getType()).getType());
+				Object val = RandomValueGenerator.getValueOf(((PrimitiveFieldType)AnalyticalUserProfileMetadata.VERSION.getField().getType()).getPrimitiveType());
 				if (val != null) {
 					dataMap.put(AnalyticalUserProfileMetadata.VERSION, val);
 				}
 			}
 
 			{
-				Object val = RandomValueGenerator.getValueOf(((PrimitiveFieldType)AnalyticalUserProfileMetadata.RESOLUTION.getField().getType()).getType());
+				Object val = RandomValueGenerator.getValueOf(((PrimitiveFieldType)AnalyticalUserProfileMetadata.RESOLUTION.getField().getType()).getPrimitiveType());
 				if (val != null) {
 					dataMap.put(AnalyticalUserProfileMetadata.RESOLUTION, val);
 				}
 			}
 
 			{
-				Object val = RandomValueGenerator.getValueOf(((PrimitiveFieldType)AnalyticalUserProfileMetadata.OS_VERSION.getField().getType()).getType());
+				Object val = RandomValueGenerator.getValueOf(((PrimitiveFieldType)AnalyticalUserProfileMetadata.OS_VERSION.getField().getType()).getPrimitiveType());
 				if (val != null) {
 					dataMap.put(AnalyticalUserProfileMetadata.OS_VERSION, val);
 				}
@@ -177,14 +177,14 @@ public class AnalyticalUserProfileTestData extends AbstractTestData<AnalyticalUs
 			}
 
 			{
-				Object val = RandomValueGenerator.getValueArrayOf(((PrimitiveFieldType) ((CollectionFieldType)AnalyticalUserProfileMetadata.TIME_LIST.getField().getType()).getElementType()).getType(), num);
+				Object val = RandomValueGenerator.getValueArrayOf(((PrimitiveFieldType) ((CollectionFieldType)AnalyticalUserProfileMetadata.TIME_LIST.getField().getType()).getElementType()).getPrimitiveType(), num);
 				if (val != null && !((List) val).isEmpty()) {
 					dataMap.put(AnalyticalUserProfileMetadata.TIME_LIST, val);
 				}
 			}
 
 			{
-				Object val = RandomValueGenerator.getValueOf(((PrimitiveFieldType)AnalyticalUserProfileMetadata.DATA.getField().getType()).getType());
+				Object val = RandomValueGenerator.getValueOf(((PrimitiveFieldType)AnalyticalUserProfileMetadata.DATA.getField().getType()).getPrimitiveType());
 				if (val != null) {
 					dataMap.put(AnalyticalUserProfileMetadata.DATA, val);
 				}

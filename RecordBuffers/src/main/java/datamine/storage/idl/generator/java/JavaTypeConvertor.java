@@ -42,7 +42,7 @@ public class JavaTypeConvertor implements UnaryOperatorInterface<FieldType, Stri
 	
 	private String convert(PrimitiveFieldType type) {
 		String javaType = "";
-		switch (type.getType()) {
+		switch (type.getPrimitiveType()) {
 		case BOOL:
 			javaType = useBoxing ? "Boolean" : "boolean";
 			break;
@@ -71,7 +71,7 @@ public class JavaTypeConvertor implements UnaryOperatorInterface<FieldType, Stri
 			javaType = "byte[]";
 			break;
 		default:
-			throw new IllegalArgumentException("Not support the type: "+type.getType());
+			throw new IllegalArgumentException("Not support the type: "+type.getPrimitiveType());
 		}
 		return javaType;
 	}
@@ -86,14 +86,14 @@ public class JavaTypeConvertor implements UnaryOperatorInterface<FieldType, Stri
 	
 	private String convert(CollectionFieldType type) {
 		StringBuilder sb = new StringBuilder();
-		if (type.getType() == CollectionType.LIST) {
+		if (type.getCollectionType() == CollectionType.LIST) {
 			useBoxing = true;
 			sb.append("List<");
 			sb.append(apply(type.getElementType()));
 			sb.append(">");
 			useBoxing = false;
 		} else {
-			throw new IllegalArgumentException("Not support "+type.getType());
+			throw new IllegalArgumentException("Not support "+type.getCollectionType());
 		}
 		return sb.toString();
 	}

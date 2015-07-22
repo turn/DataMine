@@ -131,35 +131,35 @@ public class ImpressionTestData extends AbstractTestData<ImpressionInterface, Im
 			EnumMap<ImpressionMetadata, Object> dataMap = Maps.newEnumMap(ImpressionMetadata.class);
 			
 			{
-				Object val = RandomValueGenerator.getValueOf(((PrimitiveFieldType)ImpressionMetadata.MEDIA_PROVIDER_ID.getField().getType()).getType());
+				Object val = RandomValueGenerator.getValueOf(((PrimitiveFieldType)ImpressionMetadata.MEDIA_PROVIDER_ID.getField().getType()).getPrimitiveType());
 				if (val != null) {
 					dataMap.put(ImpressionMetadata.MEDIA_PROVIDER_ID, val);
 				}
 			}
 
 			{
-				Object val = RandomValueGenerator.getValueOf(((PrimitiveFieldType)ImpressionMetadata.MP_TPT_CATEGORY_ID.getField().getType()).getType());
+				Object val = RandomValueGenerator.getValueOf(((PrimitiveFieldType)ImpressionMetadata.MP_TPT_CATEGORY_ID.getField().getType()).getPrimitiveType());
 				if (val != null) {
 					dataMap.put(ImpressionMetadata.MP_TPT_CATEGORY_ID, val);
 				}
 			}
 
 			{
-				Object val = RandomValueGenerator.getValueOf(((PrimitiveFieldType)ImpressionMetadata.TRUNCATED_URL.getField().getType()).getType());
+				Object val = RandomValueGenerator.getValueOf(((PrimitiveFieldType)ImpressionMetadata.TRUNCATED_URL.getField().getType()).getPrimitiveType());
 				if (val != null) {
 					dataMap.put(ImpressionMetadata.TRUNCATED_URL, val);
 				}
 			}
 
 			{
-				Object val = RandomValueGenerator.getValueOf(((PrimitiveFieldType)ImpressionMetadata.BID.getField().getType()).getType());
+				Object val = RandomValueGenerator.getValueOf(((PrimitiveFieldType)ImpressionMetadata.BID.getField().getType()).getPrimitiveType());
 				if (val != null) {
 					dataMap.put(ImpressionMetadata.BID, val);
 				}
 			}
 
 			{
-				Object val = RandomValueGenerator.getValueOf(((PrimitiveFieldType)ImpressionMetadata.BID_TYPE.getField().getType()).getType());
+				Object val = RandomValueGenerator.getValueOf(((PrimitiveFieldType)ImpressionMetadata.BID_TYPE.getField().getType()).getPrimitiveType());
 				if (val != null) {
 					dataMap.put(ImpressionMetadata.BID_TYPE, val);
 				}
@@ -173,14 +173,14 @@ public class ImpressionTestData extends AbstractTestData<ImpressionInterface, Im
 			}
 
 			{
-				Object val = RandomValueGenerator.getValueOf(((PrimitiveFieldType)ImpressionMetadata.ALLOWED_AD_FORMATS.getField().getType()).getType());
+				Object val = RandomValueGenerator.getValueOf(((PrimitiveFieldType)ImpressionMetadata.ALLOWED_AD_FORMATS.getField().getType()).getPrimitiveType());
 				if (val != null) {
 					dataMap.put(ImpressionMetadata.ALLOWED_AD_FORMATS, val);
 				}
 			}
 
 			{
-				Object val = RandomValueGenerator.getValueOf(((PrimitiveFieldType)ImpressionMetadata.COST.getField().getType()).getType());
+				Object val = RandomValueGenerator.getValueOf(((PrimitiveFieldType)ImpressionMetadata.COST.getField().getType()).getPrimitiveType());
 				if (val != null) {
 					dataMap.put(ImpressionMetadata.COST, val);
 				}

@@ -31,7 +31,7 @@ public class MetaTypeConvertor implements UnaryOperatorInterface<FieldType, Stri
 	
 	private String convert(PrimitiveFieldType type) {
 		String typeFormat = "FieldTypeFactory.getPrimitiveType(PrimitiveType.%s)";
-		switch (type.getType()) {
+		switch (type.getPrimitiveType()) {
 		case BOOL:
 			return String.format(typeFormat, "BOOL");
 		case BYTE:
@@ -51,7 +51,7 @@ public class MetaTypeConvertor implements UnaryOperatorInterface<FieldType, Stri
 		case BINARY:
 			return String.format(typeFormat, "BINARY");
 		default:
-			throw new IllegalArgumentException("Not support the type: "+type.getType());
+			throw new IllegalArgumentException("Not support the type: "+type.getPrimitiveType());
 		}
 	}
 	

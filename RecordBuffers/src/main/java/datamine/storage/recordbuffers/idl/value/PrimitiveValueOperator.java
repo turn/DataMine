@@ -41,7 +41,7 @@ class PrimitiveValueOperator implements FieldValueOperatorInterface {
 	
 	public PrimitiveValueOperator(PrimitiveFieldType type) {
 		this.primitiveType = type;
-		switch (type.getType()) {
+		switch (type.getPrimitiveType()) {
 		case BYTE:
 			valueOpr = new ByteValueOperator();
 			break;
@@ -72,7 +72,7 @@ class PrimitiveValueOperator implements FieldValueOperatorInterface {
 		case UNKNOWN:
 		default:
 			valueOpr = null;
-			throw new IllegalArgumentException("It is not a valid primitive type - " + type.getType());
+			throw new IllegalArgumentException("It is not a valid primitive type - " + type.getPrimitiveType());
 		}
 		
 	}

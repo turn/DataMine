@@ -487,7 +487,7 @@ public class RecordMetaWrapperGenerator implements ElementVisitor,
 			String elementTypeStr = new JavaTypeConvertor().apply(elementType);
 			String typeStr = new JavaTypeConvertor().apply(type);
 			
-			switch (type.getType()) {
+			switch (type.getCollectionType()) {
 			case LIST:
 				
 				if (elementType instanceof PrimitiveFieldType) {
@@ -537,7 +537,7 @@ public class RecordMetaWrapperGenerator implements ElementVisitor,
 				break;
 
 			default:
-				throw new IllegalArgumentException("Not support for the type of " + type.getType());
+				throw new IllegalArgumentException("Not support for the type of " + type.getCollectionType());
 			}
 			
 		}
@@ -608,7 +608,7 @@ public class RecordMetaWrapperGenerator implements ElementVisitor,
 			field = input;
 			FieldType type = input.getType();
 			
-			if (type instanceof PrimitiveFieldType && ((PrimitiveFieldType) type).getType() != PrimitiveType.BINARY) {
+			if (type instanceof PrimitiveFieldType && ((PrimitiveFieldType) type).getPrimitiveType() != PrimitiveType.BINARY) {
 				fieldGetterTemplate = new CodeTemplate(code);
 				
 				String javaTypeStr = new JavaTypeConvertor().apply(type);
@@ -620,7 +620,7 @@ public class RecordMetaWrapperGenerator implements ElementVisitor,
 					Object defVal = field.getDefaultValue();
 					String valueStr = defVal.toString();
 					if (type instanceof PrimitiveFieldType && 
-						((PrimitiveFieldType) type).getType() == PrimitiveType.STRING) {
+						((PrimitiveFieldType) type).getPrimitiveType() == PrimitiveType.STRING) {
 						valueStr = "\"" + valueStr + "\"";
 						
 					}
@@ -667,7 +667,7 @@ public class RecordMetaWrapperGenerator implements ElementVisitor,
 			String enumName = MetadataFileGenerator.getEnumValue(field.getName());
 			String colName = metadataClassName + "." + enumName;
 			StringBuilder sb = new StringBuilder().append("return this.value.get");
-			switch (type.getType()) {
+			switch (type.getPrimitiveType()) {
 			case BOOL:
 				sb.append("Bool");
 				break;
@@ -696,7 +696,7 @@ public class RecordMetaWrapperGenerator implements ElementVisitor,
 				sb.append("Binary");
 				break;
 			default:
-				throw new IllegalArgumentException("Not supported type : " + type.getType());
+				throw new IllegalArgumentException("Not supported type : " + type.getPrimitiveType());
 			}
 			fieldGetterTemplate.fillFields("returnClause", 
 					sb.append("(").append(colName).append(");").toString());
@@ -733,7 +733,7 @@ public class RecordMetaWrapperGenerator implements ElementVisitor,
 			FieldType elementType = type.getElementType();
 			String javaTypeStr = new JavaTypeConvertor(true).apply(elementType); 
 			
-			switch (type.getType()) {
+			switch (type.getCollectionType()) {
 			case LIST:
 
 				fieldGetterTemplate.fillFields("elementType", javaTypeStr);
@@ -775,7 +775,7 @@ public class RecordMetaWrapperGenerator implements ElementVisitor,
 				break;
 
 			default:
-				throw new IllegalArgumentException("Not support for the type of " + type.getType());
+				throw new IllegalArgumentException("Not support for the type of " + type.getCollectionType());
 			}
 			
 		}

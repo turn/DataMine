@@ -49,7 +49,7 @@ class CollectionValueOperator implements FieldValueOperatorInterface {
 
 	public CollectionValueOperator(CollectionFieldType type) {
 		this.elementType = type.getElementType();
-		this.collectionType = type.getType();
+		this.collectionType = type.getCollectionType();
 	}
 
 	public FieldType getElementType() {
@@ -101,7 +101,7 @@ class CollectionValueOperator implements FieldValueOperatorInterface {
 		//2. start reading values
 		FieldValueOperatorInterface valOpr = FieldValueOperatorFactory.getOperator(elementType);
 		if (elementType instanceof PrimitiveFieldType) {
-			PrimitiveType type = ((PrimitiveFieldType) elementType).getType();
+			PrimitiveType type = ((PrimitiveFieldType) elementType).getPrimitiveType();
 			switch (type) {
 			case STRING:
 				for (int i = 0; i < listSize; i++) {
@@ -154,7 +154,7 @@ class CollectionValueOperator implements FieldValueOperatorInterface {
 		FieldValueOperatorInterface valOpr = FieldValueOperatorFactory.getOperator(elementType);
 		outStream.write(ByteBuffer.allocate(4).putInt(valList.size()).array());
 		if (elementType instanceof PrimitiveFieldType) {
-			PrimitiveType type = ((PrimitiveFieldType) elementType).getType();
+			PrimitiveType type = ((PrimitiveFieldType) elementType).getPrimitiveType();
 			switch (type) {
 			case STRING:
 				for (Object cur : valList) {
@@ -207,7 +207,7 @@ class CollectionValueOperator implements FieldValueOperatorInterface {
 		int num = valList.size();
 		FieldValueOperatorInterface valOpr = FieldValueOperatorFactory.getOperator(elementType);
 		if (elementType instanceof PrimitiveFieldType) {
-			PrimitiveType type = ((PrimitiveFieldType) elementType).getType();
+			PrimitiveType type = ((PrimitiveFieldType) elementType).getPrimitiveType();
 			switch (type) {
 			case STRING:
 				for (Object cur : valList) {

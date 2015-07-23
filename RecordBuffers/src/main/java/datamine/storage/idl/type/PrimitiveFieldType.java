@@ -30,7 +30,7 @@ final public class PrimitiveFieldType implements FieldType {
 		this.type = gType;
 	}
 
-	public PrimitiveType getType() {
+	public PrimitiveType getPrimitiveType() {
 		return type;
 	}
 

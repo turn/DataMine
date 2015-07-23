@@ -29,7 +29,7 @@ final public class CollectionFieldType implements FieldType {
 		return elementType;
 	}
 
-	public CollectionType getType() {
+	public CollectionType getCollectionType() {
 		return collectionType;
 	}
 

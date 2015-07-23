@@ -287,7 +287,7 @@ public class WritableRecord<T extends Enum<T> & RecordMetadataInterface> extends
 				int id = curField.getField().getId() - 1; // note that the ID starts at 1 instead of 0
 				FieldValueOperatorInterface valueOpr = FieldValueOperatorFactory.getOperator(fieldType);
 				if (fieldType instanceof PrimitiveFieldType) {
-					switch (((PrimitiveFieldType) fieldType).getType()) {
+					switch (((PrimitiveFieldType) fieldType).getPrimitiveType()) {
 					case STRING:
 						// string requires a SHORT to store its length (max < 32k)
 						short arrayLength = bytebuffer.getShort(offset);
@@ -461,7 +461,7 @@ public class WritableRecord<T extends Enum<T> & RecordMetadataInterface> extends
 								curPosition += byteArray.length;
 							} else {
 								if (curFieldType instanceof PrimitiveFieldType && 
-										((PrimitiveFieldType) curFieldType).getType().equals(PrimitiveType.STRING)) {
+										((PrimitiveFieldType) curFieldType).getPrimitiveType().equals(PrimitiveType.STRING)) {
 									if (byteArray.length > Short.MAX_VALUE) {
 										outStream.write(new byte[]{(byte)0,(byte)0});
 										curPosition += 2;

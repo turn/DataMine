@@ -86,7 +86,7 @@ class FieldValidation implements ValidateInterface<Field> {
 		Object defaultVal = input.getDefaultValue();
 		
 		if (type instanceof PrimitiveFieldType && 
-			((PrimitiveFieldType) type).getType() != PrimitiveType.BINARY && 
+			((PrimitiveFieldType) type).getPrimitiveType() != PrimitiveType.BINARY && 
 			!input.isRequired()) {
 			
 			if (!FieldValueOperatorFactory.getOperator(type).isValid(defaultVal)) {

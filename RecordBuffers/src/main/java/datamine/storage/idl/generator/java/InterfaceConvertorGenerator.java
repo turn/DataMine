@@ -165,7 +165,7 @@ public class InterfaceConvertorGenerator implements ElementVisitor, CodeGenerato
 			};
 			
 			CodeTemplate fieldCode = null;
-			if (type.getType() == CollectionType.LIST) {
+			if (type.getCollectionType() == CollectionType.LIST) {
 				FieldType elementType = type.getElementType();
 				if (elementType instanceof PrimitiveFieldType) {
 					fieldCode = createPrimitiveFieldTypeTemplate((PrimitiveFieldType) elementType);
@@ -181,7 +181,7 @@ public class InterfaceConvertorGenerator implements ElementVisitor, CodeGenerato
 				
 			} else {
 				throw new IllegalArgumentException("Not support the type of " +
-						((CollectionFieldType) type).getType());
+						((CollectionFieldType) type).getCollectionType());
 			}
 			return fieldCode;
 		}

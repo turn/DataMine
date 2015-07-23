@@ -83,14 +83,14 @@ public class ProviderUserIdTestData extends AbstractTestData<ProviderUserIdInter
 			EnumMap<ProviderUserIdMetadata, Object> dataMap = Maps.newEnumMap(ProviderUserIdMetadata.class);
 			
 			{
-				Object val = RandomValueGenerator.getValueOf(((PrimitiveFieldType)ProviderUserIdMetadata.PROVIDER_TYPE.getField().getType()).getType());
+				Object val = RandomValueGenerator.getValueOf(((PrimitiveFieldType)ProviderUserIdMetadata.PROVIDER_TYPE.getField().getType()).getPrimitiveType());
 				if (val != null) {
 					dataMap.put(ProviderUserIdMetadata.PROVIDER_TYPE, val);
 				}
 			}
 
 			{
-				Object val = RandomValueGenerator.getValueOf(((PrimitiveFieldType)ProviderUserIdMetadata.PROVIDER_ID.getField().getType()).getType());
+				Object val = RandomValueGenerator.getValueOf(((PrimitiveFieldType)ProviderUserIdMetadata.PROVIDER_ID.getField().getType()).getPrimitiveType());
 				if (val != null) {
 					dataMap.put(ProviderUserIdMetadata.PROVIDER_ID, val);
 				}

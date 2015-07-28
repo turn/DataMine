@@ -46,6 +46,7 @@ public class InterfaceGenerator implements CodeGenerator, ElementVisitor {
 	private CodeTemplate currentTemplate = null;
 	private CodeTemplate currentDerivedTemplate = null;
 	private Table currentTable = null;
+	private boolean hasDerivedImplementationSet = false;
 	
 	private final String sourceDir;
 	private final String nameSpace;
@@ -151,13 +152,14 @@ public class InterfaceGenerator implements CodeGenerator, ElementVisitor {
 		if (!field.isDerived()) {
 			currentTemplate.fillFields("fieldSetter", 
 					templateGenerator.getSetterTemplate());	
-		} else {
+		} else if (!hasDerivedImplementationSet) {
 			final String[] codes = {
 				"		public void setDerivedValueImplementation({derivedInterface} derived);"
 			};
 			CodeTemplate ct = new CodeTemplate(codes);
 			ct.fillFields("derivedInterface", getDerivedInterfaceName(currentTable.getName()));
 			currentTemplate.fillFields("setDerivedImplementation", ct);
+			hasDerivedImplementationSet = true;
 		}
 				
 		if (field.isSortKey()) {

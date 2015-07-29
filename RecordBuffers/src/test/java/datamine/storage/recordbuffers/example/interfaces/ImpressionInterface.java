@@ -33,6 +33,7 @@ public interface ImpressionInterface extends BaseInterface  {
 		public List<AttributionResultInterface> getAttributionResults();
 		public long getAllowedAdFormats();
 		public double getCost();
+		public String getImpressionDay();
 
 		public void setMediaProviderId(int input);
 		public void setMpTptCategoryId(short input);
@@ -50,9 +51,11 @@ public interface ImpressionInterface extends BaseInterface  {
 		public byte getBidTypeDefaultValue();
 		public long getAllowedAdFormatsDefaultValue();
 		public double getCostDefaultValue();
+		public String getImpressionDayDefaultValue();
 
 		public int getAttributionResultsSize();
 
+		public void setDerivedValueImplementation(ImpressionDerivedValueInterface derived);
 
 }
 

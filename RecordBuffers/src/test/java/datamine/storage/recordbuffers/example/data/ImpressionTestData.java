@@ -122,6 +122,10 @@ public class ImpressionTestData extends AbstractTestData<ImpressionInterface, Im
 				Assert.assertEquals(objectList.get(i).getCost(), data.get(i).get(ImpressionMetadata.COST));
 			}
 
+			if (data.get(i).containsKey(ImpressionMetadata.IMPRESSION_DAY)) {
+				Assert.assertEquals(objectList.get(i).getImpressionDay(), data.get(i).get(ImpressionMetadata.IMPRESSION_DAY));
+			}
+
 		}
 	}
 

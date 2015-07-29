@@ -202,6 +202,7 @@ public class RecordMetaWrapperGenerator implements ElementVisitor,
 		templateMap.put(table, javaCode);
 		currentTemplate = bodyTemplate;
 		currentTable = table;
+		derivedDefaultValueTemplate = null;
 	}
 
 	@Override
@@ -219,7 +220,7 @@ public class RecordMetaWrapperGenerator implements ElementVisitor,
 			// the difference is that the method is renamed as that for common getters
 			codeTemp.fillFields("interfaceGetterDefaultValueName", 
 					InterfaceGenerator.getGetterName(field));
-			createDerivedTableTemplate().fillFields("fieldDefaultValue", codeTemp);
+			createDerivedTableTemplate(currentTable.getName()).fillFields("fieldDefaultValue", codeTemp);
 			
 			// Common getter
 			codeTemp = new FieldGetterTemplateGenerator(currentTable).apply(field);
@@ -245,7 +246,7 @@ public class RecordMetaWrapperGenerator implements ElementVisitor,
 		}
 	}
 	
-	private CodeTemplate createDerivedTableTemplate() {
+	private CodeTemplate createDerivedTableTemplate(String tableName) {
 		
 		if (derivedDefaultValueTemplate != null) {
 			return derivedDefaultValueTemplate;
@@ -266,7 +267,6 @@ public class RecordMetaWrapperGenerator implements ElementVisitor,
 				"	}",
 				""
 		};
-		String tableName = currentTable.getName();
 		CodeTemplate derivedFieldsTemplate = new CodeTemplate(declarationCode);
 		derivedFieldsTemplate.fillFields("derivedInterface", InterfaceGenerator.getDerivedInterfaceName(tableName));
 		derivedFieldsTemplate.fillFields("defaultDerivedClass", InterfaceGenerator.getDefaultDerivedClassName(tableName));

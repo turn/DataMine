@@ -178,6 +178,12 @@ public class AnalyticalUserProfileRecord implements AnalyticalUserProfileInterfa
         return derivedFieldValues.getDay();
     }
 
+    @Override
+    public String getDay2() {
+        
+        return derivedFieldValues.getDay2();
+    }
+
 
 
 	@Override
@@ -295,6 +301,11 @@ public class AnalyticalUserProfileRecord implements AnalyticalUserProfileInterfa
         return (String)"Unknown";
     }
 
+    @Override
+    public String getDay2DefaultValue() {
+        return (String)"Unknown";
+    }
+
 
 	@Override
 	public int getImpressionsSize() {
@@ -318,6 +329,11 @@ public class AnalyticalUserProfileRecord implements AnalyticalUserProfileInterfa
 	
 	    @Override
     public String getDay() {
+        return (String)"Unknown";
+    }
+
+    @Override
+    public String getDay2() {
         return (String)"Unknown";
     }
 

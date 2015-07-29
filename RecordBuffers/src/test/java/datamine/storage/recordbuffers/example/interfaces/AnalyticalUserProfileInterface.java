@@ -34,6 +34,7 @@ public interface AnalyticalUserProfileInterface extends BaseInterface , Comparab
 		public List<Integer> getTimeList();
 		public byte[] getData();
 		public String getDay();
+		public String getDay2();
 
 		public void setUserId(long input);
 		public void setVersion(byte input);
@@ -49,6 +50,7 @@ public interface AnalyticalUserProfileInterface extends BaseInterface , Comparab
 		public short getResolutionDefaultValue();
 		public String getOsVersionDefaultValue();
 		public String getDayDefaultValue();
+		public String getDay2DefaultValue();
 
 		public int getImpressionsSize();
 		public int getTimeListSize();

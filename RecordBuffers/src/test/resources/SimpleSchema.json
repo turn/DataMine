@@ -25,7 +25,8 @@
         {"id": 5,"name": "bid_type",          "type": "Byte",   "default": "-1"},
         {"id": 6,"name": "attribution_results","type": "List:attribution_result"},
         {"id": 7,"name": "allowed_ad_formats","type": "Long",   "default": "-1"},
-		{"id": 8,"name": "cost","type": "Double",   "default": "0"}
+		{"id": 8,"name": "cost","type": "Double",   "default": "0"},
+		{"id": 0, "name": "impression_day",     "type": "String", "isDerived": true, "default": "Unknown"}
 		]
     },
     {
@@ -52,7 +53,8 @@
         {"id": 6,"name": "id_maps",                "type": "id_map"},
 		{"id": 7, "name": "time_list",     "type": "List:Integer"},
 		{"id": 8, "name": "data",     "type": "Binary"},
-		{"id": 0, "name": "day",     "type": "String", "isDerived": true, "default": "Unknown"}
+		{"id": 0, "name": "day",     "type": "String", "isDerived": true, "default": "Unknown"},
+		{"id": 0, "name": "day2",     "type": "String", "isDerived": true, "default": "Unknown"}
       ]
     }
   ]

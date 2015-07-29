@@ -36,6 +36,7 @@ public enum ImpressionMetadata implements RecordMetadataInterface {
 	ATTRIBUTION_RESULTS((short)6, "attribution_results", FieldTypeFactory.getListType(FieldTypeFactory.getGroupType(AttributionResultMetadata.class)), false, null, false, false, false, false),
 	ALLOWED_AD_FORMATS((short)7, "allowed_ad_formats", FieldTypeFactory.getPrimitiveType(PrimitiveType.INT64), false, (long)-1, false, false, false, false),
 	COST((short)8, "cost", FieldTypeFactory.getPrimitiveType(PrimitiveType.DOUBLE), false, (double)0.0, false, false, false, false),
+	IMPRESSION_DAY((short)0, "impression_day", FieldTypeFactory.getPrimitiveType(PrimitiveType.STRING), false, (String)"Unknown", false, false, false, true),
 ;
 
 	static final short version = 1;

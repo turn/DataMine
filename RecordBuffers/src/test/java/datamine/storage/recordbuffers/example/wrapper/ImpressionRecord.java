@@ -38,6 +38,18 @@ public class ImpressionRecord implements ImpressionInterface {
 
     Record<ImpressionMetadata> value = null;
 	
+	private ImpressionDerivedValueInterface derivedFieldValues = new ImpressionDefaultDerivedValues();
+
+	public ImpressionRecord(Record<ImpressionMetadata> record, ImpressionDerivedValueInterface derived) {
+		value = record;
+		derivedFieldValues = derived;
+	}
+
+	public void setDerivedValueImplementation(ImpressionDerivedValueInterface derived) {
+		derivedFieldValues = derived;
+	}
+
+
 
     public ImpressionRecord() {
         value = new WritableRecord<ImpressionMetadata>(ImpressionMetadata.class);
@@ -143,6 +155,12 @@ public class ImpressionRecord implements ImpressionInterface {
     public double getCost() {
         
         return this.value.getDouble(ImpressionMetadata.COST);
+    }
+
+    @Override
+    public String getImpressionDay() {
+        
+        return derivedFieldValues.getImpressionDay();
     }
 
 
@@ -262,6 +280,11 @@ public class ImpressionRecord implements ImpressionInterface {
         return (double)0.0;
     }
 
+    @Override
+    public String getImpressionDayDefaultValue() {
+        return (String)"Unknown";
+    }
+
 
 	@Override
 	public int getAttributionResultsSize() {
@@ -270,6 +293,17 @@ public class ImpressionRecord implements ImpressionInterface {
 
 
 
+
+	public static class ImpressionDefaultDerivedValues implements ImpressionDerivedValueInterface {
+
+	
+	    @Override
+    public String getImpressionDay() {
+        return (String)"Unknown";
+    }
+
+
+	}
 
 }
 

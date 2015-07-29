@@ -31,9 +31,11 @@ import datamine.storage.recordbuffers.Record;
 import datamine.storage.recordbuffers.RecordBuffer;
 import datamine.storage.recordbuffers.example.data.AnalyticalUserProfileTestData;
 import datamine.storage.recordbuffers.example.derived.AnalyticalUserProfileDerived;
+import datamine.storage.recordbuffers.example.derived.ImpressionDerived;
 import datamine.storage.recordbuffers.example.interfaces.AnalyticalUserProfileDerivedValueInterface;
 import datamine.storage.recordbuffers.example.interfaces.AnalyticalUserProfileInterface;
 import datamine.storage.recordbuffers.example.interfaces.AttributionResultInterface;
+import datamine.storage.recordbuffers.example.interfaces.ImpressionDerivedValueInterface;
 import datamine.storage.recordbuffers.example.interfaces.ImpressionInterface;
 import datamine.storage.recordbuffers.example.model.AnalyticalUserProfileMetadata;
 import datamine.storage.recordbuffers.example.wrapper.AnalyticalUserProfileRecord;
@@ -164,7 +166,15 @@ public class RecordTest {
 			AnalyticalUserProfileDerivedValueInterface derivedImpl = new 
 					AnalyticalUserProfileDerived(cur);
 			cur.setDerivedValueImplementation(derivedImpl);
-			Assert.assertEquals("Monday", cur.getDay());			
+			Assert.assertEquals("Monday", cur.getDay());
+			Assert.assertEquals("Tuesday", cur.getDay2());
+			
+			for(ImpressionInterface imp : cur.getImpressions()) {
+				ImpressionDerivedValueInterface impDev = new
+						ImpressionDerived();
+				imp.setDerivedValueImplementation(impDev);
+				Assert.assertEquals("Sunday", imp.getImpressionDay());
+			}
 		}
 	}
 

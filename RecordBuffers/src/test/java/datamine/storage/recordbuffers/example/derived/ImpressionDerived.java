@@ -15,30 +15,17 @@
  */
 package datamine.storage.recordbuffers.example.derived;
 
-import datamine.storage.recordbuffers.example.interfaces.AnalyticalUserProfileDerivedValueInterface;
-import datamine.storage.recordbuffers.example.interfaces.AnalyticalUserProfileInterface;
+import datamine.storage.recordbuffers.example.interfaces.ImpressionDerivedValueInterface;
 
 /**
  * @author yqi
- * @date May 20, 2015
+ * @date Jul 28, 2015
  */
-public class AnalyticalUserProfileDerived implements
-		AnalyticalUserProfileDerivedValueInterface {
-
-	final AnalyticalUserProfileInterface aup;
-	
-	public AnalyticalUserProfileDerived(AnalyticalUserProfileInterface aup) {
-		this.aup = aup;
-	}
-	
-	@Override
-	public String getDay() {
-		return "Monday";
-	}
+public class ImpressionDerived implements ImpressionDerivedValueInterface {
 
 	@Override
-	public String getDay2() {
-		return "Tuesday";
+	public String getImpressionDay() {
+		return "Sunday";
 	}
 
 }

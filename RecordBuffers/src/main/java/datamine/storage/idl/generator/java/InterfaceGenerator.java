@@ -113,6 +113,7 @@ public class InterfaceGenerator implements CodeGenerator, ElementVisitor {
 		templateMap.put(table, javaCode);
 		currentTemplate = bodyTemplate;
 		currentTable = table;
+		hasDerivedImplementationSet = false;
 	}
 
 	@Override

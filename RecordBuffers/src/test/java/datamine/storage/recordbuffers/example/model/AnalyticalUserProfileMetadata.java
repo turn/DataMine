@@ -37,6 +37,7 @@ public enum AnalyticalUserProfileMetadata implements RecordMetadataInterface {
 	TIME_LIST((short)7, "time_list", FieldTypeFactory.getListType(FieldTypeFactory.getPrimitiveType(PrimitiveType.INT32)), false, null, false, false, false, false),
 	DATA((short)8, "data", FieldTypeFactory.getPrimitiveType(PrimitiveType.BINARY), false, null, false, false, false, false),
 	DAY((short)0, "day", FieldTypeFactory.getPrimitiveType(PrimitiveType.STRING), false, (String)"Unknown", false, false, false, true),
+	DAY2((short)0, "day2", FieldTypeFactory.getPrimitiveType(PrimitiveType.STRING), false, (String)"Unknown", false, false, false, true),
 ;
 
 	static final short version = 1;

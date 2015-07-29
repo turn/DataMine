@@ -43,24 +43,24 @@ public class RecordBuffersBuilder implements RecordBuilderInterface {
 			return (T) AttributionResultRecord.class.newInstance();
 		}
 		else
-		if (tableClass == AttributionResultRuleInterface.class) {
-			return (T) AttributionResultRuleRecord.class.newInstance();
-		}
-		else
 		if (tableClass == ImpressionInterface.class) {
 			return (T) ImpressionRecord.class.newInstance();
+		}
+		else
+		if (tableClass == AttributionResultRuleInterface.class) {
+			return (T) AttributionResultRuleRecord.class.newInstance();
 		}
 		else
 		if (tableClass == IdMapInterface.class) {
 			return (T) IdMapRecord.class.newInstance();
 		}
 		else
-		if (tableClass == AnalyticalUserProfileInterface.class) {
-			return (T) AnalyticalUserProfileRecord.class.newInstance();
-		}
-		else
 		if (tableClass == ProviderUserIdInterface.class) {
 			return (T) ProviderUserIdRecord.class.newInstance();
+		}
+		else
+		if (tableClass == AnalyticalUserProfileInterface.class) {
+			return (T) AnalyticalUserProfileRecord.class.newInstance();
 		}
 
 		} catch (InstantiationException e) {

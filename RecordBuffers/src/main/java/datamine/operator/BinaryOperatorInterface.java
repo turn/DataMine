@@ -20,5 +20,5 @@ package datamine.operator;
  * @date Sep 3, 2014
  */
 public interface BinaryOperatorInterface<T_LEFT, T_RIGHT, T_OUTPUT> extends OperatorInterface {
-	public T_OUTPUT execute(T_LEFT left, T_RIGHT right);
+	public T_OUTPUT apply(T_LEFT left, T_RIGHT right);
 }

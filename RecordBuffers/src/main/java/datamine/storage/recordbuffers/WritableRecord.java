@@ -274,7 +274,7 @@ public class WritableRecord<T extends Enum<T> & RecordMetadataInterface> extends
 		short refSectionLength = bytebuffer.getShort(initOffset + 4);
 		int posOfAttrs = refSectionLength + 6 + initOffset;
 	
-		valueArray = new Object[length];
+		valueArray = new Object[Math.max(length, fieldList.size())]; // in case we have to update the existing record
 
 		int offset = posOfAttrs + (length + 7) / 8; // skip # of attrs, flags;
 		for (int i = 0; i < length; i++) {

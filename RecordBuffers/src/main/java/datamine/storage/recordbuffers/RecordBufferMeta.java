@@ -38,7 +38,7 @@ import datamine.storage.idl.type.CollectionFieldType;
  * 
  * @author yqi
  */
-class RecordBufferMeta<T extends Enum<T> & RecordMetadataInterface> {
+public class RecordBufferMeta<T extends Enum<T> & RecordMetadataInterface> {
 
 	public static final Logger LOG = LoggerFactory.getLogger(RecordBufferMeta.class);
 	
@@ -92,6 +92,13 @@ class RecordBufferMeta<T extends Enum<T> & RecordMetadataInterface> {
 	 */
 	public Class<T> getTableEnumClass() {
 		return dummyClass;
+	}
+	
+	/**
+	 * @return the name of the table
+	 */
+	public String getTableName() {
+		return fieldList.get(0).getTableName();
 	}
 	
 	/**

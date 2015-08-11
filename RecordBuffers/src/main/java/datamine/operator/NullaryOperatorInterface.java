@@ -20,5 +20,5 @@ package datamine.operator;
  * @date Sep 19, 2014
  */
 public interface NullaryOperatorInterface<T_OUTPUT> extends OperatorInterface {
-	public T_OUTPUT execute();
+	public T_OUTPUT apply();
 }

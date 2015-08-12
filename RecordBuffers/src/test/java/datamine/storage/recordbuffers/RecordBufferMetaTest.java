@@ -19,15 +19,15 @@ package datamine.storage.recordbuffers;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import datamine.storage.recordbuffers.example.model.AnalyticalUserProfileMetadata;
+import datamine.storage.recordbuffers.example.model.MainTableMetadata;
 
 public class RecordBufferMetaTest {
 	@Test
 	public void getField() {
-		RecordBufferMeta<AnalyticalUserProfileMetadata> rbm = 
-				RecordBufferMeta.getRecordOperator(AnalyticalUserProfileMetadata.class);
+		RecordBufferMeta<MainTableMetadata> rbm = 
+				RecordBufferMeta.getRecordOperator(MainTableMetadata.class);
 		
-		Assert.assertEquals(AnalyticalUserProfileMetadata.USER_ID, rbm.getField("user_id"));
+		Assert.assertEquals(MainTableMetadata.LONG_REQUIRED_COLUMN, rbm.getField("long_required_column"));
 		Assert.assertEquals(null, rbm.getField("fake_user_id"));
 	}
 }

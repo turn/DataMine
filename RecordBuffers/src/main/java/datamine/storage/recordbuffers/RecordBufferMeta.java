@@ -44,6 +44,7 @@ public class RecordBufferMeta<T extends Enum<T> & RecordMetadataInterface> {
 	
 	private final Class<T> dummyClass; // a helper to collect ENUM info
 	private final List<T> fieldList; // a list of fields ordered by its 'ID'
+	private final Map<String, T> nameFieldMap;
 	private final ReferenceSection refSection;
 
 	// The factory pattern to minimize the instances of the class
@@ -72,10 +73,13 @@ public class RecordBufferMeta<T extends Enum<T> & RecordMetadataInterface> {
 	private RecordBufferMeta(Class<T> enumClass) {
 		dummyClass = enumClass;
 		fieldList = Lists.newArrayList();
+		nameFieldMap = Maps.newHashMap();
 		// the derived field should be ignored 
 		for (T cur : dummyClass.getEnumConstants()) {
-			if (cur.getField().getId() > 0) {
+			Field field = cur.getField();
+			if (field.getId() > 0) {
 				fieldList.add(cur);
+				nameFieldMap.put(field.getName(), cur);
 			}
 		}
 
@@ -87,6 +91,16 @@ public class RecordBufferMeta<T extends Enum<T> & RecordMetadataInterface> {
 		refSection = new ReferenceSection(fieldList); // 4 bytes for version # and # of attributes
 	}
 
+	/**
+	 * Find the field (i.e., the corresponding ENUM) given a name
+	 * 
+	 * @param name the field name
+	 * @return the field ENUM, or null if the field doesn't exist
+	 */
+	public T getField(String name) {
+		return nameFieldMap.get(name);
+	}
+	
 	/**
 	 * @return the ENUM defines the table schema
 	 */

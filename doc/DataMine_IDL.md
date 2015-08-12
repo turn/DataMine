@@ -3,7 +3,7 @@
 DataMine schema defines an interface description language (IDL) to describe the data structure in the DataMine storage. 
 
 
-A schema is usually stored in the individual file. For instance, the file, [SimpleSchema.json](../RecordBuffers/src/test/resources/SimpleSchema.json) depicts the schema of *simple_schema*.
+A schema is usually stored in the individual file. For instance, the file, [RBSchema.json](../RecordBuffers/src/test/resources/RBSchema.json) depicts the schema of *simple_schema*.
 
 
 ## Elements

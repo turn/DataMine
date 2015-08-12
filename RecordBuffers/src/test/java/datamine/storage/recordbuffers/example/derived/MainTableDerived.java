@@ -20,7 +20,6 @@ import datamine.storage.recordbuffers.example.interfaces.MainTableInterface;
 
 /**
  * @author yqi
- * @date Aug 11, 2015
  */
 public class MainTableDerived implements MainTableDerivedValueInterface {
 

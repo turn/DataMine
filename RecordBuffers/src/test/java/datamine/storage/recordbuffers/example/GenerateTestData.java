@@ -18,6 +18,9 @@ package datamine.storage.recordbuffers.example;
 import java.io.File;
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 
@@ -35,10 +38,91 @@ import datamine.storage.recordbuffers.idl.generator.RecordMetaWrapperGenerator;
  * This class is to generate all data for unit testing.
  * 
  * @author yqi
- * @date Mar 18, 2015
  */
 public class GenerateTestData {
 
+	static final Logger LOG = LoggerFactory.getLogger(GenerateTestData.class);
+	
+	private final String schemaFile;
+	private final String genSrcFolder;
+	private final String genClassPackageName;
+		
+	private Schema schema = null;
+	
+	public GenerateTestData(String file, String folder, String packageName) { 
+		this.schemaFile = file;
+		this.genClassPackageName = packageName;
+		this.genSrcFolder = folder;		
+	}
+	
+	public void run() {
+		File schemaPath = new File(this.schemaFile);
+		try {
+			schema = new JsonSchemaConvertor().apply(
+					Files.toString(schemaPath, Charsets.UTF_8));
+			
+			// validate the schema
+			new SchemaValidation().check(schema);
+			
+			// generate the codes
+			generateTableAccessInterfaces();
+			generateTableConversionImps();
+			generateTableMetadataEnums();
+			generateTableAccessImps();
+			generateTableAccessTestData();
+			
+		} catch (IOException e) {
+			LOG.error("Cannot generate the code for the schema at " + this.schemaFile, e);
+		} catch (AbstractValidationException e) {
+			LOG.error("Schema validation failed for " + this.schemaFile, e);
+		}
+	}
+	
+	private void generateTableAccessInterfaces() {
+		InterfaceGenerator generator = new InterfaceGenerator(
+				genSrcFolder, genClassPackageName + ".interfaces");
+
+		// generate the java source codes
+		schema.accept(generator);
+		generator.generate();
+	}
+	
+	private void generateTableConversionImps() {
+		InterfaceConvertorGenerator generator0 = new InterfaceConvertorGenerator(
+				genSrcFolder,
+				genClassPackageName + ".convertors",
+				genClassPackageName + ".interfaces");
+
+		// generate the java source codes
+		schema.accept(generator0);
+		generator0.generate();
+	}
+	
+	private void generateTableMetadataEnums() {
+		MetadataFileGenerator generator1 = new MetadataFileGenerator(
+				this.genSrcFolder, genClassPackageName + ".model");
+		generator1.apply(schema);
+	}
+	
+	private void generateTableAccessImps() {
+		RecordMetaWrapperGenerator gen = new RecordMetaWrapperGenerator(
+				genSrcFolder,
+				genClassPackageName + ".wrapper",
+				genClassPackageName + ".model",
+				genClassPackageName + ".interfaces");
+		gen.apply(schema);
+	}
+	
+	private void generateTableAccessTestData() {
+		TableTestDataGenerator gen2 = new TableTestDataGenerator(
+				genSrcFolder,
+				genClassPackageName + ".data",
+				genClassPackageName + ".model",
+				genClassPackageName + ".interfaces");
+		gen2.apply(schema);
+	}
+	
+	
 	/**
 	 * @param args
 	 * @throws IOException 
@@ -46,52 +130,12 @@ public class GenerateTestData {
 	 */
 	public static void main(String[] args) throws IOException, AbstractValidationException {
 
-		File schemaPath = new File("src/test/resources/SimpleSchema.json");
-		Schema schema = new JsonSchemaConvertor().apply(
-				Files.toString(schemaPath, Charsets.UTF_8));
+		GenerateTestData gtd = new GenerateTestData(
+				"src/test/resources/RBSchema.json", 
+				"src/test/java/", 
+				"datamine.storage.recordbuffers.example");
 		
-		// verify
-		new SchemaValidation().check(schema); 
-		
-		InterfaceGenerator generator = new InterfaceGenerator(
-				"src/test/java/", 
-				"datamine.storage.recordbuffers.example.interfaces");
-
-		// generate the java source codes
-		schema.accept(generator);
-		generator.generate();
-
-		InterfaceConvertorGenerator generator0 = new InterfaceConvertorGenerator(
-				"src/test/java/", 
-				"datamine.storage.recordbuffers.example.convertors",
-				"datamine.storage.recordbuffers.example.interfaces");
-
-		// generate the java source codes
-		schema.accept(generator0);
-		generator0.generate();
-		
-		//1. generate model codes
-		MetadataFileGenerator generator1 = new MetadataFileGenerator(
-				"src/test/java/", 
-				"datamine.storage.recordbuffers.example.model");
-		generator1.apply(schema);
-
-		//2. generate wrapper codes
-		RecordMetaWrapperGenerator gen = new RecordMetaWrapperGenerator(
-				"src/test/java/", 
-				"datamine.storage.recordbuffers.example.wrapper",
-				"datamine.storage.recordbuffers.example.model",
-				"datamine.storage.recordbuffers.example.interfaces");
-		gen.apply(schema);
-		
-		//3. generate the data for unit testing
-		TableTestDataGenerator gen2 = new TableTestDataGenerator(
-				"src/test/java/", 
-				"datamine.storage.recordbuffers.example.data",
-				"datamine.storage.recordbuffers.example.model",
-				"datamine.storage.recordbuffers.example.interfaces");
-		gen2.apply(schema);
-
+		gtd.run();
 	}
 
 }

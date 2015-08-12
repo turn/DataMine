@@ -32,10 +32,10 @@ public class JsonSchemaTest {
 	
 	@Test
 	public void testLoading() throws FileNotFoundException {
-		BufferedReader br = new BufferedReader(new FileReader("src/test/resources/SimpleSchema.json"));
+		BufferedReader br = new BufferedReader(new FileReader("src/test/resources/RBSchema.json"));
 		JsonSchema schema = new Gson().fromJson(br, JsonSchema.class);
 		
 		List<JsonTable> tables = schema.getTableList();
-		Assert.assertEquals(6, tables.size());
+		Assert.assertEquals(4, tables.size());
 	}
 }

@@ -30,7 +30,6 @@ import datamine.storage.idl.Table;
  * given a package name.
  * 
  * @author yqi
- * @date Apr 8, 2015
  */
 public class MetadataPackageToSchema implements
 		UnaryOperatorInterface<String, Schema> {

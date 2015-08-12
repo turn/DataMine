@@ -33,27 +33,23 @@ import datamine.storage.idl.json.JsonSchemaConvertor;
 
 public class JsonSchemaConvertorTest {
 
-	public final static String WRONG_SCHEMA_IN_JSON = "{\n  \"schema\": \"aup\",\n  \"table_list\": " +
-			"[\n    {\n      \"table\": \"attribution_result_rule\",\n      " +
-			"\"fields\": [\n        {\"id\": 1,\"name\": \"run_num\",    " +
-			"\"type\": \"Byte\",   \"isRequired\": true},\n        " +
-			"{\"id\": 2,\"name\": \"category_id\",\"type\": \"String\", " +
-			"\"default\": \"\\\"Unknown\\\"\"},\n        " +
-			"{\"id\": 3,\"name\": \"keyword\",    \"type\": \"String\", " +
-			"\"default\": \"\\\"Unknown\\\"\"},\n        " +
-			"{\"id\": 4,\"name\": \"key\",        " +
-			"\"type\": \"String\", \"default\": \"\\\"Unknown\\\"\"},\n        " +
-			"{\"id\": 5,\"name\": \"value\",      " +
-			"\"type\": \"String\", \"default\": \"\\\"Unknown\\\"\"}\n      " +
-			"]\n    },\n    {\n      \"table\": \"attribution_result\",\n      " +
-			"\"fields\": [\n        {\"id\": 1,\"name\": \"contract_id\",\"type\": " +
-			"\"Integer\",\"isRequired\": true},\n        " +
-			"{\"id\": 2,\"name\": \"data_cost\",  \"type\": \"Float\",  \"isRequired\": true},\n        " +
-			"{\"id\": 3,\"name\": \"rules\",      \"type\": \"List:unknown_attribution_result_rule\"}\n      ]\n    }\n    ]\n}";
+	public final static String WRONG_SCHEMA_IN_JSON = 
+			"{\r\n" + 
+			"  \"schema\": \"simple_schema\",\r\n" + 
+			"  \"table_list\": [\r\n" + 
+			"    {\r\n" + 
+			"      \"table\": \"table\",\r\n" + 
+			"      \"fields\": [\r\n" + 
+			"        {\"id\": 1,\"name\": \"byte_required_column\",	\"type\": \"Byte\",		\"isRequired\": true},\r\n" + 
+			"        {\"id\": 2,\"name\": \"boolean_list_column\",  \"type\": \"List:nested_table\"}\r\n" + 
+			"      ]\r\n" + 
+			"    }\r\n" + 
+			"  ]\r\n" + 
+			"}";
 	
 	@Test
 	public void getSchema() throws IOException {
-		String filePath = "src/test/resources/SimpleSchema.json";
+		String filePath = "src/test/resources/RBSchema.json";
 		// 1. load the schema into the class
 		BufferedReader br = new BufferedReader(new FileReader(filePath));
 		JsonSchema jSchema = new Gson().fromJson(br, JsonSchema.class);
@@ -68,6 +64,9 @@ public class JsonSchemaConvertorTest {
 		Assert.assertEquals(dmSchema.getTableList().size(), jSchema.getTableList().size());
 	}
 	
+	/**
+	 * A undefined table is referred, i.e., nested_table
+	 */
 	@Test (expectedExceptions = IllegalArgumentException.class)
 	public void testSchemaValidation() {
 		JsonSchemaConvertor convertor = new JsonSchemaConvertor();

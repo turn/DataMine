@@ -1,0 +1,45 @@
+{
+  "schema": "simple_schema",
+  "table_list": [
+    {
+      "table": "second_level_nested_table",
+      "fields": [
+        {"id": 1,"name": "byte_required_column",			"type": "Byte",		"isRequired": true},
+        {"id": 2,"name": "boolean_list_column",      		"type": "List:Boolean"}
+      ]
+    },
+    {
+      "table": "first_level_nested_table",
+      "fields": [
+        {"id": 1, 	"name": "int_required_column", 			"type": "Integer",		"isRequired": true},
+        {"id": 2,	"name": "nested_table_column",			"type": "List:second_level_nested_table"},
+		{"id": 0, 	"name": "string_derived_column",     	"type": "String", "default": "Unknown", 	"isDerived": true}
+		]
+    },
+   {
+      "table": "struct_table",
+      "fields": [
+        {"id": 1,	"name": "nested_table_column",			"type": "List:second_level_nested_table"}
+      ]
+    },
+    {
+      "table": "main_table",
+      "fields": [
+        {"id": 1,	"name": "long_required_column",			"type": "Long",   	"isRequired": true, "isFrequentlyUsed": true},
+        {"id": 2,	"name": "int_sorted_column",         	"type": "Integer", 	"isRequired": true, "isDesSortKey": true},
+        {"id": 3,	"name": "byte_column",      			"type": "Byte",  	"default": "-1"},
+        {"id": 4,	"name": "boolean_column",      			"type": "Boolean", 	"default": "false"},
+		{"id": 5,	"name": "short_column",      			"type": "Short", 	"default": "0"},
+		{"id": 6,	"name": "float_column",      			"type": "Float", 	"default": "0.0"},
+		{"id": 7,	"name": "double_column",      			"type": "Double", 	"default": "0.001"},
+		{"id": 8,	"name": "string_column",      			"type": "String", 	"default": "Unknown"},
+		{"id": 9,	"name": "binary_column",     			"type": "Binary"},
+		{"id": 10,	"name": "nested_table_column",          "type": "List:first_level_nested_table", "hasLargeList": true},
+		{"id": 11,	"name": "struct_column",                "type": "struct_table"},
+		{"id": 12, 	"name": "int_list_column",     			"type": "List:Integer"},
+		{"id": 0, 	"name": "string_derived_column",     	"type": "String", 	"default": "Unknown", 	"isDerived": true},
+		{"id": 0, 	"name": "int_derived_column",     		"type": "Integer", 	"default": "0", 		"isDerived": true}
+      ]
+    }
+  ]
+}

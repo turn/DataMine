@@ -13,25 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package datamine.storage.idl.validate;
+package datamine.storage.recordbuffers.example.derived;
 
-import java.util.Set;
+import datamine.storage.recordbuffers.example.interfaces.MainTableDerivedValueInterface;
+import datamine.storage.recordbuffers.example.interfaces.MainTableInterface;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
+/**
+ * @author yqi
+ */
+public class MainTableDerived implements MainTableDerivedValueInterface {
 
-import datamine.storage.api.RecordMetadataInterface;
-import datamine.storage.idl.generator.metadata.GetAllMetadataEnumClasses;
+	private final MainTableInterface mti;
+	public MainTableDerived(MainTableInterface ati) {
+		this.mti = ati;
 
-public class GetAllMetadataEnumClassesTest {
-
-	@Test
-	public void testLoading() {
-		String inputPackageName = 
-				"datamine.storage.recordbuffers.example.model";
-		Set<Class<? extends RecordMetadataInterface>> allClasses = 
-				new GetAllMetadataEnumClasses().apply(inputPackageName);
-		
-		Assert.assertEquals(4, allClasses.size());
 	}
+
+	@Override
+	public String getStringDerivedColumn() {
+		return "StringDerivedColumn@MainTable";
+	}
+
+	@Override
+	public int getIntDerivedColumn() {
+		return 101;
+	}
+
 }

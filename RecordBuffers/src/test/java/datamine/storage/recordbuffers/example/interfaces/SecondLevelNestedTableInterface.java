@@ -13,25 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package datamine.storage.idl.validate;
+package datamine.storage.recordbuffers.example.interfaces;
 
-import java.util.Set;
+import datamine.storage.api.BaseInterface;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import java.util.List;
 
-import datamine.storage.api.RecordMetadataInterface;
-import datamine.storage.idl.generator.metadata.GetAllMetadataEnumClasses;
 
-public class GetAllMetadataEnumClassesTest {
+/**
+ * DO NOT CHANGE! Auto-generated code
+ */
+public interface SecondLevelNestedTableInterface extends BaseInterface  {
 
-	@Test
-	public void testLoading() {
-		String inputPackageName = 
-				"datamine.storage.recordbuffers.example.model";
-		Set<Class<? extends RecordMetadataInterface>> allClasses = 
-				new GetAllMetadataEnumClasses().apply(inputPackageName);
-		
-		Assert.assertEquals(4, allClasses.size());
-	}
+		public byte getByteRequiredColumn();
+		public List<Boolean> getBooleanListColumn();
+
+		public void setByteRequiredColumn(byte input);
+		public void setBooleanListColumn(List<Boolean> input);
+
+		public byte getByteRequiredColumnDefaultValue();
+
+		public int getBooleanListColumnSize();
+
+
 }
+

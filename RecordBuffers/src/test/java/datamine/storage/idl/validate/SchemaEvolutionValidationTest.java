@@ -15,18 +15,11 @@
  */
 package datamine.storage.idl.validate;
 
-import java.io.File;
-import java.io.IOException;
-
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
-
 import datamine.storage.idl.Schema;
-import datamine.storage.idl.generator.metadata.MetadataPackageToSchema;
 import datamine.storage.idl.json.JsonSchemaConvertor;
-import datamine.storage.idl.validate.SchemaEvolutionValidation;
 import datamine.storage.idl.validate.exceptions.AbstractValidationException;
 import datamine.storage.idl.validate.exceptions.FieldConstraintModifiedInSchemaEvolutionException;
 import datamine.storage.idl.validate.exceptions.FieldDefaultValueModifiedInSchemaEvolutionException;
@@ -35,287 +28,102 @@ import datamine.storage.idl.validate.exceptions.FieldTypeModifiedInSchemaEvoluti
 
 public class SchemaEvolutionValidationTest {
 
-	private final Schema currentSchema = 
-			new MetadataPackageToSchema().apply("datamine.storage.recordbuffers.example");
+	private Schema currentSchema = null;
 	
-	@Test
-	public void validate() throws IOException, AbstractValidationException {
-		File schemaPath = new File("src/test/resources/SimpleSchema.json");
-		Schema nextSchema = new JsonSchemaConvertor().apply(
-				Files.toString(schemaPath, Charsets.UTF_8));
-		SchemaEvolutionValidation validate = 
-				new SchemaEvolutionValidation(currentSchema);
-		validate.check(nextSchema);
+	@BeforeMethod
+	private void prepareRecord() {
+		final String json_schema = 
+				"{\r\n" + 
+				"  \"schema\": \"simple_schema\",\r\n" + 
+				"  \"table_list\": [\r\n" + 
+				"    {\r\n" + 
+				"      \"table\": \"second_level_nested_table\",\r\n" + 
+				"      \"fields\": [\r\n" + 
+				"        {\"id\": 1,\"name\": \"byte_required_column\",			\"type\": \"Byte\",		\"isRequired\": true},\r\n" + 
+				"        {\"id\": 2,\"name\": \"boolean_list_column\",      		\"type\": \"List:Boolean\"}\r\n" + 
+				"      ]\r\n" + 
+				"    },\r\n" + 
+				"    {\r\n" + 
+				"      \"table\": \"first_level_nested_table\",\r\n" + 
+				"      \"fields\": [\r\n" + 
+				"        {\"id\": 1, 	\"name\": \"int_required_column\", 			\"type\": \"Integer\",		\"isRequired\": true},\r\n" + 
+				"        {\"id\": 2,	\"name\": \"nested_table_column\",			\"type\": \"List:second_level_nested_table\"},\r\n" + 
+				"		{\"id\": 0, 	\"name\": \"string_derived_column\",     	\"type\": \"String\", \"default\": \"Unknown\", 	\"isDerived\": true}\r\n" + 
+				"		]\r\n" + 
+				"    },\r\n" + 
+				"   {\r\n" + 
+				"      \"table\": \"struct_table\",\r\n" + 
+				"      \"fields\": [\r\n" + 
+				"        {\"id\": 1,	\"name\": \"nested_table_column\",			\"type\": \"List:second_level_nested_table\"}\r\n" + 
+				"      ]\r\n" + 
+				"    },\r\n" + 
+				"    {\r\n" + 
+				"      \"table\": \"main_table\",\r\n" + 
+				"      \"fields\": [\r\n" + 
+				"        {\"id\": 1,	\"name\": \"long_required_column\",			\"type\": \"Long\",   	\"isRequired\": true, \"isFrequentlyUsed\": true},\r\n" + 
+				"        {\"id\": 2,	\"name\": \"int_sorted_column\",         	\"type\": \"Integer\", 	\"isRequired\": true, \"isDesSortKey\": true},\r\n" + 
+				"        {\"id\": 3,	\"name\": \"byte_column\",      			\"type\": \"Byte\",  	\"default\": \"-1\"},\r\n" + 
+				"        {\"id\": 4,	\"name\": \"boolean_column\",      			\"type\": \"Boolean\", 	\"default\": \"false\"},\r\n" + 
+				"		{\"id\": 5,	\"name\": \"short_column\",      			\"type\": \"Short\", 	\"default\": \"0\"},\r\n" + 
+				"		{\"id\": 6,	\"name\": \"float_column\",      			\"type\": \"Float\", 	\"default\": \"0.0\"},\r\n" + 
+				"		{\"id\": 7,	\"name\": \"double_column\",      			\"type\": \"Double\", 	\"default\": \"0.001\"},\r\n" + 
+				"		{\"id\": 8,	\"name\": \"string_column\",      			\"type\": \"String\", 	\"default\": \"Unknown\"},\r\n" + 
+				"		{\"id\": 9,	\"name\": \"binary_column\",     			\"type\": \"Binary\"},\r\n" + 
+				"		{\"id\": 10,	\"name\": \"nested_table_column\",          \"type\": \"List:first_level_nested_table\", \"hasLargeList\": true},\r\n" + 
+				"		{\"id\": 11,	\"name\": \"struct_column\",                \"type\": \"struct_table\"},\r\n" + 
+				"		{\"id\": 12, 	\"name\": \"int_list_column\",     			\"type\": \"List:Integer\"},\r\n" + 
+				"		{\"id\": 0, 	\"name\": \"string_derived_column\",     	\"type\": \"String\", 	\"default\": \"Unknown\", 	\"isDerived\": true},\r\n" + 
+				"		{\"id\": 0, 	\"name\": \"int_derived_column\",     		\"type\": \"Integer\", 	\"default\": \"0\", 		\"isDerived\": true}\r\n" + 
+				"      ]\r\n" + 
+				"    }\r\n" + 
+				"  ]\r\n" + 
+				"}\r\n";
+			currentSchema = new JsonSchemaConvertor().apply(json_schema);	
 	}
 	
 	/**
-	 * The exception is thrown out from datamine.storage.idl.json.JsonSchemaConvertor
-	 * 
+	 * Any existing table cannot be removed (e.g., struct_table).
+	 *  
 	 * @throws AbstractValidationException
 	 */
 	@Test(expectedExceptions = IllegalArgumentException.class)
 	public void checkNextSchema() throws AbstractValidationException {
-		String json_schema = "{\r\n" + 
+		final String json_schema = 
+				"{\r\n" + 
 				"  \"schema\": \"simple_schema\",\r\n" + 
 				"  \"table_list\": [\r\n" + 
 				"    {\r\n" + 
-				"      \"table\": \"attribution_result_rule\",\r\n" + 
+				"      \"table\": \"second_level_nested_table\",\r\n" + 
 				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1,\"name\": \"run_num\",    \"type\": \"Byte\",   \"isRequired\": true},\r\n" + 
-				"        {\"id\": 2,\"name\": \"value\",      \"type\": \"String\", \"default\": \"Unknown\"}\r\n" + 
+				"        {\"id\": 1,\"name\": \"byte_required_column\",			\"type\": \"Byte\",		\"isRequired\": true},\r\n" + 
+				"        {\"id\": 2,\"name\": \"boolean_list_column\",      		\"type\": \"List:Boolean\"}\r\n" + 
 				"      ]\r\n" + 
 				"    },\r\n" + 
 				"    {\r\n" + 
-				"      \"table\": \"attribution_result\",\r\n" + 
+				"      \"table\": \"first_level_nested_table\",\r\n" + 
 				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1,\"name\": \"id\",\"type\": \"Integer\",\"isRequired\": true},\r\n" + 
-				"        {\"id\": 2,\"name\": \"rules\",      \"type\": \"List:attribution_result_rule\", \"isRequired\": true}\r\n" + 
-				"      ]\r\n" + 
-				"    },\r\n" + 
-				"    {\r\n" + 
-				"      \"table\": \"impression\",\r\n" + 
-				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1, \"name\": \"media_provider_id\", \"type\": \"Integer\",\"isRequired\": true},\r\n" + 
-				"        {\"id\": 2,\"name\": \"mp_tpt_category_id\",\"type\": \"Short\",  \"default\": \"-1\"},\r\n" + 
-				"        {\"id\": 3,\"name\": \"truncated_url\",     \"type\": \"String\", \"default\": \"Unknown\"},\r\n" + 
-				"        {\"id\": 4,\"name\": \"bid\",         \"type\": \"Boolean\",  \"default\": \"true\"},\r\n" + 
-				"        {\"id\": 5,\"name\": \"bid_type\",          \"type\": \"Byte\",   \"default\": \"-1\"},\r\n" + 
-				"        {\"id\": 6,\"name\": \"attribution_results\",\"type\": \"List:attribution_result\"},\r\n" + 
-				"        {\"id\": 7,\"name\": \"allowed_ad_formats\",\"type\": \"Long\",   \"default\": \"-1\"},\r\n" + 
-				"		{\"id\": 8,\"name\": \"cost\",\"type\": \"Double\",   \"default\": \"0\"}\r\n" + 
+				"        {\"id\": 1, 	\"name\": \"int_required_column\", 			\"type\": \"Integer\",		\"isRequired\": true},\r\n" + 
+				"        {\"id\": 2,	\"name\": \"nested_table_column\",			\"type\": \"List:second_level_nested_table\"},\r\n" + 
+				"		{\"id\": 0, 	\"name\": \"string_derived_column\",     	\"type\": \"String\", \"default\": \"Unknown\", 	\"isDerived\": true}\r\n" + 
 				"		]\r\n" + 
 				"    },\r\n" + 
 				"    {\r\n" + 
-				"      \"table\": \"provider_user_id\",\r\n" + 
+				"      \"table\": \"main_table\",\r\n" + 
 				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1,\"name\": \"provider_type\",          \"type\": \"Byte\",   \"isRequired\": true},\r\n" + 
-				"        {\"id\": 2,\"name\": \"provider_id\",            \"type\": \"Integer\",\"isRequired\": true}\r\n" + 
-				"      ]\r\n" + 
-				"    },\r\n" + 
-//				"    {\r\n" + 
-//				"      \"table\": \"id_map\",\r\n" + 
-//				"      \"fields\": [\r\n" + 
-//				"        {\"id\": 1,\"name\": \"media_provider_ids\",\"type\": \"List:provider_user_id\"}\r\n" + 
-//				"      ]\r\n" + 
-//				"    },\r\n" + 
-				"    {\r\n" + 
-				"      \"table\": \"analytical_user_profile\",\r\n" + 
-				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1,\"name\": \"user_id\",                 \"type\": \"Long\",   \"isRequired\": true, \"isFrequentlyUsed\": true},\r\n" + 
-				"        {\"id\": 2,\"name\": \"version\",         \"type\": \"Byte\", \"isRequired\": true, \"isDesSortKey\": true},\r\n" + 
-				"        {\"id\": 3,\"name\": \"resolution\",      \"type\": \"Short\",  \"default\": \"-1\"},\r\n" + 
-				"        {\"id\": 4,\"name\": \"os_version\",      \"type\": \"String\", \"default\": \"Unknown\"},\r\n" + 
-				"        {\"id\": 5,\"name\": \"impressions\",            \"type\": \"List:impression\"},\r\n" + 
-				"        {\"id\": 6,\"name\": \"id_maps\",                \"type\": \"id_map\"},\r\n" + 
-				"		{\"id\": 7, \"name\": \"time_list\",     \"type\": \"List:Integer\"},\r\n" + 
-				"		{\"id\": 8, \"name\": \"data\",     \"type\": \"Binary\"},\r\n" + 
-				"		{\"id\": 0, \"name\": \"day\",     \"type\": \"String\", \"isDerived\": true, \"default\": \"Unknown\"}\r\n" + 
-				"      ]\r\n" + 
-				"    }\r\n" + 
-				"  ]\r\n" + 
-				"}\r\n" + 
-				"";
-		
-		Schema nextSchema = new JsonSchemaConvertor().apply(json_schema);
-		SchemaEvolutionValidation validate = 
-				new SchemaEvolutionValidation(currentSchema);
-		validate.check(nextSchema);
-	}
-	
-	@Test(expectedExceptions = FieldDeletionInSchemaEvolutionException.class)
-	public void checkFieldSchema() throws AbstractValidationException {
-		String json_schema = "{\r\n" + 
-				"  \"schema\": \"simple_schema\",\r\n" + 
-				"  \"table_list\": [\r\n" + 
-				"    {\r\n" + 
-				"      \"table\": \"attribution_result_rule\",\r\n" + 
-				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1,\"name\": \"run_num\",    \"type\": \"Byte\",   \"isRequired\": true},\r\n" + 
-				"        {\"id\": 2,\"name\": \"value\",      \"type\": \"String\", \"default\": \"Unknown\"}\r\n" + 
-				"      ]\r\n" + 
-				"    },\r\n" + 
-				"    {\r\n" + 
-				"      \"table\": \"attribution_result\",\r\n" + 
-				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1,\"name\": \"id\",\"type\": \"Integer\",\"isRequired\": true},\r\n" + 
-				"        {\"id\": 2,\"name\": \"rules\",      \"type\": \"List:attribution_result_rule\", \"isRequired\": true}\r\n" + 
-				"      ]\r\n" + 
-				"    },\r\n" + 
-				"    {\r\n" + 
-				"      \"table\": \"impression\",\r\n" + 
-				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1, \"name\": \"media_provider_id\", \"type\": \"Integer\",\"isRequired\": true},\r\n" + 
-				"        {\"id\": 2,\"name\": \"mp_tpt_category_id\",\"type\": \"Short\",  \"default\": \"-1\"},\r\n" + 
-				"        {\"id\": 3,\"name\": \"truncated_url\",     \"type\": \"String\", \"default\": \"Unknown\"},\r\n" + 
-				"        {\"id\": 4,\"name\": \"bid\",         \"type\": \"Boolean\",  \"default\": \"true\"},\r\n" + 
-				"        {\"id\": 5,\"name\": \"bid_type\",          \"type\": \"Byte\",   \"default\": \"-1\"},\r\n" + 
-				"        {\"id\": 6,\"name\": \"attribution_results\",\"type\": \"List:attribution_result\"},\r\n" + 
-				"        {\"id\": 7,\"name\": \"allowed_ad_formats\",\"type\": \"Long\",   \"default\": \"-1\"},\r\n" + 
-				"		{\"id\": 8,\"name\": \"cost\",\"type\": \"Double\",   \"default\": \"0\"}\r\n" + 
-				"		]\r\n" + 
-				"    },\r\n" + 
-				"    {\r\n" + 
-				"      \"table\": \"provider_user_id\",\r\n" + 
-				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1,\"name\": \"provider_type\",          \"type\": \"Byte\",   \"isRequired\": true},\r\n" + 
-				"        {\"id\": 2,\"name\": \"provider_id\",            \"type\": \"Integer\",\"isRequired\": true}\r\n" + 
-				"      ]\r\n" + 
-				"    },\r\n" + 
-				"    {\r\n" + 
-				"      \"table\": \"id_map\",\r\n" + 
-				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1,\"name\": \"media_provider_ids\",\"type\": \"List:provider_user_id\"}\r\n" + 
-				"      ]\r\n" + 
-				"    },\r\n" + 
-				"    {\r\n" + 
-				"      \"table\": \"analytical_user_profile\",\r\n" + 
-				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1,\"name\": \"user_id\",                 \"type\": \"Long\",   \"isRequired\": true, \"isFrequentlyUsed\": true},\r\n" + 
-				"        {\"id\": 2,\"name\": \"version\",         \"type\": \"Byte\", \"isRequired\": true, \"isDesSortKey\": true},\r\n" + 
-				"        {\"id\": 3,\"name\": \"resolution\",      \"type\": \"Short\",  \"default\": \"-1\"},\r\n" + 
-				"        {\"id\": 4,\"name\": \"os_version\",      \"type\": \"String\", \"default\": \"Unknown\"},\r\n" + 
-				"        {\"id\": 5,\"name\": \"impressions\",            \"type\": \"List:impression\"},\r\n" + 
-				"        {\"id\": 6,\"name\": \"id_maps\",                \"type\": \"id_map\"},\r\n" + 
-				"		{\"id\": 7, \"name\": \"time_list\",     \"type\": \"List:Integer\"},\r\n" + 
-				"		{\"id\": 0, \"name\": \"day\",     \"type\": \"String\", \"isDerived\": true, \"default\": \"Unknown\"}\r\n" + 
-				"      ]\r\n" + 
-				"    }\r\n" + 
-				"  ]\r\n" + 
-				"}\r\n" + 
-				"";
-				
-		Schema nextSchema = new JsonSchemaConvertor().apply(json_schema);
-		SchemaEvolutionValidation validate = 
-				new SchemaEvolutionValidation(currentSchema);
-		validate.check(nextSchema);
-	}
-	
-	@Test(expectedExceptions = FieldTypeModifiedInSchemaEvolutionException.class)
-	public void checkFieldTypeChangedSchema() throws AbstractValidationException {
-		String json_schema = "{\r\n" + 
-				"  \"schema\": \"simple_schema\",\r\n" + 
-				"  \"table_list\": [\r\n" + 
-				"    {\r\n" + 
-				"      \"table\": \"attribution_result_rule\",\r\n" + 
-				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1,\"name\": \"run_num\",    \"type\": \"Byte\",   \"isRequired\": true},\r\n" + 
-				"        {\"id\": 2,\"name\": \"value\",      \"type\": \"String\", \"default\": \"Unknown\"}\r\n" + 
-				"      ]\r\n" + 
-				"    },\r\n" + 
-				"    {\r\n" + 
-				"      \"table\": \"attribution_result\",\r\n" + 
-				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1,\"name\": \"id\",\"type\": \"Integer\",\"isRequired\": true},\r\n" + 
-				"        {\"id\": 2,\"name\": \"rules\",      \"type\": \"List:attribution_result_rule\", \"isRequired\": true}\r\n" + 
-				"      ]\r\n" + 
-				"    },\r\n" + 
-				"    {\r\n" + 
-				"      \"table\": \"impression\",\r\n" + 
-				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1, \"name\": \"media_provider_id\", \"type\": \"Integer\",\"isRequired\": true},\r\n" + 
-				"        {\"id\": 2,\"name\": \"mp_tpt_category_id\",\"type\": \"Short\",  \"default\": \"-1\"},\r\n" + 
-				"        {\"id\": 3,\"name\": \"truncated_url\",     \"type\": \"String\", \"default\": \"Unknown\"},\r\n" + 
-				"        {\"id\": 4,\"name\": \"bid\",         \"type\": \"Boolean\",  \"default\": \"true\"},\r\n" + 
-				"        {\"id\": 5,\"name\": \"bid_type\",          \"type\": \"Byte\",   \"default\": \"-1\"},\r\n" + 
-				"        {\"id\": 6,\"name\": \"attribution_results\",\"type\": \"List:attribution_result\"},\r\n" + 
-				"        {\"id\": 7,\"name\": \"allowed_ad_formats\",\"type\": \"Long\",   \"default\": \"-1\"},\r\n" + 
-				"		{\"id\": 8,\"name\": \"cost\",\"type\": \"Double\",   \"default\": \"0\"}\r\n" + 
-				"		]\r\n" + 
-				"    },\r\n" + 
-				"    {\r\n" + 
-				"      \"table\": \"provider_user_id\",\r\n" + 
-				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1,\"name\": \"provider_type\",          \"type\": \"Byte\",   \"isRequired\": true},\r\n" + 
-				"        {\"id\": 2,\"name\": \"provider_id\",            \"type\": \"Integer\",\"isRequired\": true}\r\n" + 
-				"      ]\r\n" + 
-				"    },\r\n" + 
-				"    {\r\n" + 
-				"      \"table\": \"id_map\",\r\n" + 
-				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1,\"name\": \"media_provider_ids\",\"type\": \"List:provider_user_id\"}\r\n" + 
-				"      ]\r\n" + 
-				"    },\r\n" + 
-				"    {\r\n" + 
-				"      \"table\": \"analytical_user_profile\",\r\n" + 
-				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1,\"name\": \"user_id\",                 \"type\": \"Integer\",   \"isRequired\": true, \"isFrequentlyUsed\": true},\r\n" + 
-				"        {\"id\": 2,\"name\": \"version\",         \"type\": \"Byte\", \"isRequired\": true, \"isDesSortKey\": true},\r\n" + 
-				"        {\"id\": 3,\"name\": \"resolution\",      \"type\": \"Short\",  \"default\": \"-1\"},\r\n" + 
-				"        {\"id\": 4,\"name\": \"os_version\",      \"type\": \"String\", \"default\": \"Unknown\"},\r\n" + 
-				"        {\"id\": 5,\"name\": \"impressions\",            \"type\": \"List:impression\"},\r\n" + 
-				"        {\"id\": 6,\"name\": \"id_maps\",                \"type\": \"id_map\"},\r\n" + 
-				"		{\"id\": 7, \"name\": \"time_list\",     \"type\": \"List:Integer\"},\r\n" + 
-				"		{\"id\": 8, \"name\": \"data\",     \"type\": \"Binary\"},\r\n" + 
-				"		{\"id\": 0, \"name\": \"day\",     \"type\": \"String\", \"isDerived\": true, \"default\": \"Unknown\"}\r\n" + 
-				"      ]\r\n" + 
-				"    }\r\n" + 
-				"  ]\r\n" + 
-				"}\r\n" + 
-				"";
-		
-		Schema nextSchema = new JsonSchemaConvertor().apply(json_schema);
-		SchemaEvolutionValidation validate = 
-				new SchemaEvolutionValidation(currentSchema);
-		validate.check(nextSchema);
-	}
-	
-	@Test(expectedExceptions = FieldDefaultValueModifiedInSchemaEvolutionException.class)
-	public void checkFieldDefaultValueChangedSchema() throws AbstractValidationException {
-		String json_schema = "{\r\n" + 
-				"  \"schema\": \"simple_schema\",\r\n" + 
-				"  \"table_list\": [\r\n" + 
-				"    {\r\n" + 
-				"      \"table\": \"attribution_result_rule\",\r\n" + 
-				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1,\"name\": \"run_num\",    \"type\": \"Byte\",   \"isRequired\": true},\r\n" + 
-				"        {\"id\": 2,\"name\": \"value\",      \"type\": \"String\", \"default\": \"Unknown\"}\r\n" + 
-				"      ]\r\n" + 
-				"    },\r\n" + 
-				"    {\r\n" + 
-				"      \"table\": \"attribution_result\",\r\n" + 
-				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1,\"name\": \"id\",\"type\": \"Integer\",\"isRequired\": true},\r\n" + 
-				"        {\"id\": 2,\"name\": \"rules\",      \"type\": \"List:attribution_result_rule\", \"isRequired\": true}\r\n" + 
-				"      ]\r\n" + 
-				"    },\r\n" + 
-				"    {\r\n" + 
-				"      \"table\": \"impression\",\r\n" + 
-				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1, \"name\": \"media_provider_id\", \"type\": \"Integer\",\"isRequired\": true},\r\n" + 
-				"        {\"id\": 2,\"name\": \"mp_tpt_category_id\",\"type\": \"Short\",  \"default\": \"100\"},\r\n" + 
-				"        {\"id\": 3,\"name\": \"truncated_url\",     \"type\": \"String\", \"default\": \"Unknown\"},\r\n" + 
-				"        {\"id\": 4,\"name\": \"bid\",         \"type\": \"Boolean\",  \"default\": \"true\"},\r\n" + 
-				"        {\"id\": 5,\"name\": \"bid_type\",          \"type\": \"Byte\",   \"default\": \"-1\"},\r\n" + 
-				"        {\"id\": 6,\"name\": \"attribution_results\",\"type\": \"List:attribution_result\"},\r\n" + 
-				"        {\"id\": 7,\"name\": \"allowed_ad_formats\",\"type\": \"Long\",   \"default\": \"-1\"},\r\n" + 
-				"		{\"id\": 8,\"name\": \"cost\",\"type\": \"Double\",   \"default\": \"0\"}\r\n" + 
-				"		]\r\n" + 
-				"    },\r\n" + 
-				"    {\r\n" + 
-				"      \"table\": \"provider_user_id\",\r\n" + 
-				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1,\"name\": \"provider_type\",          \"type\": \"Byte\",   \"isRequired\": true},\r\n" + 
-				"        {\"id\": 2,\"name\": \"provider_id\",            \"type\": \"Integer\",\"isRequired\": true}\r\n" + 
-				"      ]\r\n" + 
-				"    },\r\n" + 
-				"    {\r\n" + 
-				"      \"table\": \"id_map\",\r\n" + 
-				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1,\"name\": \"media_provider_ids\",\"type\": \"List:provider_user_id\"}\r\n" + 
-				"      ]\r\n" + 
-				"    },\r\n" + 
-				"    {\r\n" + 
-				"      \"table\": \"analytical_user_profile\",\r\n" + 
-				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1,\"name\": \"user_id\",                 \"type\": \"Long\",   \"isRequired\": true, \"isFrequentlyUsed\": true},\r\n" + 
-				"        {\"id\": 2,\"name\": \"version\",         \"type\": \"Byte\", \"isRequired\": true, \"isDesSortKey\": true},\r\n" + 
-				"        {\"id\": 3,\"name\": \"resolution\",      \"type\": \"Short\",  \"default\": \"-1\"},\r\n" + 
-				"        {\"id\": 4,\"name\": \"os_version\",      \"type\": \"String\", \"default\": \"Unknown\"},\r\n" + 
-				"        {\"id\": 5,\"name\": \"impressions\",            \"type\": \"List:impression\"},\r\n" + 
-				"        {\"id\": 6,\"name\": \"id_maps\",                \"type\": \"id_map\"},\r\n" + 
-				"		{\"id\": 7, \"name\": \"time_list\",     \"type\": \"List:Integer\"},\r\n" + 
-				"		{\"id\": 8, \"name\": \"data\",     \"type\": \"Binary\"},\r\n" + 
-				"		{\"id\": 0, \"name\": \"day\",     \"type\": \"String\", \"isDerived\": true, \"default\": \"Unknown\"}\r\n" + 
+				"        {\"id\": 1,	\"name\": \"long_required_column\",			\"type\": \"Long\",   	\"isRequired\": true, \"isFrequentlyUsed\": true},\r\n" + 
+				"        {\"id\": 2,	\"name\": \"int_sorted_column\",         	\"type\": \"Integer\", 	\"isRequired\": true, \"isDesSortKey\": true},\r\n" + 
+				"        {\"id\": 3,	\"name\": \"byte_column\",      			\"type\": \"Byte\",  	\"default\": \"-1\"},\r\n" + 
+				"        {\"id\": 4,	\"name\": \"boolean_column\",      			\"type\": \"Boolean\", 	\"default\": \"false\"},\r\n" + 
+				"		{\"id\": 5,	\"name\": \"short_column\",      			\"type\": \"Short\", 	\"default\": \"0\"},\r\n" + 
+				"		{\"id\": 6,	\"name\": \"float_column\",      			\"type\": \"Float\", 	\"default\": \"0.0\"},\r\n" + 
+				"		{\"id\": 7,	\"name\": \"double_column\",      			\"type\": \"Double\", 	\"default\": \"0.001\"},\r\n" + 
+				"		{\"id\": 8,	\"name\": \"string_column\",      			\"type\": \"String\", 	\"default\": \"Unknown\"},\r\n" + 
+				"		{\"id\": 9,	\"name\": \"binary_column\",     			\"type\": \"Binary\"},\r\n" + 
+				"		{\"id\": 10,	\"name\": \"nested_table_column\",          \"type\": \"List:first_level_nested_table\", \"hasLargeList\": true},\r\n" + 
+				"		{\"id\": 11,	\"name\": \"struct_column\",                \"type\": \"struct_table\"},\r\n" + 
+				"		{\"id\": 12, 	\"name\": \"int_list_column\",     			\"type\": \"List:Integer\"},\r\n" + 
+				"		{\"id\": 0, 	\"name\": \"string_derived_column\",     	\"type\": \"String\", 	\"default\": \"Unknown\", 	\"isDerived\": true},\r\n" + 
+				"		{\"id\": 0, 	\"name\": \"int_derived_column\",     		\"type\": \"Integer\", 	\"default\": \"0\", 		\"isDerived\": true}\r\n" + 
 				"      ]\r\n" + 
 				"    }\r\n" + 
 				"  ]\r\n" + 
@@ -327,198 +135,351 @@ public class SchemaEvolutionValidationTest {
 		validate.check(nextSchema);
 	}
 	
+	/**
+	 * Cannot delete a non-derived field (e.g., int_list_column) 
+	 * @throws AbstractValidationException
+	 */
+	@Test(expectedExceptions = FieldDeletionInSchemaEvolutionException.class)
+	public void checkFieldSchema() throws AbstractValidationException {
+		final String json_schema = 
+				"{\r\n" + 
+				"  \"schema\": \"simple_schema\",\r\n" + 
+				"  \"table_list\": [\r\n" + 
+				"    {\r\n" + 
+				"      \"table\": \"second_level_nested_table\",\r\n" + 
+				"      \"fields\": [\r\n" + 
+				"        {\"id\": 1,\"name\": \"byte_required_column\",			\"type\": \"Byte\",		\"isRequired\": true},\r\n" + 
+				"        {\"id\": 2,\"name\": \"boolean_list_column\",      		\"type\": \"List:Boolean\"}\r\n" + 
+				"      ]\r\n" + 
+				"    },\r\n" + 
+				"    {\r\n" + 
+				"      \"table\": \"first_level_nested_table\",\r\n" + 
+				"      \"fields\": [\r\n" + 
+				"        {\"id\": 1, 	\"name\": \"int_required_column\", 			\"type\": \"Integer\",		\"isRequired\": true},\r\n" + 
+				"        {\"id\": 2,	\"name\": \"nested_table_column\",			\"type\": \"List:second_level_nested_table\"},\r\n" + 
+				"		{\"id\": 0, 	\"name\": \"string_derived_column\",     	\"type\": \"String\", \"default\": \"Unknown\", 	\"isDerived\": true}\r\n" + 
+				"		]\r\n" + 
+				"    },\r\n" + 
+				"   {\r\n" + 
+				"      \"table\": \"struct_table\",\r\n" + 
+				"      \"fields\": [\r\n" + 
+				"        {\"id\": 1,	\"name\": \"nested_table_column\",			\"type\": \"List:second_level_nested_table\"}\r\n" + 
+				"      ]\r\n" + 
+				"    },\r\n" + 
+				"    {\r\n" + 
+				"      \"table\": \"main_table\",\r\n" + 
+				"      \"fields\": [\r\n" + 
+				"        {\"id\": 1,	\"name\": \"long_required_column\",			\"type\": \"Long\",   	\"isRequired\": true, \"isFrequentlyUsed\": true},\r\n" + 
+				"        {\"id\": 2,	\"name\": \"int_sorted_column\",         	\"type\": \"Integer\", 	\"isRequired\": true, \"isDesSortKey\": true},\r\n" + 
+				"        {\"id\": 3,	\"name\": \"byte_column\",      			\"type\": \"Byte\",  	\"default\": \"-1\"},\r\n" + 
+				"        {\"id\": 4,	\"name\": \"boolean_column\",      			\"type\": \"Boolean\", 	\"default\": \"false\"},\r\n" + 
+				"		{\"id\": 5,	\"name\": \"short_column\",      			\"type\": \"Short\", 	\"default\": \"0\"},\r\n" + 
+				"		{\"id\": 6,	\"name\": \"float_column\",      			\"type\": \"Float\", 	\"default\": \"0.0\"},\r\n" + 
+				"		{\"id\": 7,	\"name\": \"double_column\",      			\"type\": \"Double\", 	\"default\": \"0.001\"},\r\n" + 
+				"		{\"id\": 8,	\"name\": \"string_column\",      			\"type\": \"String\", 	\"default\": \"Unknown\"},\r\n" + 
+				"		{\"id\": 9,	\"name\": \"binary_column\",     			\"type\": \"Binary\"},\r\n" + 
+				"		{\"id\": 10,	\"name\": \"nested_table_column\",          \"type\": \"List:first_level_nested_table\", \"hasLargeList\": true},\r\n" + 
+				"		{\"id\": 11,	\"name\": \"struct_column\",                \"type\": \"struct_table\"},\r\n" + 
+				"		{\"id\": 0, 	\"name\": \"string_derived_column\",     	\"type\": \"String\", 	\"default\": \"Unknown\", 	\"isDerived\": true},\r\n" + 
+				"		{\"id\": 0, 	\"name\": \"int_derived_column\",     		\"type\": \"Integer\", 	\"default\": \"0\", 		\"isDerived\": true}\r\n" + 
+				"      ]\r\n" + 
+				"    }\r\n" + 
+				"  ]\r\n" + 
+				"}\r\n";
+				
+		Schema nextSchema = new JsonSchemaConvertor().apply(json_schema);
+		SchemaEvolutionValidation validate = 
+				new SchemaEvolutionValidation(currentSchema);
+		validate.check(nextSchema);
+	}
+	
+	/**
+	 * Cannot change the type of a non-derived field (e.g., int_sorted_column)
+	 * @throws AbstractValidationException
+	 */
+	@Test(expectedExceptions = FieldTypeModifiedInSchemaEvolutionException.class)
+	public void checkFieldTypeChangedSchema() throws AbstractValidationException {
+		final String json_schema = 
+				"{\r\n" + 
+				"  \"schema\": \"simple_schema\",\r\n" + 
+				"  \"table_list\": [\r\n" + 
+				"    {\r\n" + 
+				"      \"table\": \"second_level_nested_table\",\r\n" + 
+				"      \"fields\": [\r\n" + 
+				"        {\"id\": 1,\"name\": \"byte_required_column\",			\"type\": \"Byte\",		\"isRequired\": true},\r\n" + 
+				"        {\"id\": 2,\"name\": \"boolean_list_column\",      		\"type\": \"List:Boolean\"}\r\n" + 
+				"      ]\r\n" + 
+				"    },\r\n" + 
+				"    {\r\n" + 
+				"      \"table\": \"first_level_nested_table\",\r\n" + 
+				"      \"fields\": [\r\n" + 
+				"        {\"id\": 1, 	\"name\": \"int_required_column\", 			\"type\": \"Integer\",		\"isRequired\": true},\r\n" + 
+				"        {\"id\": 2,	\"name\": \"nested_table_column\",			\"type\": \"List:second_level_nested_table\"},\r\n" + 
+				"		{\"id\": 0, 	\"name\": \"string_derived_column\",     	\"type\": \"String\", \"default\": \"Unknown\", 	\"isDerived\": true}\r\n" + 
+				"		]\r\n" + 
+				"    },\r\n" + 
+				"   {\r\n" + 
+				"      \"table\": \"struct_table\",\r\n" + 
+				"      \"fields\": [\r\n" + 
+				"        {\"id\": 1,	\"name\": \"nested_table_column\",			\"type\": \"List:second_level_nested_table\"}\r\n" + 
+				"      ]\r\n" + 
+				"    },\r\n" + 
+				"    {\r\n" + 
+				"      \"table\": \"main_table\",\r\n" + 
+				"      \"fields\": [\r\n" + 
+				"        {\"id\": 1,	\"name\": \"long_required_column\",			\"type\": \"Long\",   	\"isRequired\": true, \"isFrequentlyUsed\": true},\r\n" + 
+				"        {\"id\": 2,	\"name\": \"int_sorted_column\",         	\"type\": \"Long\", 	\"isRequired\": true, \"isDesSortKey\": true},\r\n" + 
+				"        {\"id\": 3,	\"name\": \"byte_column\",      			\"type\": \"Byte\",  	\"default\": \"-1\"},\r\n" + 
+				"        {\"id\": 4,	\"name\": \"boolean_column\",      			\"type\": \"Boolean\", 	\"default\": \"false\"},\r\n" + 
+				"		{\"id\": 5,	\"name\": \"short_column\",      			\"type\": \"Short\", 	\"default\": \"0\"},\r\n" + 
+				"		{\"id\": 6,	\"name\": \"float_column\",      			\"type\": \"Float\", 	\"default\": \"0.0\"},\r\n" + 
+				"		{\"id\": 7,	\"name\": \"double_column\",      			\"type\": \"Double\", 	\"default\": \"0.001\"},\r\n" + 
+				"		{\"id\": 8,	\"name\": \"string_column\",      			\"type\": \"String\", 	\"default\": \"Unknown\"},\r\n" + 
+				"		{\"id\": 9,	\"name\": \"binary_column\",     			\"type\": \"Binary\"},\r\n" + 
+				"		{\"id\": 10,	\"name\": \"nested_table_column\",          \"type\": \"List:first_level_nested_table\", \"hasLargeList\": true},\r\n" + 
+				"		{\"id\": 11,	\"name\": \"struct_column\",                \"type\": \"struct_table\"},\r\n" + 
+				"		{\"id\": 12, 	\"name\": \"int_list_column\",     			\"type\": \"List:Integer\"},\r\n" + 
+				"		{\"id\": 0, 	\"name\": \"string_derived_column\",     	\"type\": \"String\", 	\"default\": \"Unknown\", 	\"isDerived\": true},\r\n" + 
+				"		{\"id\": 0, 	\"name\": \"int_derived_column\",     		\"type\": \"Integer\", 	\"default\": \"0\", 		\"isDerived\": true}\r\n" + 
+				"      ]\r\n" + 
+				"    }\r\n" + 
+				"  ]\r\n" + 
+				"}\r\n";
+		
+		Schema nextSchema = new JsonSchemaConvertor().apply(json_schema);
+		SchemaEvolutionValidation validate = 
+				new SchemaEvolutionValidation(currentSchema);
+		validate.check(nextSchema);
+	}
+	
+	/**
+	 * Cannot change the default value of a non-derived field (e.g., short_column)
+	 * @throws AbstractValidationException
+	 */
+	@Test(expectedExceptions = FieldDefaultValueModifiedInSchemaEvolutionException.class)
+	public void checkFieldDefaultValueChangedSchema() throws AbstractValidationException {
+		final String json_schema = 
+				"{\r\n" + 
+				"  \"schema\": \"simple_schema\",\r\n" + 
+				"  \"table_list\": [\r\n" + 
+				"    {\r\n" + 
+				"      \"table\": \"second_level_nested_table\",\r\n" + 
+				"      \"fields\": [\r\n" + 
+				"        {\"id\": 1,\"name\": \"byte_required_column\",			\"type\": \"Byte\",		\"isRequired\": true},\r\n" + 
+				"        {\"id\": 2,\"name\": \"boolean_list_column\",      		\"type\": \"List:Boolean\"}\r\n" + 
+				"      ]\r\n" + 
+				"    },\r\n" + 
+				"    {\r\n" + 
+				"      \"table\": \"first_level_nested_table\",\r\n" + 
+				"      \"fields\": [\r\n" + 
+				"        {\"id\": 1, 	\"name\": \"int_required_column\", 			\"type\": \"Integer\",		\"isRequired\": true},\r\n" + 
+				"        {\"id\": 2,	\"name\": \"nested_table_column\",			\"type\": \"List:second_level_nested_table\"},\r\n" + 
+				"		{\"id\": 0, 	\"name\": \"string_derived_column\",     	\"type\": \"String\", \"default\": \"Unknown\", 	\"isDerived\": true}\r\n" + 
+				"		]\r\n" + 
+				"    },\r\n" + 
+				"   {\r\n" + 
+				"      \"table\": \"struct_table\",\r\n" + 
+				"      \"fields\": [\r\n" + 
+				"        {\"id\": 1,	\"name\": \"nested_table_column\",			\"type\": \"List:second_level_nested_table\"}\r\n" + 
+				"      ]\r\n" + 
+				"    },\r\n" + 
+				"    {\r\n" + 
+				"      \"table\": \"main_table\",\r\n" + 
+				"      \"fields\": [\r\n" + 
+				"        {\"id\": 1,	\"name\": \"long_required_column\",			\"type\": \"Long\",   	\"isRequired\": true, \"isFrequentlyUsed\": true},\r\n" + 
+				"        {\"id\": 2,	\"name\": \"int_sorted_column\",         	\"type\": \"Integer\", 	\"isRequired\": true, \"isDesSortKey\": true},\r\n" + 
+				"        {\"id\": 3,	\"name\": \"byte_column\",      			\"type\": \"Byte\",  	\"default\": \"-1\"},\r\n" + 
+				"        {\"id\": 4,	\"name\": \"boolean_column\",      			\"type\": \"Boolean\", 	\"default\": \"false\"},\r\n" + 
+				"		{\"id\": 5,	\"name\": \"short_column\",      			\"type\": \"Short\", 	\"default\": \"11\"},\r\n" + 
+				"		{\"id\": 6,	\"name\": \"float_column\",      			\"type\": \"Float\", 	\"default\": \"0.0\"},\r\n" + 
+				"		{\"id\": 7,	\"name\": \"double_column\",      			\"type\": \"Double\", 	\"default\": \"0.001\"},\r\n" + 
+				"		{\"id\": 8,	\"name\": \"string_column\",      			\"type\": \"String\", 	\"default\": \"Unknown\"},\r\n" + 
+				"		{\"id\": 9,	\"name\": \"binary_column\",     			\"type\": \"Binary\"},\r\n" + 
+				"		{\"id\": 10,	\"name\": \"nested_table_column\",          \"type\": \"List:first_level_nested_table\", \"hasLargeList\": true},\r\n" + 
+				"		{\"id\": 11,	\"name\": \"struct_column\",                \"type\": \"struct_table\"},\r\n" + 
+				"		{\"id\": 12, 	\"name\": \"int_list_column\",     			\"type\": \"List:Integer\"},\r\n" + 
+				"		{\"id\": 0, 	\"name\": \"string_derived_column\",     	\"type\": \"String\", 	\"default\": \"Unknown\", 	\"isDerived\": true},\r\n" + 
+				"		{\"id\": 0, 	\"name\": \"int_derived_column\",     		\"type\": \"Integer\", 	\"default\": \"0\", 		\"isDerived\": true}\r\n" + 
+				"      ]\r\n" + 
+				"    }\r\n" + 
+				"  ]\r\n" + 
+				"}\r\n";
+		
+		Schema nextSchema = new JsonSchemaConvertor().apply(json_schema);
+		SchemaEvolutionValidation validate = 
+				new SchemaEvolutionValidation(currentSchema);
+		validate.check(nextSchema);
+	}
+	
+	/**
+	 * The field (e.g.,int_sorted_column) cannot change its sorting direction once it is defined
+	 * 
+	 * @throws AbstractValidationException
+	 */
 	@Test(expectedExceptions = FieldConstraintModifiedInSchemaEvolutionException.class)
 	public void checkFieldConstraintChangedSchema1() throws AbstractValidationException {
-		String json_schema = "{\r\n" + 
+		final String json_schema = 
+				"{\r\n" + 
 				"  \"schema\": \"simple_schema\",\r\n" + 
 				"  \"table_list\": [\r\n" + 
 				"    {\r\n" + 
-				"      \"table\": \"attribution_result_rule\",\r\n" + 
+				"      \"table\": \"second_level_nested_table\",\r\n" + 
 				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1,\"name\": \"run_num\",    \"type\": \"Byte\",   \"isRequired\": true},\r\n" + 
-				"        {\"id\": 2,\"name\": \"value\",      \"type\": \"String\", \"default\": \"Unknown\"}\r\n" + 
+				"        {\"id\": 1,\"name\": \"byte_required_column\",			\"type\": \"Byte\",		\"isRequired\": true},\r\n" + 
+				"        {\"id\": 2,\"name\": \"boolean_list_column\",      		\"type\": \"List:Boolean\"}\r\n" + 
 				"      ]\r\n" + 
 				"    },\r\n" + 
 				"    {\r\n" + 
-				"      \"table\": \"attribution_result\",\r\n" + 
+				"      \"table\": \"first_level_nested_table\",\r\n" + 
 				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1,\"name\": \"id\",\"type\": \"Integer\",\"isRequired\": true},\r\n" + 
-				"        {\"id\": 2,\"name\": \"rules\",      \"type\": \"List:attribution_result_rule\", \"isRequired\": true}\r\n" + 
-				"      ]\r\n" + 
-				"    },\r\n" + 
-				"    {\r\n" + 
-				"      \"table\": \"impression\",\r\n" + 
-				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1, \"name\": \"media_provider_id\", \"type\": \"Integer\",\"isRequired\": true},\r\n" + 
-				"        {\"id\": 2,\"name\": \"mp_tpt_category_id\",\"type\": \"Short\",  \"default\": \"-1\"},\r\n" + 
-				"        {\"id\": 3,\"name\": \"truncated_url\",     \"type\": \"String\", \"default\": \"Unknown\"},\r\n" + 
-				"        {\"id\": 4,\"name\": \"bid\",         \"type\": \"Boolean\",  \"default\": \"true\"},\r\n" + 
-				"        {\"id\": 5,\"name\": \"bid_type\",          \"type\": \"Byte\",   \"default\": \"-1\"},\r\n" + 
-				"        {\"id\": 6,\"name\": \"attribution_results\",\"type\": \"List:attribution_result\"},\r\n" + 
-				"        {\"id\": 7,\"name\": \"allowed_ad_formats\",\"type\": \"Long\",   \"default\": \"-1\"},\r\n" + 
-				"		{\"id\": 8,\"name\": \"cost\",\"type\": \"Double\",   \"default\": \"0\"}\r\n" + 
+				"        {\"id\": 1, 	\"name\": \"int_required_column\", 			\"type\": \"Integer\",		\"isRequired\": true},\r\n" + 
+				"        {\"id\": 2,	\"name\": \"nested_table_column\",			\"type\": \"List:second_level_nested_table\"},\r\n" + 
+				"		{\"id\": 0, 	\"name\": \"string_derived_column\",     	\"type\": \"String\", \"default\": \"Unknown\", 	\"isDerived\": true}\r\n" + 
 				"		]\r\n" + 
 				"    },\r\n" + 
-				"    {\r\n" + 
-				"      \"table\": \"provider_user_id\",\r\n" + 
+				"   {\r\n" + 
+				"      \"table\": \"struct_table\",\r\n" + 
 				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1,\"name\": \"provider_type\",          \"type\": \"Byte\",   \"isRequired\": true},\r\n" + 
-				"        {\"id\": 2,\"name\": \"provider_id\",            \"type\": \"Integer\",\"isRequired\": true}\r\n" + 
+				"        {\"id\": 1,	\"name\": \"nested_table_column\",			\"type\": \"List:second_level_nested_table\"}\r\n" + 
 				"      ]\r\n" + 
 				"    },\r\n" + 
 				"    {\r\n" + 
-				"      \"table\": \"id_map\",\r\n" + 
+				"      \"table\": \"main_table\",\r\n" + 
 				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1,\"name\": \"media_provider_ids\",\"type\": \"List:provider_user_id\"}\r\n" + 
-				"      ]\r\n" + 
-				"    },\r\n" + 
-				"    {\r\n" + 
-				"      \"table\": \"analytical_user_profile\",\r\n" + 
-				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1,\"name\": \"user_id\",                 \"type\": \"Long\",   \"isRequired\": true, \"isFrequentlyUsed\": true},\r\n" + 
-				"        {\"id\": 2,\"name\": \"version\",         \"type\": \"Byte\", \"isRequired\": true, \"isDesSortKey\": true},\r\n" + 
-				"        {\"id\": 3,\"name\": \"resolution\",      \"type\": \"Short\",  \"isRequired\": true},\r\n" + 
-				"        {\"id\": 4,\"name\": \"os_version\",      \"type\": \"String\", \"default\": \"Unknown\"},\r\n" + 
-				"        {\"id\": 5,\"name\": \"impressions\",            \"type\": \"List:impression\"},\r\n" + 
-				"        {\"id\": 6,\"name\": \"id_maps\",                \"type\": \"id_map\"},\r\n" + 
-				"		{\"id\": 7, \"name\": \"time_list\",     \"type\": \"List:Integer\"},\r\n" + 
-				"		{\"id\": 8, \"name\": \"data\",     \"type\": \"Binary\"}\r\t" + 
+				"        {\"id\": 1,	\"name\": \"long_required_column\",			\"type\": \"Long\",   	\"isRequired\": true, \"isFrequentlyUsed\": true},\r\n" + 
+				"        {\"id\": 2,	\"name\": \"int_sorted_column\",         	\"type\": \"Integer\", 	\"isRequired\": true, \"isAscSortKey\": true},\r\n" + 
+				"        {\"id\": 3,	\"name\": \"byte_column\",      			\"type\": \"Byte\",  	\"default\": \"-1\"},\r\n" + 
+				"        {\"id\": 4,	\"name\": \"boolean_column\",      			\"type\": \"Boolean\", 	\"default\": \"false\"},\r\n" + 
+				"		{\"id\": 5,	\"name\": \"short_column\",      			\"type\": \"Short\", 	\"default\": \"0\"},\r\n" + 
+				"		{\"id\": 6,	\"name\": \"float_column\",      			\"type\": \"Float\", 	\"default\": \"0.0\"},\r\n" + 
+				"		{\"id\": 7,	\"name\": \"double_column\",      			\"type\": \"Double\", 	\"default\": \"0.001\"},\r\n" + 
+				"		{\"id\": 8,	\"name\": \"string_column\",      			\"type\": \"String\", 	\"default\": \"Unknown\"},\r\n" + 
+				"		{\"id\": 9,	\"name\": \"binary_column\",     			\"type\": \"Binary\"},\r\n" + 
+				"		{\"id\": 10,	\"name\": \"nested_table_column\",          \"type\": \"List:first_level_nested_table\", \"hasLargeList\": true},\r\n" + 
+				"		{\"id\": 11,	\"name\": \"struct_column\",                \"type\": \"struct_table\"},\r\n" + 
+				"		{\"id\": 12, 	\"name\": \"int_list_column\",     			\"type\": \"List:Integer\"},\r\n" + 
+				"		{\"id\": 0, 	\"name\": \"string_derived_column\",     	\"type\": \"String\", 	\"default\": \"Unknown\", 	\"isDerived\": true},\r\n" + 
+				"		{\"id\": 0, 	\"name\": \"int_derived_column\",     		\"type\": \"Integer\", 	\"default\": \"0\", 		\"isDerived\": true}\r\n" + 
 				"      ]\r\n" + 
 				"    }\r\n" + 
 				"  ]\r\n" + 
-				"}";
+				"}\r\n";
 		Schema nextSchema = new JsonSchemaConvertor().apply(json_schema);
 		SchemaEvolutionValidation validate = 
 				new SchemaEvolutionValidation(currentSchema);
 		validate.check(nextSchema);
 	}
 	
+	/**
+	 * Cannot change a field from optional into required (e.g., boolean_list_column)
+	 * @throws AbstractValidationException
+	 */
 	@Test(expectedExceptions = FieldConstraintModifiedInSchemaEvolutionException.class)
 	public void checkFieldConstraintChangedSchema2() throws AbstractValidationException {
-		String json_schema = "{\r\n" + 
+		final String json_schema = 
+				"{\r\n" + 
 				"  \"schema\": \"simple_schema\",\r\n" + 
 				"  \"table_list\": [\r\n" + 
 				"    {\r\n" + 
-				"      \"table\": \"attribution_result_rule\",\r\n" + 
+				"      \"table\": \"second_level_nested_table\",\r\n" + 
 				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1,\"name\": \"run_num\",    \"type\": \"Byte\",   \"isRequired\": true},\r\n" + 
-				"        {\"id\": 2,\"name\": \"value\",      \"type\": \"String\", \"default\": \"Unknown\"}\r\n" + 
+				"        {\"id\": 1,\"name\": \"byte_required_column\",			\"type\": \"Byte\",		\"isRequired\": true},\r\n" + 
+				"        {\"id\": 2,\"name\": \"boolean_list_column\",      		\"type\": \"List:Boolean\",		\"isRequired\": true}\r\n" + 
 				"      ]\r\n" + 
 				"    },\r\n" + 
 				"    {\r\n" + 
-				"      \"table\": \"attribution_result\",\r\n" + 
+				"      \"table\": \"first_level_nested_table\",\r\n" + 
 				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1,\"name\": \"id\",\"type\": \"Integer\",\"isRequired\": true},\r\n" + 
-				"        {\"id\": 2,\"name\": \"rules\",      \"type\": \"List:attribution_result_rule\", \"isRequired\": true}\r\n" + 
-				"      ]\r\n" + 
-				"    },\r\n" + 
-				"    {\r\n" + 
-				"      \"table\": \"impression\",\r\n" + 
-				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1, \"name\": \"media_provider_id\", \"type\": \"Integer\",\"isRequired\": true, \"isDesSortKey\": true},\r\n" + 
-				"        {\"id\": 2,\"name\": \"mp_tpt_category_id\",\"type\": \"Short\",  \"default\": \"-1\"},\r\n" + 
-				"        {\"id\": 3,\"name\": \"truncated_url\",     \"type\": \"String\", \"default\": \"Unknown\"},\r\n" + 
-				"        {\"id\": 4,\"name\": \"bid\",         \"type\": \"Boolean\",  \"default\": \"true\"},\r\n" + 
-				"        {\"id\": 5,\"name\": \"bid_type\",          \"type\": \"Byte\",   \"default\": \"-1\"},\r\n" + 
-				"        {\"id\": 6,\"name\": \"attribution_results\",\"type\": \"List:attribution_result\"},\r\n" + 
-				"        {\"id\": 7,\"name\": \"allowed_ad_formats\",\"type\": \"Long\",   \"default\": \"-1\"},\r\n" + 
-				"		{\"id\": 8,\"name\": \"cost\",\"type\": \"Double\",   \"default\": \"0\"}\r\n" + 
+				"        {\"id\": 1, 	\"name\": \"int_required_column\", 			\"type\": \"Integer\",		\"isRequired\": true},\r\n" + 
+				"        {\"id\": 2,	\"name\": \"nested_table_column\",			\"type\": \"List:second_level_nested_table\"},\r\n" + 
+				"		{\"id\": 0, 	\"name\": \"string_derived_column\",     	\"type\": \"String\", \"default\": \"Unknown\", 	\"isDerived\": true}\r\n" + 
 				"		]\r\n" + 
 				"    },\r\n" + 
-				"    {\r\n" + 
-				"      \"table\": \"provider_user_id\",\r\n" + 
+				"   {\r\n" + 
+				"      \"table\": \"struct_table\",\r\n" + 
 				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1,\"name\": \"provider_type\",          \"type\": \"Byte\",   \"isRequired\": true},\r\n" + 
-				"        {\"id\": 2,\"name\": \"provider_id\",            \"type\": \"Integer\",\"isRequired\": true}\r\n" + 
+				"        {\"id\": 1,	\"name\": \"nested_table_column\",			\"type\": \"List:second_level_nested_table\"}\r\n" + 
 				"      ]\r\n" + 
 				"    },\r\n" + 
 				"    {\r\n" + 
-				"      \"table\": \"id_map\",\r\n" + 
+				"      \"table\": \"main_table\",\r\n" + 
 				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1,\"name\": \"media_provider_ids\",\"type\": \"List:provider_user_id\"}\r\n" + 
-				"      ]\r\n" + 
-				"    },\r\n" + 
-				"    {\r\n" + 
-				"      \"table\": \"analytical_user_profile\",\r\n" + 
-				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1,\"name\": \"user_id\",                 \"type\": \"Long\",   \"isRequired\": true, \"isFrequentlyUsed\": true},\r\n" + 
-				"        {\"id\": 2,\"name\": \"version\",         \"type\": \"Byte\", \"isRequired\": true, \"isDesSortKey\": true},\r\n" + 
-				"        {\"id\": 3,\"name\": \"resolution\",      \"type\": \"Short\",  \"default\": \"-1\"},\r\n" + 
-				"        {\"id\": 4,\"name\": \"os_version\",      \"type\": \"String\", \"default\": \"Unknown\"},\r\n" + 
-				"        {\"id\": 5,\"name\": \"impressions\",            \"type\": \"List:impression\"},\r\n" + 
-				"        {\"id\": 6,\"name\": \"id_maps\",                \"type\": \"id_map\"},\r\n" + 
-				"		{\"id\": 7, \"name\": \"time_list\",     \"type\": \"List:Integer\"},\r\n" + 
-				"		{\"id\": 8, \"name\": \"data\",     \"type\": \"Binary\"}\r\t" +
+				"        {\"id\": 1,	\"name\": \"long_required_column\",			\"type\": \"Long\",   	\"isRequired\": true, \"isFrequentlyUsed\": true},\r\n" + 
+				"        {\"id\": 2,	\"name\": \"int_sorted_column\",         	\"type\": \"Integer\", 	\"isRequired\": true, \"isDesSortKey\": true},\r\n" + 
+				"        {\"id\": 3,	\"name\": \"byte_column\",      			\"type\": \"Byte\",  	\"default\": \"-1\"},\r\n" + 
+				"        {\"id\": 4,	\"name\": \"boolean_column\",      			\"type\": \"Boolean\", 	\"default\": \"false\"},\r\n" + 
+				"		{\"id\": 5,	\"name\": \"short_column\",      			\"type\": \"Short\", 	\"default\": \"0\"},\r\n" + 
+				"		{\"id\": 6,	\"name\": \"float_column\",      			\"type\": \"Float\", 	\"default\": \"0.0\"},\r\n" + 
+				"		{\"id\": 7,	\"name\": \"double_column\",      			\"type\": \"Double\", 	\"default\": \"0.001\"},\r\n" + 
+				"		{\"id\": 8,	\"name\": \"string_column\",      			\"type\": \"String\", 	\"default\": \"Unknown\"},\r\n" + 
+				"		{\"id\": 9,	\"name\": \"binary_column\",     			\"type\": \"Binary\"},\r\n" + 
+				"		{\"id\": 10,	\"name\": \"nested_table_column\",          \"type\": \"List:first_level_nested_table\", \"hasLargeList\": true},\r\n" + 
+				"		{\"id\": 11,	\"name\": \"struct_column\",                \"type\": \"struct_table\"},\r\n" + 
+				"		{\"id\": 12, 	\"name\": \"int_list_column\",     			\"type\": \"List:Integer\"},\r\n" + 
+				"		{\"id\": 0, 	\"name\": \"string_derived_column\",     	\"type\": \"String\", 	\"default\": \"Unknown\", 	\"isDerived\": true},\r\n" + 
+				"		{\"id\": 0, 	\"name\": \"int_derived_column\",     		\"type\": \"Integer\", 	\"default\": \"0\", 		\"isDerived\": true}\r\n" + 
 				"      ]\r\n" + 
 				"    }\r\n" + 
 				"  ]\r\n" + 
-				"}";
+				"}\r\n";
 		Schema nextSchema = new JsonSchemaConvertor().apply(json_schema);
 		SchemaEvolutionValidation validate = 
 				new SchemaEvolutionValidation(currentSchema);
 		validate.check(nextSchema);
 	}
 	
+	/**
+	 * Cannot make a field from sorting into non-sorting (e.g., int_sorted_column)
+	 * @throws AbstractValidationException
+	 */
 	@Test(expectedExceptions = FieldConstraintModifiedInSchemaEvolutionException.class)
 	public void checkFieldConstraintChangedSchema3() throws AbstractValidationException {
-		String json_schema = "{\r\n" + 
+		final String json_schema = 
+				"{\r\n" + 
 				"  \"schema\": \"simple_schema\",\r\n" + 
 				"  \"table_list\": [\r\n" + 
 				"    {\r\n" + 
-				"      \"table\": \"attribution_result_rule\",\r\n" + 
+				"      \"table\": \"second_level_nested_table\",\r\n" + 
 				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1,\"name\": \"run_num\",    \"type\": \"Byte\",   \"isRequired\": true},\r\n" + 
-				"        {\"id\": 2,\"name\": \"value\",      \"type\": \"String\", \"default\": \"Unknown\"}\r\n" + 
+				"        {\"id\": 1,\"name\": \"byte_required_column\",			\"type\": \"Byte\",		\"isRequired\": true},\r\n" + 
+				"        {\"id\": 2,\"name\": \"boolean_list_column\",      		\"type\": \"List:Boolean\"}\r\n" + 
 				"      ]\r\n" + 
 				"    },\r\n" + 
 				"    {\r\n" + 
-				"      \"table\": \"attribution_result\",\r\n" + 
+				"      \"table\": \"first_level_nested_table\",\r\n" + 
 				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1,\"name\": \"id\",\"type\": \"Integer\",\"isRequired\": true},\r\n" + 
-				"        {\"id\": 2,\"name\": \"rules\",      \"type\": \"List:attribution_result_rule\", \"isRequired\": true}\r\n" + 
-				"      ]\r\n" + 
-				"    },\r\n" + 
-				"    {\r\n" + 
-				"      \"table\": \"impression\",\r\n" + 
-				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1, \"name\": \"media_provider_id\", \"type\": \"Integer\",\"isRequired\": true},\r\n" + 
-				"        {\"id\": 2,\"name\": \"mp_tpt_category_id\",\"type\": \"Short\",  \"default\": \"-1\"},\r\n" + 
-				"        {\"id\": 3,\"name\": \"truncated_url\",     \"type\": \"String\", \"default\": \"Unknown\"},\r\n" + 
-				"        {\"id\": 4,\"name\": \"bid\",         \"type\": \"Boolean\",  \"default\": \"true\"},\r\n" + 
-				"        {\"id\": 5,\"name\": \"bid_type\",          \"type\": \"Byte\",   \"default\": \"-1\"},\r\n" + 
-				"        {\"id\": 6,\"name\": \"attribution_results\",\"type\": \"List:attribution_result\"},\r\n" + 
-				"        {\"id\": 7,\"name\": \"allowed_ad_formats\",\"type\": \"Long\",   \"default\": \"-1\"},\r\n" + 
-				"		{\"id\": 8,\"name\": \"cost\",\"type\": \"Double\",   \"default\": \"0\"}\r\n" + 
+				"        {\"id\": 1, 	\"name\": \"int_required_column\", 			\"type\": \"Integer\",		\"isRequired\": true},\r\n" + 
+				"        {\"id\": 2,	\"name\": \"nested_table_column\",			\"type\": \"List:second_level_nested_table\"},\r\n" + 
+				"		{\"id\": 0, 	\"name\": \"string_derived_column\",     	\"type\": \"String\", \"default\": \"Unknown\", 	\"isDerived\": true}\r\n" + 
 				"		]\r\n" + 
 				"    },\r\n" + 
-				"    {\r\n" + 
-				"      \"table\": \"provider_user_id\",\r\n" + 
+				"   {\r\n" + 
+				"      \"table\": \"struct_table\",\r\n" + 
 				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1,\"name\": \"provider_type\",          \"type\": \"Byte\",   \"isRequired\": true},\r\n" + 
-				"        {\"id\": 2,\"name\": \"provider_id\",            \"type\": \"Integer\",\"isRequired\": true}\r\n" + 
+				"        {\"id\": 1,	\"name\": \"nested_table_column\",			\"type\": \"List:second_level_nested_table\"}\r\n" + 
 				"      ]\r\n" + 
 				"    },\r\n" + 
 				"    {\r\n" + 
-				"      \"table\": \"id_map\",\r\n" + 
+				"      \"table\": \"main_table\",\r\n" + 
 				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1,\"name\": \"media_provider_ids\",\"type\": \"List:provider_user_id\"}\r\n" + 
-				"      ]\r\n" + 
-				"    },\r\n" + 
-				"    {\r\n" + 
-				"      \"table\": \"analytical_user_profile\",\r\n" + 
-				"      \"fields\": [\r\n" + 
-				"        {\"id\": 1,\"name\": \"user_id\",                 \"type\": \"Long\",   \"isRequired\": true, \"isFrequentlyUsed\": true},\r\n" + 
-				"        {\"id\": 2,\"name\": \"version\",         \"type\": \"Byte\", \"isRequired\": true},\r\n" + 
-				"        {\"id\": 3,\"name\": \"resolution\",      \"type\": \"Short\",  \"default\": \"-1\"},\r\n" + 
-				"        {\"id\": 4,\"name\": \"os_version\",      \"type\": \"String\", \"default\": \"Unknown\"},\r\n" + 
-				"        {\"id\": 5,\"name\": \"impressions\",            \"type\": \"List:impression\"},\r\n" + 
-				"        {\"id\": 6,\"name\": \"id_maps\",                \"type\": \"id_map\"},\r\n" + 
-				"		{\"id\": 7, \"name\": \"time_list\",     \"type\": \"List:Integer\"},\r\n" +
-				"		{\"id\": 8, \"name\": \"data\",     \"type\": \"Binary\"}\r\n" +
+				"        {\"id\": 1,	\"name\": \"long_required_column\",			\"type\": \"Long\",   	\"isRequired\": true, \"isFrequentlyUsed\": true},\r\n" + 
+				"        {\"id\": 2,	\"name\": \"int_sorted_column\",         	\"type\": \"Integer\", 	\"isRequired\": true},\r\n" + 
+				"        {\"id\": 3,	\"name\": \"byte_column\",      			\"type\": \"Byte\",  	\"default\": \"-1\"},\r\n" + 
+				"        {\"id\": 4,	\"name\": \"boolean_column\",      			\"type\": \"Boolean\", 	\"default\": \"false\"},\r\n" + 
+				"		{\"id\": 5,	\"name\": \"short_column\",      			\"type\": \"Short\", 	\"default\": \"0\"},\r\n" + 
+				"		{\"id\": 6,	\"name\": \"float_column\",      			\"type\": \"Float\", 	\"default\": \"0.0\"},\r\n" + 
+				"		{\"id\": 7,	\"name\": \"double_column\",      			\"type\": \"Double\", 	\"default\": \"0.001\"},\r\n" + 
+				"		{\"id\": 8,	\"name\": \"string_column\",      			\"type\": \"String\", 	\"default\": \"Unknown\"},\r\n" + 
+				"		{\"id\": 9,	\"name\": \"binary_column\",     			\"type\": \"Binary\"},\r\n" + 
+				"		{\"id\": 10,	\"name\": \"nested_table_column\",          \"type\": \"List:first_level_nested_table\", \"hasLargeList\": true},\r\n" + 
+				"		{\"id\": 11,	\"name\": \"struct_column\",                \"type\": \"struct_table\"},\r\n" + 
+				"		{\"id\": 12, 	\"name\": \"int_list_column\",     			\"type\": \"List:Integer\"},\r\n" + 
+				"		{\"id\": 0, 	\"name\": \"string_derived_column\",     	\"type\": \"String\", 	\"default\": \"Unknown\", 	\"isDerived\": true},\r\n" + 
+				"		{\"id\": 0, 	\"name\": \"int_derived_column\",     		\"type\": \"Integer\", 	\"default\": \"0\", 		\"isDerived\": true}\r\n" + 
 				"      ]\r\n" + 
 				"    }\r\n" + 
 				"  ]\r\n" + 
-				"}";
+				"}\r\n";
 		Schema nextSchema = new JsonSchemaConvertor().apply(json_schema);
 		SchemaEvolutionValidation validate = 
 				new SchemaEvolutionValidation(currentSchema);

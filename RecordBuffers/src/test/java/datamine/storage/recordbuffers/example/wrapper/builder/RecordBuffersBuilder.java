@@ -39,20 +39,20 @@ public class RecordBuffersBuilder implements RecordBuilderInterface {
 
 		try {
 			
-		if (tableClass == SecondLevelNestedTableInterface.class) {
-			return (T) SecondLevelNestedTableRecord.class.newInstance();
-		}
-		else
 		if (tableClass == MainTableInterface.class) {
 			return (T) MainTableRecord.class.newInstance();
 		}
 		else
-		if (tableClass == StructTableInterface.class) {
-			return (T) StructTableRecord.class.newInstance();
+		if (tableClass == SecondLevelNestedTableInterface.class) {
+			return (T) SecondLevelNestedTableRecord.class.newInstance();
 		}
 		else
 		if (tableClass == FirstLevelNestedTableInterface.class) {
 			return (T) FirstLevelNestedTableRecord.class.newInstance();
+		}
+		else
+		if (tableClass == StructTableInterface.class) {
+			return (T) StructTableRecord.class.newInstance();
 		}
 
 		} catch (InstantiationException e) {

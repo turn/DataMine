@@ -206,7 +206,6 @@ public class ReadWriteTest {
 		aup.setIntSortedColumn(101);
 		aup.setLongRequiredColumn(1000L);
 		String output = new MainTableInterfaceContentPrinter().apply(aup);
-		System.out.println(output);
 		String content = "{\r\n" + 
 				"long_required_column = 1000\r\n" + 
 				"int_sorted_column = 101\r\n" + 

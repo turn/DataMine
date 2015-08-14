@@ -28,6 +28,7 @@ import datamine.storage.idl.Schema;
 import datamine.storage.idl.generator.TableTestDataGenerator;
 import datamine.storage.idl.generator.java.InterfaceConvertorGenerator;
 import datamine.storage.idl.generator.java.InterfaceGenerator;
+import datamine.storage.idl.generator.java.InterfaceContentPrinterGenerator;
 import datamine.storage.idl.generator.metadata.MetadataFileGenerator;
 import datamine.storage.idl.json.JsonSchemaConvertor;
 import datamine.storage.idl.validate.SchemaValidation;
@@ -70,6 +71,7 @@ public class GenerateTestData {
 			generateTableMetadataEnums();
 			generateTableAccessImps();
 			generateTableAccessTestData();
+			generateTableContentPrinters();
 			
 		} catch (IOException e) {
 			LOG.error("Cannot generate the code for the schema at " + this.schemaFile, e);
@@ -96,6 +98,17 @@ public class GenerateTestData {
 		// generate the java source codes
 		schema.accept(generator0);
 		generator0.generate();
+	}
+	
+	private void generateTableContentPrinters() {
+		InterfaceContentPrinterGenerator generator = new InterfaceContentPrinterGenerator(
+				genSrcFolder,
+				genClassPackageName + ".printers",
+				genClassPackageName + ".interfaces");
+
+		// generate the java source codes
+		schema.accept(generator);
+		generator.generate();
 	}
 	
 	private void generateTableMetadataEnums() {

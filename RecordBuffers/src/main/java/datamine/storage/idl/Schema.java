@@ -17,7 +17,9 @@ package datamine.storage.idl;
 
 import java.util.List;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import datamine.storage.idl.type.FieldType;
 
 /**
  * Schema definition of DataMine
@@ -40,7 +42,13 @@ public class Schema implements Element {
 	
 	private final String name;
 	private final List<Table> tableList;
-	
+
+
+	public static Schema getSchema(String string){
+		Gson gson = new GsonBuilder().registerTypeAdapter(FieldType.class, new Field.FieldDeserializer()).create();
+		return gson.fromJson(string, Schema.class);
+	}
+
 	public Schema(String name, List<Table> tables) {
 		this.name = name;
 		this.tableList = tables;
@@ -62,7 +70,7 @@ public class Schema implements Element {
 	public String toString() {
 		return new GsonBuilder().setPrettyPrinting().create().toJson(this);
 	}
-	
+
 	@Override
 	public void accept(ElementVisitor visitor) {
 		visitor.visit(this);

@@ -15,8 +15,16 @@
  */
 package datamine.storage.idl;
 
+import java.io.*;
 import java.util.EnumSet;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import datamine.storage.idl.json.JsonSchema;
+import datamine.storage.idl.json.JsonSchemaConvertor;
+import datamine.storage.idl.type.FieldType;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -65,5 +73,17 @@ public class FieldTest {
 		boolean isAscSorted = true;
 		Field.getContraintEnumSet(false, isDesSorted, isAscSorted, false, 
 				false, false);
+	}
+
+	@Test
+	public void testReadWriteSchema() throws IOException {
+		String filePath = "src/test/resources/RBSchema.json";
+		JsonSchemaConvertor convertor = new JsonSchemaConvertor();
+		Schema dmSchema = convertor.apply(
+				Files.toString(new File(filePath), Charsets.UTF_8));
+
+		Gson gson = new GsonBuilder().registerTypeAdapter(FieldType.class, new Field.FieldDeserializer()).create();
+		Schema rqSchema = gson.fromJson(dmSchema.toString(), Schema.class);
+		Assert.assertEquals(dmSchema.getTableList().size(), rqSchema.getTableList().size());
 	}
 }

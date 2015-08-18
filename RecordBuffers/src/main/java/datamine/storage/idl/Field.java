@@ -15,13 +15,14 @@
  */
 package datamine.storage.idl;
 
+import java.lang.reflect.Type;
 import java.util.EnumSet;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
 
-import datamine.storage.idl.type.FieldType;
+import datamine.storage.idl.type.*;
 
 /**
  * Definition of one field in Datamine
@@ -31,7 +32,29 @@ import datamine.storage.idl.type.FieldType;
 public class Field implements Element {
 	
 	public static final int DERIVED_FIELD_ID = 0;
-	
+
+	public static class FieldDeserializer implements JsonDeserializer<FieldType>{
+
+		@Override
+		public FieldType deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+			if(json.getAsJsonObject().has("type")){
+				String type = json.getAsJsonObject().get("type").getAsString();
+				PrimitiveType pType = PrimitiveType.valueOf(type);
+				return new PrimitiveFieldType(pType);
+			}
+			if (json.getAsJsonObject().has("collectionType")) {
+				CollectionType cType = CollectionType.valueOf(json.getAsJsonObject().get("collectionType").getAsString());
+				FieldType elemType = deserialize(json.getAsJsonObject().get("elementType"), typeOfT, context);
+				return new CollectionFieldType(elemType, cType);
+			}
+			if (json.getAsJsonObject().has("groupName")) {
+				return new GroupFieldType(json.getAsJsonObject().get("groupName").getAsString(), null);
+			}
+			throw new RuntimeException("not a valid type" + json.toString());
+		}
+	}
+
+
 	public enum Constraint {
 		REQUIRED, ASC_SORTED, DES_SORTED, OPTIONAL, FREQUENTLY_USED, DERIVED,
 		LARGE_LIST
@@ -42,7 +65,7 @@ public class Field implements Element {
 	private final FieldType type;
 	private final Object defaultValue;
 	private final EnumSet<Constraint> constraints;
-			
+
 	private Field(Builder builder) {
 		this.id = builder.id;
 		this.name = builder.name;

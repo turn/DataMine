@@ -29,8 +29,8 @@ import datamine.storage.idl.json.JsonSchemaConvertor;
 import datamine.storage.recordbuffers.idl.generator.RecordMetaWrapperGenerator;
 
 /**
- * Goal which creates a set of Java interfaces for table access based on 
- * the input schema (e.g., a JSON file).
+ * Goal which creates a set of Java classes as the implementation of 
+ * the table access interfaces. 
  *
  * @goal record_buffer_tables
  * 

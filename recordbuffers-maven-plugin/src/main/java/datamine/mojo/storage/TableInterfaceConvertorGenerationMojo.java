@@ -28,8 +28,8 @@ import datamine.storage.idl.generator.java.InterfaceConvertorGenerator;
 import datamine.storage.idl.json.JsonSchemaConvertor;
 
 /**
- * Goal which creates a set of Java interfaces for table access based on 
- * the input schema (e.g., a JSON file).
+ * Goal which creates a set of Java classes to copy a table record as an interface
+ * into another table record as the same interface. 
  *
  * @goal table_interface_convertors
  * 

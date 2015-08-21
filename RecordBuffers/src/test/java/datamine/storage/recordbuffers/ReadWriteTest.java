@@ -36,6 +36,7 @@ import datamine.storage.recordbuffers.example.interfaces.MainTableInterface;
 import datamine.storage.recordbuffers.example.interfaces.SecondLevelNestedTableInterface;
 import datamine.storage.recordbuffers.example.interfaces.StructTableInterface;
 import datamine.storage.recordbuffers.example.model.MainTableMetadata;
+import datamine.storage.recordbuffers.example.printers.MainTableInterfaceContentPrinter;
 import datamine.storage.recordbuffers.example.wrapper.FirstLevelNestedTableRecord;
 import datamine.storage.recordbuffers.example.wrapper.MainTableRecord;
 import datamine.storage.recordbuffers.example.wrapper.SecondLevelNestedTableRecord;
@@ -51,11 +52,11 @@ public class ReadWriteTest {
 	@SuppressWarnings("rawtypes")
 	private List<Record> recordList = Lists.newArrayList();
 	private int recordNum = 3;
-	
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@BeforeMethod
 	private void prepareRecord() {
-		
+
 		mainTableTestData = new MainTableTestData(MainTableTestData.createInputData(recordNum));
 		mainTableList = mainTableTestData.createObjects(new RecordBuffersBuilder());
 		recordList.clear();
@@ -70,12 +71,12 @@ public class ReadWriteTest {
 	public void getRecordLength() {
 		GroupFieldType gft = new GroupFieldType("main_table", MainTableMetadata.class);
 		int len = FieldValueOperatorFactory.getOperator(gft).getNumOfBytes(mainTableRecord);
-		
+
 		// trigger the creation of the object array
 		mainTableRecord.getValue(MainTableMetadata.NESTED_TABLE_COLUMN);
 		Assert.assertEquals(mainTableRecord.getNumOfBytes(), len);
 	}
-	
+
 	@Test
 	public void getListSize() {
 		Assert.assertEquals(recordNum, mainTableList.size());
@@ -122,12 +123,12 @@ public class ReadWriteTest {
 		for (MainTableInterface cur : mainTableList) {
 			Assert.assertEquals(cur.getStringDerivedColumn(),
 					cur.getStringDerivedColumnDefaultValue());
-			
+
 			MainTableDerivedValueInterface derivedImpl = new MainTableDerived(cur);
 			cur.setDerivedValueImplementation(derivedImpl);
 			Assert.assertEquals("StringDerivedColumn@MainTable", derivedImpl.getStringDerivedColumn());
 			Assert.assertEquals(101, derivedImpl.getIntDerivedColumn());
-			
+
 			for(FirstLevelNestedTableInterface imp : cur.getNestedTableColumn()) {
 				FirstLevelNestedTableDerivedValueInterface impDev = new
 						FirstLevelNestedTableDerived(imp);
@@ -138,8 +139,7 @@ public class ReadWriteTest {
 		}
 	}
 
-	@Test
-	public void recordCreation() {
+	private MainTableInterface createRecord() {
 		// create the record
 		MainTableInterface aup = new MainTableRecord();
 		aup.setStringColumn("1234567890");
@@ -156,7 +156,7 @@ public class ReadWriteTest {
 			ids.add(rand.nextInt());
 		}
 		aup.setIntListColumn(ids);
-		
+
 		FirstLevelNestedTableInterface nestedTable = new FirstLevelNestedTableRecord();
 		nestedTable.setIntRequiredColumn(202);
 		SecondLevelNestedTableInterface snt = new SecondLevelNestedTableRecord();
@@ -169,15 +169,22 @@ public class ReadWriteTest {
 		List<SecondLevelNestedTableInterface> snts = Lists.newArrayList();
 		snts.add(snt);
 		nestedTable.setNestedTableColumn(snts);
-		
+
 		List<FirstLevelNestedTableInterface> nts = Lists.newArrayList();
 		nts.add(nestedTable);
 		aup.setNestedTableColumn(nts);
-		
+
 		StructTableInterface sti = new StructTableRecord();
 		sti.setNestedTableColumn(snts);
 		aup.setStructColumn(sti);
-		
+
+		return aup;
+	}
+
+	@Test
+	public void recordCreation() {
+
+		MainTableInterface aup = createRecord();
 		@SuppressWarnings("unchecked")
 		Record<MainTableMetadata> aupRecord = (Record<MainTableMetadata>) aup.getBaseObject();
 		// start testing
@@ -192,5 +199,29 @@ public class ReadWriteTest {
 		GroupFieldType gft = new GroupFieldType("main_table", MainTableMetadata.class);
 		Assert.assertEquals(len, FieldValueOperatorFactory.getOperator(gft).getNumOfBytes(aupRecord));
 	}
-
+	
+	@Test
+	public void printContent1() {
+		MainTableInterface aup = new MainTableRecord();
+		aup.setIntSortedColumn(101);
+		aup.setLongRequiredColumn(1000L);
+		String output = new MainTableInterfaceContentPrinter().apply(aup);
+		String content = "{\r\n" + 
+				"long_required_column = 1000\r\n" + 
+				"int_sorted_column = 101\r\n" + 
+				"byte_column = -1\r\n" + 
+				"boolean_column = false\r\n" + 
+				"short_column = 0\r\n" + 
+				"float_column = 0.0\r\n" + 
+				"double_column = 0.001\r\n" + 
+				"string_column = Unknown\r\n" + 
+				"binary_column = null\r\n" + 
+				"nested_table_column = [\r\n" + 
+				"]\r\n" + 
+				"int_list_column = []\r\n" + 
+				"string_derived_column = Unknown\r\n" + 
+				"int_derived_column = 0\r\n" + 
+				"}";
+		Assert.assertEquals(output.replaceAll("\\s", ""), content.trim().replaceAll("\\s", ""));
+	}
 }

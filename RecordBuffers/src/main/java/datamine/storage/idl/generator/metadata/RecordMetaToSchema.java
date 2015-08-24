@@ -1,19 +1,17 @@
 package datamine.storage.idl.generator.metadata;
 
-import com.google.common.collect.Lists;
 import datamine.operator.UnaryOperatorInterface;
 import datamine.storage.api.RecordMetadataInterface;
-import datamine.storage.idl.Field;
 import datamine.storage.idl.Schema;
 import datamine.storage.idl.Table;
 import datamine.storage.idl.type.CollectionFieldType;
 import datamine.storage.idl.type.GroupFieldType;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
+ * convert a RecordMetadataInterface back to Schema
  * Created by tliu on 7/13/15.
  */
 public class RecordMetaToSchema implements
@@ -27,17 +25,17 @@ public class RecordMetaToSchema implements
         return schema;
     }
 
-
-    private void addTableInTableList(List<Table> tableList, Class<? extends RecordMetadataInterface> tClass){
+    //Find all the needed table and add them into Schema
+    private void addTableInTableList(List<Table> tableList, Class<? extends RecordMetadataInterface> tClass) {
         RecordMetaToTable converter = new RecordMetaToTable();
         tableList.add(converter.apply(tClass));
-        for (RecordMetadataInterface field: tClass.getEnumConstants()){
+        for (RecordMetadataInterface field : tClass.getEnumConstants()) {
             if (field.getField().getType() instanceof GroupFieldType) {
                 GroupFieldType type = (GroupFieldType) field.getField().getType();
                 addTableInTableList(tableList, type.getTableClass());
             }
             if (field.getField().getType() instanceof CollectionFieldType &&
-                    ((CollectionFieldType) field.getField().getType()).getElementType() instanceof GroupFieldType){
+                    ((CollectionFieldType) field.getField().getType()).getElementType() instanceof GroupFieldType) {
                 GroupFieldType type = (GroupFieldType) ((CollectionFieldType) field.getField().getType()).getElementType();
                 addTableInTableList(tableList, type.getTableClass());
             }

@@ -15,75 +15,53 @@
  */
 package datamine.storage.idl;
 
-import java.io.*;
-import java.util.EnumSet;
-
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import datamine.storage.idl.json.JsonSchema;
-import datamine.storage.idl.json.JsonSchemaConvertor;
-import datamine.storage.idl.type.FieldType;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import datamine.storage.idl.Field;
+import java.util.EnumSet;
 
 public class FieldTest {
-	
-	@Test
-	public void getContraintEnumSet() {
-		
-		boolean isRequired = false;
-		boolean isDesSorted = false;
-		boolean isAscSorted = false;
-		boolean isFrequentlyUsed = false;
-		boolean isDerived = false;
-		boolean hasLargeList = false;
-		
-		EnumSet<Field.Constraint> constraints = Field.getContraintEnumSet(
-				isRequired, isDesSorted, isAscSorted, isFrequentlyUsed, 
-				isDerived, hasLargeList);
-		Assert.assertEquals(constraints, EnumSet.of(Field.Constraint.OPTIONAL));
-		
-		isRequired = true;
-		isDesSorted = false;
-		isAscSorted = false;
-		
-		constraints = Field.getContraintEnumSet(
-				isRequired, isDesSorted, isAscSorted, isFrequentlyUsed, 
-				isDerived, hasLargeList);
-		Assert.assertEquals(constraints, EnumSet.of(Field.Constraint.REQUIRED));
-		
-		isRequired = true;
-		isDesSorted = true;
-		isAscSorted = false;
-		
-		constraints = Field.getContraintEnumSet(
-				isRequired, isDesSorted, isAscSorted, isFrequentlyUsed, 
-				isDerived, hasLargeList);
-		Assert.assertEquals(constraints, EnumSet.of(Field.Constraint.REQUIRED, 
-				Field.Constraint.DES_SORTED));
-	}
-	
-	@Test (expectedExceptions=java.lang.IllegalArgumentException.class)
-	void checkDerived() {
-		boolean isDesSorted = true;
-		boolean isAscSorted = true;
-		Field.getContraintEnumSet(false, isDesSorted, isAscSorted, false, 
-				false, false);
-	}
 
-	@Test
-	public void testReadWriteSchema() throws IOException {
-		String filePath = "src/test/resources/RBSchema.json";
-		JsonSchemaConvertor convertor = new JsonSchemaConvertor();
-		Schema dmSchema = convertor.apply(
-				Files.toString(new File(filePath), Charsets.UTF_8));
+    @Test
+    public void getContraintEnumSet() {
 
-		Gson gson = new GsonBuilder().registerTypeAdapter(FieldType.class, new Field.FieldDeserializer()).create();
-		Schema rqSchema = gson.fromJson(dmSchema.toString(), Schema.class);
-		Assert.assertEquals(dmSchema.getTableList().size(), rqSchema.getTableList().size());
-	}
+        boolean isRequired = false;
+        boolean isDesSorted = false;
+        boolean isAscSorted = false;
+        boolean isFrequentlyUsed = false;
+        boolean isDerived = false;
+        boolean hasLargeList = false;
+
+        EnumSet<Field.Constraint> constraints = Field.getContraintEnumSet(
+                isRequired, isDesSorted, isAscSorted, isFrequentlyUsed,
+                isDerived, hasLargeList);
+        Assert.assertEquals(constraints, EnumSet.of(Field.Constraint.OPTIONAL));
+
+        isRequired = true;
+        isDesSorted = false;
+        isAscSorted = false;
+
+        constraints = Field.getContraintEnumSet(
+                isRequired, isDesSorted, isAscSorted, isFrequentlyUsed,
+                isDerived, hasLargeList);
+        Assert.assertEquals(constraints, EnumSet.of(Field.Constraint.REQUIRED));
+
+        isRequired = true;
+        isDesSorted = true;
+        isAscSorted = false;
+
+        constraints = Field.getContraintEnumSet(
+                isRequired, isDesSorted, isAscSorted, isFrequentlyUsed,
+                isDerived, hasLargeList);
+        Assert.assertEquals(constraints, EnumSet.of(Field.Constraint.REQUIRED,
+                Field.Constraint.DES_SORTED));
+    }
+
+    @Test(expectedExceptions = java.lang.IllegalArgumentException.class)
+    void checkDerived() {
+        boolean isDesSorted = true;
+        boolean isAscSorted = true;
+        Field.getContraintEnumSet(false, isDesSorted, isAscSorted, false,
+                false, false);
+    }
 }

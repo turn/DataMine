@@ -14,6 +14,7 @@ import java.util.List;
  * convert a RecordMetadataInterface back to Schema
  * Created by tliu on 7/13/15.
  */
+
 public class RecordMetaToSchema implements
         UnaryOperatorInterface<Class<? extends RecordMetadataInterface>, Schema> {
 
@@ -27,6 +28,10 @@ public class RecordMetaToSchema implements
 
     //Find all the needed table and add them into Schema
     private void addTableInTableList(List<Table> tableList, Class<? extends RecordMetadataInterface> tClass) {
+        if (tableAlreadyAdded(tableList, tClass)){
+            return;
+        }
+
         RecordMetaToTable converter = new RecordMetaToTable();
         tableList.add(converter.apply(tClass));
         for (RecordMetadataInterface field : tClass.getEnumConstants()) {
@@ -42,5 +47,14 @@ public class RecordMetaToSchema implements
         }
     }
 
+    // Check if schema already exist in the Schema
+    private boolean tableAlreadyAdded(List<Table> tableList,Class<? extends RecordMetadataInterface> tClass ){
+        for (Table table: tableList) {
+            if (table.getName().toLowerCase().equals(tClass.getEnumConstants()[0].getTableName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }

@@ -15,55 +15,53 @@
  */
 package datamine.storage.idl;
 
-import java.util.EnumSet;
-
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import datamine.storage.idl.Field;
+import java.util.EnumSet;
 
 public class FieldTest {
-	
-	@Test
-	public void getContraintEnumSet() {
-		
-		boolean isRequired = false;
-		boolean isDesSorted = false;
-		boolean isAscSorted = false;
-		boolean isFrequentlyUsed = false;
-		boolean isDerived = false;
-		boolean hasLargeList = false;
-		
-		EnumSet<Field.Constraint> constraints = Field.getContraintEnumSet(
-				isRequired, isDesSorted, isAscSorted, isFrequentlyUsed, 
-				isDerived, hasLargeList);
-		Assert.assertEquals(constraints, EnumSet.of(Field.Constraint.OPTIONAL));
-		
-		isRequired = true;
-		isDesSorted = false;
-		isAscSorted = false;
-		
-		constraints = Field.getContraintEnumSet(
-				isRequired, isDesSorted, isAscSorted, isFrequentlyUsed, 
-				isDerived, hasLargeList);
-		Assert.assertEquals(constraints, EnumSet.of(Field.Constraint.REQUIRED));
-		
-		isRequired = true;
-		isDesSorted = true;
-		isAscSorted = false;
-		
-		constraints = Field.getContraintEnumSet(
-				isRequired, isDesSorted, isAscSorted, isFrequentlyUsed, 
-				isDerived, hasLargeList);
-		Assert.assertEquals(constraints, EnumSet.of(Field.Constraint.REQUIRED, 
-				Field.Constraint.DES_SORTED));
-	}
-	
-	@Test (expectedExceptions=java.lang.IllegalArgumentException.class)
-	void checkDerived() {
-		boolean isDesSorted = true;
-		boolean isAscSorted = true;
-		Field.getContraintEnumSet(false, isDesSorted, isAscSorted, false, 
-				false, false);
-	}
+
+    @Test
+    public void getContraintEnumSet() {
+
+        boolean isRequired = false;
+        boolean isDesSorted = false;
+        boolean isAscSorted = false;
+        boolean isFrequentlyUsed = false;
+        boolean isDerived = false;
+        boolean hasLargeList = false;
+
+        EnumSet<Field.Constraint> constraints = Field.getContraintEnumSet(
+                isRequired, isDesSorted, isAscSorted, isFrequentlyUsed,
+                isDerived, hasLargeList);
+        Assert.assertEquals(constraints, EnumSet.of(Field.Constraint.OPTIONAL));
+
+        isRequired = true;
+        isDesSorted = false;
+        isAscSorted = false;
+
+        constraints = Field.getContraintEnumSet(
+                isRequired, isDesSorted, isAscSorted, isFrequentlyUsed,
+                isDerived, hasLargeList);
+        Assert.assertEquals(constraints, EnumSet.of(Field.Constraint.REQUIRED));
+
+        isRequired = true;
+        isDesSorted = true;
+        isAscSorted = false;
+
+        constraints = Field.getContraintEnumSet(
+                isRequired, isDesSorted, isAscSorted, isFrequentlyUsed,
+                isDerived, hasLargeList);
+        Assert.assertEquals(constraints, EnumSet.of(Field.Constraint.REQUIRED,
+                Field.Constraint.DES_SORTED));
+    }
+
+    @Test(expectedExceptions = java.lang.IllegalArgumentException.class)
+    void checkDerived() {
+        boolean isDesSorted = true;
+        boolean isAscSorted = true;
+        Field.getContraintEnumSet(false, isDesSorted, isAscSorted, false,
+                false, false);
+    }
 }

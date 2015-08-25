@@ -25,7 +25,8 @@ package datamine.storage.idl.type;
 final public class GroupFieldType implements FieldType {
 
 	private String groupName;
-	private Class clazz = null;
+	// skip deserialize clazz object
+	private transient Class clazz = null;
 
 	public GroupFieldType(String name, Class clazz) {
 		this.groupName = name;

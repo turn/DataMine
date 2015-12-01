@@ -110,8 +110,8 @@ They work together to ensure the correct serialization and de-serialization. One
 
 - *Version No.* specifies what version of schema this record uses; it is required and takes 2 bytes.
 - *The number of attributes* in the table schema is required and takes 2 bytes.
-- *Reference section length* is the number of bytes used for the referene section; it is required and takes 2 bytes. 
-- *Sort-key reference* stores the offset of the sork key column if exists; it is optional and takes 4 bytes if exists. 
+- *Reference section length* is the number of bytes used for the reference section; it is required and takes 2 bytes. 
+- *Sort-key reference* stores the offset of the sort key column if exists; it is optional and takes 4 bytes if exists. 
 - *The number of collection-type attributes* uses 1 byte for the number of collections in the table, and it is required.
 - *Collection-type field references* stores the offsets of the collections in the table sequentially; note that the offset of an empty collection is -1.
 - *The number of non-collection-type field reference* uses 1 byte for the number of non-collection-type columns which have *hasRef* annotation.
@@ -127,4 +127,4 @@ Currently, there are three types of attributes having their offsets in the refer
 
 1. The attribute as the table sort-key: it speeds up the record sorting;
 2. The attribute having the annotation of "hasRef": the attribute can be specified by the user if it is frequently accessed.
-3. The attribute of collection type (i.e., nested table): by default, any nested table has its offset stored in the referene section; according to our experience the nested table is often the hot spot. Having its offset in the reference section, it could significantly speed up some basic operations, like getting the size of the nested table. 
+3. The attribute of collection type (i.e., nested table): by default, any nested table has its offset stored in the reference section; according to our experience the nested table is often the hot spot. Having its offset in the reference section, it could significantly speed up some basic operations, like getting the size of the nested table. 

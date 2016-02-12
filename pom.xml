@@ -2,8 +2,8 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.turn</groupId>
-    <artifactId>datamine</artifactId>
+    <groupId>com.turn.datamine</groupId>
+    <artifactId>datamine-recordbuffer</artifactId>
     <version>0.9.0-alpha</version>
     <packaging>pom</packaging>
 
@@ -13,7 +13,7 @@
 	</properties>
 
     <modules>
-        <module>RecordBuffers</module>
+        <module>recordbuffers</module>
         <module>recordbuffers-maven-plugin</module>
     </modules>
     

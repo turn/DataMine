@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>com.turn.datamine</groupId>
 		<artifactId>datamine-recordbuffer</artifactId>
-		<version>0.9.0-alpha</version>
+		<version>0.9</version>
 	</parent>
 
 	<artifactId>recordbuffers</artifactId>

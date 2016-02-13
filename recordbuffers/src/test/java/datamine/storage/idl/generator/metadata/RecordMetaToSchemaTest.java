@@ -1,0 +1,53 @@
+/**
+ * Copyright (C) 2016 Turn Inc. (yan.qi@turn.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package datamine.storage.idl.generator.metadata;
+
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
+import datamine.storage.idl.Schema;
+import datamine.storage.idl.json.JsonSchemaConvertor;
+import datamine.storage.recordbuffers.example.model.MainTableMetadata;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import java.io.File;
+
+import static org.testng.Assert.assertEquals;
+
+public class RecordMetaToSchemaTest {
+
+    @BeforeMethod
+    public void setUp() throws Exception {
+
+    }
+
+    @AfterMethod
+    public void tearDown() throws Exception {
+
+    }
+
+    @Test
+    public void testApply() throws Exception {
+        String filePath = "src/test/resources/RBSchema.json";
+        JsonSchemaConvertor convertor = new JsonSchemaConvertor();
+        Schema dmSchema = convertor.apply(
+                Files.toString(new File(filePath), Charsets.UTF_8));
+        RecordMetaToSchema converter = new RecordMetaToSchema();
+        Schema rqSchema = converter.apply(MainTableMetadata.class);
+        assertEquals(rqSchema.getTableList().size(), dmSchema.getTableList().size());
+    }
+}

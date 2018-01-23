@@ -1,0 +1,6 @@
+rootProject.name = 'recordbuffer'
+include ':recordbuffers'
+//include ':recordbuffers-maven-plugin'
+
+project(':recordbuffers').projectDir = "$rootDir/recordbuffers" as File
+//project(':recordbuffers-maven-plugin').projectDir = "$rootDir/recordbuffers-maven-plugin" as File

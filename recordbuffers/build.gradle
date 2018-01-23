@@ -1,0 +1,44 @@
+description = 'RecordBuffer'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile ("org.apache.spark:spark-sql_${scalaVersion}:${sparkVersion}")
+
+    compile (group: 'com.github.scopt', name: 'scopt_2.10', version: '3.3.0') {
+        exclude (group: "org.scala-lang")
+    }
+
+    compile 'org.slf4j:slf4j-api:1.6.4'
+
+    compile 'com.google.code.gson:gson:2.2.4'
+
+    compile 'com.google.guava:guava:18.0'
+
+    compile (group: 'org.apache.hadoop', name: 'hadoop-common', version: '2.6.0') {
+        exclude (group: "javax.servlet")
+    }
+
+    compile group: 'net.sf.trove4j', name: 'trove4j', version: '3.0.3'
+
+    compile group: 'joda-time', name: 'joda-time', version: '2.9.9'
+
+    compile group: 'org.antlr', name: 'antlr4-runtime', version: '4.7'
+
+    compile 'org.apache.commons:commons-lang3:3.3.2'
+
+    compile 'org.reflections:reflections:0.9.9'
+
+    testCompile 'org.testng:testng:6.8.21'
+    testCompile ("org.scalatest:scalatest_${scalaVersion}:3.0.0")
+}
+
+test.useTestNG()
+
+task packageTests(type: Jar) {
+  from sourceSets.test.output
+  classifier = 'tests'
+}
+artifacts.archives packageTests

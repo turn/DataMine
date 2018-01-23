@@ -1,18 +1,3 @@
-/**
- * Copyright (C) 2016 Turn Inc. (yan.qi@turn.com)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package datamine.storage.recordbuffers.example.data;
 
 import datamine.storage.api.RecordBuilderInterface;
@@ -33,7 +18,7 @@ import com.google.common.collect.Maps;
 
 
 /**
- * DO NOT CHANGE! Auto-generated code
+ * DO Not CHANGE! Auto-generated code
  */
 public class StructTableTestData extends AbstractTestData<StructTableInterface, StructTableMetadata> {
 
@@ -51,6 +36,10 @@ public class StructTableTestData extends AbstractTestData<StructTableInterface, 
 				record.setNestedTableColumn(new SecondLevelNestedTableTestData((List) cur.get(StructTableMetadata.NESTED_TABLE_COLUMN)).createObjects(builder));
 			}
 
+			if (cur.containsKey(StructTableMetadata.INT_SORTED_COLUMN)) {
+				record.setIntSortedColumn((Integer) cur.get(StructTableMetadata.INT_SORTED_COLUMN));
+			}
+
 			records.add(record);
 		}
 		return records;
@@ -66,6 +55,10 @@ public class StructTableTestData extends AbstractTestData<StructTableInterface, 
 				new SecondLevelNestedTableTestData((List) data.get(i).get(StructTableMetadata.NESTED_TABLE_COLUMN)).assertObjects(objectList.get(i).getNestedTableColumn());
 			}
 
+			if (data.get(i).containsKey(StructTableMetadata.INT_SORTED_COLUMN)) {
+				Assert.assertEquals(objectList.get(i).getIntSortedColumn(), data.get(i).get(StructTableMetadata.INT_SORTED_COLUMN));
+			}
+
 		}
 	}
 
@@ -78,6 +71,13 @@ public class StructTableTestData extends AbstractTestData<StructTableInterface, 
 				Object val = SecondLevelNestedTableTestData.createInputData(3);
 				if (val != null && !((List) val).isEmpty()) {
 					dataMap.put(StructTableMetadata.NESTED_TABLE_COLUMN, val);
+				}
+			}
+
+			{
+				Object val = RandomValueGenerator.getValueOf(((PrimitiveFieldType)StructTableMetadata.INT_SORTED_COLUMN.getField().getType()).getPrimitiveType());
+				if (val != null) {
+					dataMap.put(StructTableMetadata.INT_SORTED_COLUMN, val);
 				}
 			}
 

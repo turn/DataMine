@@ -15,12 +15,23 @@
  */
 package datamine.storage.idl.generator.metadata;
 
-import com.google.gson.*;
-import datamine.operator.UnaryOperatorInterface;
-import datamine.storage.idl.Schema;
-import datamine.storage.idl.type.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
+
+import datamine.operator.UnaryOperatorInterface;
+import datamine.storage.idl.Schema;
+import datamine.storage.idl.type.CollectionFieldType;
+import datamine.storage.idl.type.CollectionType;
+import datamine.storage.idl.type.FieldType;
+import datamine.storage.idl.type.GroupFieldType;
+import datamine.storage.idl.type.PrimitiveFieldType;
+import datamine.storage.idl.type.PrimitiveType;
 
 /**
  * Convert String to Schema

@@ -15,20 +15,20 @@
  */
 package datamine.storage.recordbuffers.example;
 
-import java.io.File;
-import java.io.IOException;
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
+import java.io.File;
+import java.io.IOException;
 
 import datamine.storage.idl.Schema;
 import datamine.storage.idl.generator.TableTestDataGenerator;
+import datamine.storage.idl.generator.java.InterfaceContentPrinterGenerator;
 import datamine.storage.idl.generator.java.InterfaceConvertorGenerator;
 import datamine.storage.idl.generator.java.InterfaceGenerator;
-import datamine.storage.idl.generator.java.InterfaceContentPrinterGenerator;
 import datamine.storage.idl.generator.metadata.MetadataFileGenerator;
 import datamine.storage.idl.json.JsonSchemaConvertor;
 import datamine.storage.idl.validate.SchemaValidation;
@@ -139,14 +139,18 @@ public class GenerateTestData {
 	/**
 	 * @param args
 	 * @throws IOException 
-	 * @throws AbstractValidationException 
+	 * @throws AbstractValidationException
 	 */
 	public static void main(String[] args) throws IOException, AbstractValidationException {
 
+		final String dir = "recordbuffers/src/test";
 		GenerateTestData gtd = new GenerateTestData(
-				"src/test/resources/RBSchema.json", 
-				"src/test/java/", 
-				"datamine.storage.recordbuffers.example");
+				dir + "/resources/RBSchema.json",
+//			dir + "/resources/ProfileSchema.json",
+			dir + "/java/",
+				"datamine.storage.recordbuffers.example"
+//			"datamine.query.example"
+		);
 		
 		gtd.run();
 	}

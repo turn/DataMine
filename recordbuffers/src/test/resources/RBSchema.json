@@ -11,15 +11,17 @@
     {
       "table": "first_level_nested_table",
       "fields": [
-        {"id": 1, 	"name": "int_required_column", 			"type": "Integer",		"isRequired": true},
-        {"id": 2,	"name": "nested_table_column",			"type": "List:second_level_nested_table"},
+        {"id": 1,   "name": "event_time",			"type": "Long",		    "isRequired": true, "isAscSortKey": true},
+        {"id": 2, 	"name": "int_required_column", 			"type": "Integer",		"isRequired": true},
+        {"id": 3,	"name": "nested_table_column",			"type": "List:second_level_nested_table"},
 		{"id": 0, 	"name": "string_derived_column",     	"type": "String", "default": "Unknown", 	"isDerived": true}
 		]
     },
    {
       "table": "struct_table",
       "fields": [
-        {"id": 1,	"name": "nested_table_column",			"type": "List:second_level_nested_table"}
+        {"id": 1,	"name": "nested_table_column",			"type": "List:second_level_nested_table"},
+        {"id": 2,	"name": "int_sorted_column",         	"type": "Integer", 	"isRequired": true}
       ]
     },
     {

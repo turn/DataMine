@@ -15,6 +15,44 @@
  */
 package datamine.storage.idl.type;
 
-public enum CollectionType { 
-	LIST, SET 
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * The enum for the definition of collection.
+ */
+public enum CollectionType {
+	LIST(1, "LIST"),
+	SET(2, "SET");
+
+	private int id;
+	private String name;
+
+	private static Map<Integer, CollectionType> idTypeMapping =
+		new HashMap<>();
+
+	CollectionType(int id, String name) {
+		this.id = id;
+		this.name = name;
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	public int getId() {
+		return this.id;
+	}
+
+	public static CollectionType getType(int id) {
+		if (idTypeMapping.isEmpty()) {
+			for (CollectionType type : values()) {
+				idTypeMapping.put(type.getId(), type);
+			}
+		}
+		return idTypeMapping.get(id);
+	}
 }

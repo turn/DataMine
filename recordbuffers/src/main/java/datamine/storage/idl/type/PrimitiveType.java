@@ -18,6 +18,14 @@ package datamine.storage.idl.type;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * An enum for primitive type.
+ *
+ * <p>
+ *     Note that the ID should be always larger than 0 and smaller than 1000
+ *     (i.e.,{@link CollectionFieldType#MULTIPLICATION_FACTOR}).
+ * </p>
+ */
 public enum PrimitiveType {
 
 	BYTE (6, "BYTE"), 
@@ -29,15 +37,16 @@ public enum PrimitiveType {
 	INT64 (4, "INT64"),
 	STRING (5, "STRING"), 
 	BINARY (9, "BINARY"),
+	NULL (0, "NULL"),
 	UNKNOWN (-1, "UNKNOWN"); 
 
 	private int id;
 	private String name;
 	
 	private static Map<Integer, PrimitiveType> idTypeMapping = 
-			new HashMap<Integer, PrimitiveType>();
+			new HashMap<>();
 
-	private PrimitiveType(int id, String name) {
+	PrimitiveType(int id, String name) {
 		this.id = id;
 		this.name = name;
 	}

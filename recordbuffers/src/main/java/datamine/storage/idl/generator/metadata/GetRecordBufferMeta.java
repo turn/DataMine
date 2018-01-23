@@ -28,13 +28,13 @@ import datamine.storage.recordbuffers.RecordBufferMeta;
  * @author yqi
  */
 public class GetRecordBufferMeta<T extends Enum<T> & RecordMetadataInterface> implements
-		BinaryOperatorInterface<String, String, RecordBufferMeta<T>> {
+    BinaryOperatorInterface<String, String, RecordBufferMeta<T>> {
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public RecordBufferMeta<T> apply(String packageName, String tableName) {
 		
-		Set<Class<? extends RecordMetadataInterface>> allClasses = 
+		Set<Class<? extends RecordMetadataInterface>> allClasses =
 		     new GetAllMetadataEnumClasses().apply(packageName);
 		
 		for (@SuppressWarnings("rawtypes") Class cur : allClasses) {

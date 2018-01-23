@@ -22,7 +22,7 @@ package datamine.storage.idl.type;
  * @author yqi
  */
 @SuppressWarnings("rawtypes")
-final public class GroupFieldType implements FieldType {
+public final class GroupFieldType implements FieldType {
 
 	private String groupName;
 	// skip deserialize clazz object
@@ -67,4 +67,13 @@ final public class GroupFieldType implements FieldType {
 		return true;
 	}
 
+	@Override
+	public int getID() {
+		return 0;
+	}
+
+	@Override
+	public String toString() {
+		return groupName + "@" + clazz;
+	}
 }

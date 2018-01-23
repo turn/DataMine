@@ -15,11 +15,11 @@
  */
 package datamine.storage.idl.json;
 
-import java.util.List;
-
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 /**
  * Definition of a table

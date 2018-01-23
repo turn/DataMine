@@ -16,9 +16,11 @@
 package datamine.storage.idl.type;
 
 final public class CollectionFieldType implements FieldType {
-	
-	final private CollectionType collectionType;
-	final private FieldType elementType;
+
+	public static final int MULTIPLICATION_FACTOR = 1000;
+
+	private final CollectionType collectionType;
+	private final FieldType elementType;
 
 	public CollectionFieldType(FieldType elementType, CollectionType cType) {
 		this.elementType = elementType;
@@ -63,4 +65,22 @@ final public class CollectionFieldType implements FieldType {
 		return true;
 	}
 
+	/**
+	 * The type ID of {@link CollectionFieldType} is calculated by
+	 * its own type ID and its element type ID, based on the formula below:
+	 *
+	 * <p>
+	 *     collectionType.getId() * 1000 + elementType.getID()
+	 * </p>
+	 * @return
+	 */
+	@Override
+	public int getID() {
+		return collectionType.getId() * MULTIPLICATION_FACTOR + elementType.getID();
+	}
+
+	@Override
+	public String toString() {
+		return collectionType.getName() + "<" + elementType.toString() + ">";
+	}
 }

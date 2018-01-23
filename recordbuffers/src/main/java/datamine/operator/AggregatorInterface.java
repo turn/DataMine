@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,10 +16,18 @@
 package datamine.operator;
 
 /**
+ * The interface of aggregation.
+ *
  * @author yqi
- * @date Sep 3, 2014
+ * @param <T_INPUT> the data type of input
+ * @param <T_OUTPUT> the data type of output
  */
 public interface AggregatorInterface<T_INPUT, T_OUTPUT> extends
-		UnaryOperatorInterface<T_INPUT, T_OUTPUT> {
-	public T_OUTPUT getResult();
+    UnaryOperatorInterface<T_INPUT, T_OUTPUT> {
+
+    /**
+     * Get the result of the aggregation.
+     * @return the result of aggregation
+     */
+    T_OUTPUT getResult();
 }

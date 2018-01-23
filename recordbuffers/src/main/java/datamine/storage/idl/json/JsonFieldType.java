@@ -15,9 +15,9 @@
  */
 package datamine.storage.idl.json;
 
-import org.apache.commons.lang3.ArrayUtils;
-
 import com.google.common.collect.Lists;
+
+import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * The ENUM defines all types in the JSON schema. 

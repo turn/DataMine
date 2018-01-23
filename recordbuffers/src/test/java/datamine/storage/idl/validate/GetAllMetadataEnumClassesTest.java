@@ -15,10 +15,10 @@
  */
 package datamine.storage.idl.validate;
 
-import java.util.Set;
-
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.util.Set;
 
 import datamine.storage.api.RecordMetadataInterface;
 import datamine.storage.idl.generator.metadata.GetAllMetadataEnumClasses;
@@ -29,7 +29,7 @@ public class GetAllMetadataEnumClassesTest {
 	public void testLoading() {
 		String inputPackageName = 
 				"datamine.storage.recordbuffers.example.model";
-		Set<Class<? extends RecordMetadataInterface>> allClasses = 
+		Set<Class<? extends RecordMetadataInterface>> allClasses =
 				new GetAllMetadataEnumClasses().apply(inputPackageName);
 		
 		Assert.assertEquals(4, allClasses.size());

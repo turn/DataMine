@@ -26,7 +26,7 @@ import datamine.storage.api.RecordMetadataInterface;
  * @author yqi
  * @date Feb 18, 2015
  */
-abstract public class AbstractTestData<T extends BaseInterface, S extends Enum<S> & RecordMetadataInterface> 
+abstract public class AbstractTestData<T extends BaseInterface, S extends Enum<S> & RecordMetadataInterface>
 	implements GenerateTestDataInterface<T> {
 	
 	protected final List<EnumMap<S, Object>> data;

@@ -38,7 +38,7 @@ class GroupValueOperator implements FieldValueOperatorInterface {
 	public boolean isValid(Object val) {
 		try {
 			@SuppressWarnings({ "unused", "rawtypes" })
-			Record buf = (Record) val;
+            Record buf = (Record) val;
 		} catch (ClassCastException e) {
 			return false;
 		}
@@ -51,7 +51,7 @@ class GroupValueOperator implements FieldValueOperatorInterface {
 			return new byte[0];
 		} else {
 			@SuppressWarnings("rawtypes")
-			Record record = (Record) value;
+            Record record = (Record) value;
 			return record.array();
 		}
 	}
@@ -82,7 +82,7 @@ class GroupValueOperator implements FieldValueOperatorInterface {
 			return 0;
 		} else {
 			@SuppressWarnings("rawtypes")
-			Record record = (Record) val;
+            Record record = (Record) val;
 			return record.getNumOfBytes();
 		}
 	}

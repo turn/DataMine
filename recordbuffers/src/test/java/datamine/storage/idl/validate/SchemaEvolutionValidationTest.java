@@ -20,6 +20,7 @@ import org.testng.annotations.Test;
 
 import datamine.storage.idl.Schema;
 import datamine.storage.idl.json.JsonSchemaConvertor;
+import datamine.storage.idl.validate.SchemaEvolutionValidation;
 import datamine.storage.idl.validate.exceptions.AbstractValidationException;
 import datamine.storage.idl.validate.exceptions.FieldConstraintModifiedInSchemaEvolutionException;
 import datamine.storage.idl.validate.exceptions.FieldDefaultValueModifiedInSchemaEvolutionException;
@@ -78,7 +79,7 @@ public class SchemaEvolutionValidationTest {
 				"    }\r\n" + 
 				"  ]\r\n" + 
 				"}\r\n";
-			currentSchema = new JsonSchemaConvertor().apply(json_schema);	
+			currentSchema = new JsonSchemaConvertor().apply(json_schema);
 	}
 	
 	/**
@@ -130,7 +131,7 @@ public class SchemaEvolutionValidationTest {
 				"}\r\n";
 		
 		Schema nextSchema = new JsonSchemaConvertor().apply(json_schema);
-		SchemaEvolutionValidation validate = 
+		SchemaEvolutionValidation validate =
 				new SchemaEvolutionValidation(currentSchema);
 		validate.check(nextSchema);
 	}
@@ -188,7 +189,7 @@ public class SchemaEvolutionValidationTest {
 				"}\r\n";
 				
 		Schema nextSchema = new JsonSchemaConvertor().apply(json_schema);
-		SchemaEvolutionValidation validate = 
+		SchemaEvolutionValidation validate =
 				new SchemaEvolutionValidation(currentSchema);
 		validate.check(nextSchema);
 	}
@@ -247,7 +248,7 @@ public class SchemaEvolutionValidationTest {
 				"}\r\n";
 		
 		Schema nextSchema = new JsonSchemaConvertor().apply(json_schema);
-		SchemaEvolutionValidation validate = 
+		SchemaEvolutionValidation validate =
 				new SchemaEvolutionValidation(currentSchema);
 		validate.check(nextSchema);
 	}
@@ -306,7 +307,7 @@ public class SchemaEvolutionValidationTest {
 				"}\r\n";
 		
 		Schema nextSchema = new JsonSchemaConvertor().apply(json_schema);
-		SchemaEvolutionValidation validate = 
+		SchemaEvolutionValidation validate =
 				new SchemaEvolutionValidation(currentSchema);
 		validate.check(nextSchema);
 	}
@@ -365,7 +366,7 @@ public class SchemaEvolutionValidationTest {
 				"  ]\r\n" + 
 				"}\r\n";
 		Schema nextSchema = new JsonSchemaConvertor().apply(json_schema);
-		SchemaEvolutionValidation validate = 
+		SchemaEvolutionValidation validate =
 				new SchemaEvolutionValidation(currentSchema);
 		validate.check(nextSchema);
 	}
@@ -423,7 +424,7 @@ public class SchemaEvolutionValidationTest {
 				"  ]\r\n" + 
 				"}\r\n";
 		Schema nextSchema = new JsonSchemaConvertor().apply(json_schema);
-		SchemaEvolutionValidation validate = 
+		SchemaEvolutionValidation validate =
 				new SchemaEvolutionValidation(currentSchema);
 		validate.check(nextSchema);
 	}
@@ -481,7 +482,7 @@ public class SchemaEvolutionValidationTest {
 				"  ]\r\n" + 
 				"}\r\n";
 		Schema nextSchema = new JsonSchemaConvertor().apply(json_schema);
-		SchemaEvolutionValidation validate = 
+		SchemaEvolutionValidation validate =
 				new SchemaEvolutionValidation(currentSchema);
 		validate.check(nextSchema);
 	}

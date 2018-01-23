@@ -15,14 +15,14 @@
  */
 package datamine.storage.recordbuffers.idl.generator;
 
+import com.google.common.base.CaseFormat;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.google.common.base.CaseFormat;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
 
 import datamine.operator.UnaryOperatorInterface;
 import datamine.storage.idl.ElementVisitor;
@@ -42,7 +42,7 @@ import datamine.storage.idl.type.PrimitiveFieldType;
 import datamine.storage.idl.type.PrimitiveType;
 
 /**
- * The class {@link RecordMetaWrapperGenerator} generates the wrapper class 
+ * The class {@link RecordMetaWrapperGenerator} generates the wrapper class
  * for each table defined in the input schema. 
  * 
  * @author yqi
@@ -236,12 +236,26 @@ public class RecordMetaWrapperGenerator implements ElementVisitor,
 		if (field.isSortKey()) {
 			String interfaceName = InterfaceGenerator.getInterfaceName(currentTable.getName());
 			String fieldGetter = InterfaceGenerator.getGetterName(field);
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 			sb.append("\t@Override\n")
 				.append("\tpublic int compareTo(").append(interfaceName).append(" o) {\n")
-				.append("\t\t").append("return ").append(field.isAscSortKey() ? "-":"")
-				.append("(o.").append(fieldGetter).append("() - this.").append(fieldGetter).append("());\n")
-				.append("\t}\n");
+				.append("\t\t").append("if (this == o) return 0;\n");
+			if (field.isAscSortKey()) {
+				sb.append("\t\t").append("if (this == null) return -1;\n")
+					.append("\t\t").append("if (o == null) return 1;\n\n");
+
+				sb.append("\t\t").append("if (this.").append(fieldGetter).append("() < o.").append(fieldGetter).append("()) return -1;\n")
+					.append("\t\t").append("else if (this.").append(fieldGetter).append("() > o.").append(fieldGetter).append("()) return 1;\n")
+					.append("\t\t").append("else return 0;\n");
+			} else {
+				sb.append("\t\t").append("if (this == null) return 1;\n")
+					.append("\t\t").append("if (o == null) return -1;\n\n");
+
+				sb.append("\t\t").append("if (this.").append(fieldGetter).append("() < o.").append(fieldGetter).append("()) return 1;\n")
+					.append("\t\t").append("else if (this.").append(fieldGetter).append("() > o.").append(fieldGetter).append("()) return -1;\n")
+					.append("\t\t").append("else return 0;\n");
+			}
+			sb.append("\t}\n");
 			currentTemplate.fillFields("fieldComparable", sb.toString());
 		}
 	}
@@ -419,7 +433,7 @@ public class RecordMetaWrapperGenerator implements ElementVisitor,
 				fieldTemplate.fillFields("enumName",
 						MetadataFileGenerator.getEnumValue(field.getName()));
 				fieldTemplate.fillFields("interfaceGetterName", 
-						InterfaceGenerator.getListSizeGetterName(field));	
+						InterfaceGenerator.getListSizeGetterName(field));
 			} else {
 				fieldTemplate = new CodeTemplate();
 			}

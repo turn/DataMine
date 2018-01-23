@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package datamine.storage.idl;
 
-import java.util.Set;
-
-import junit.framework.Assert;
-
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import java.util.Set;
 
 import datamine.storage.api.RecordMetadataInterface;
 import datamine.storage.idl.generator.metadata.GetAllMetadataEnumClasses;
@@ -42,7 +42,7 @@ public class MetadataEnumClassesTest {
 	public void getRecordMetadata() {
 		String tableName = "main_table";
 		@SuppressWarnings("rawtypes")
-		RecordBufferMeta rbm = new GetRecordBufferMeta().apply(packageName, tableName);
+        RecordBufferMeta rbm = new GetRecordBufferMeta().apply(packageName, tableName);
 		Assert.assertEquals(tableName, rbm.getTableName());
 	}
 	

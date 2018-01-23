@@ -20,6 +20,8 @@ import org.testng.annotations.Test;
 
 import java.util.EnumSet;
 
+import datamine.storage.idl.Field;
+
 public class FieldTest {
 
     @Test
@@ -57,7 +59,7 @@ public class FieldTest {
                 Field.Constraint.DES_SORTED));
     }
 
-    @Test(expectedExceptions = java.lang.IllegalArgumentException.class)
+    @Test(expectedExceptions = IllegalArgumentException.class)
     void checkDerived() {
         boolean isDesSorted = true;
         boolean isAscSorted = true;

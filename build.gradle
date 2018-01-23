@@ -12,13 +12,13 @@ subprojects {
   }
 
   apply plugin: 'idea'
-  apply plugin: 'checkstyle'
+//  apply plugin: 'checkstyle'
 
-  checkstyle {
-    configFile rootProject.file('gbi-checkstyle_checks.xml')
-    toolVersion '7.7'    // set Checkstyle version here
-    showViolations = true
-  }
+//  checkstyle {
+//    configFile rootProject.file('gbi-checkstyle_checks.xml')
+//    toolVersion '7.7'    // set Checkstyle version here
+//    showViolations = true
+//  }
 
   idea {
     module {

@@ -15,10 +15,10 @@
  */
 package datamine.storage.idl.type;
 
+import com.google.common.collect.Maps;
+
 import java.util.EnumMap;
 import java.util.Map;
-
-import com.google.common.collect.Maps;
 
 import datamine.storage.api.RecordMetadataInterface;
 
@@ -64,4 +64,5 @@ public class FieldTypeFactory {
 			return fieldType;
 		}
 	}
+
 }

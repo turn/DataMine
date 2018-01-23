@@ -15,9 +15,9 @@
  */
 package datamine.storage.idl;
 
-import java.util.List;
-
 import com.google.gson.GsonBuilder;
+
+import java.util.List;
 
 /**
  * Definition of a table of Datamine

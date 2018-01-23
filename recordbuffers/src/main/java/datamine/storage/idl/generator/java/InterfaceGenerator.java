@@ -15,10 +15,10 @@
  */
 package datamine.storage.idl.generator.java;
 
-import java.util.Map;
-
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.Maps;
+
+import java.util.Map;
 
 import datamine.storage.idl.ElementVisitor;
 import datamine.storage.idl.Field;

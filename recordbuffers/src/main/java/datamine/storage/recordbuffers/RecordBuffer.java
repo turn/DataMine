@@ -15,14 +15,14 @@
  */
 package datamine.storage.recordbuffers;
 
+import com.google.common.base.Preconditions;
+
+import org.apache.hadoop.io.Writable;
+
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-
-import org.apache.hadoop.io.Writable;
-
-import com.google.common.base.Preconditions;
 
 
 /**

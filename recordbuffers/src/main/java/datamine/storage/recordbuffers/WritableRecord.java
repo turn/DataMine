@@ -15,15 +15,15 @@
  */
 package datamine.storage.recordbuffers;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.List;
+import com.google.common.base.Preconditions;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Preconditions;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.List;
 
 import datamine.storage.api.RecordMetadataInterface;
 import datamine.storage.idl.Field;
@@ -101,7 +101,7 @@ public class WritableRecord<T extends Enum<T> & RecordMetadataInterface> extends
 	 * 
 	 * TODO (Yan) support the deletion by making col null.
 	 * 
-	 * @param Field the field of interest
+	 * @param field the field of interest
 	 * @param val the new value of the concerned field
 	 */
 	@Override
@@ -259,7 +259,7 @@ public class WritableRecord<T extends Enum<T> & RecordMetadataInterface> extends
 	}
 	
 	/**
-	 * It creates an array of objects from the instance of {@link RecordBuffer}. 
+	 * It creates an array of objects from the instance of {@link RecordBuffer}.
 	 */
 	private void constructValueArrayFromRecordBuffer() {
 
@@ -334,7 +334,6 @@ public class WritableRecord<T extends Enum<T> & RecordMetadataInterface> extends
 	 * Create a byte buffer containing the input record and the input objects
 	 * would be removed at the same time. 
 	 * 
-	 * @param input an array of attributes from a record.
 	 * @return a byte buffer containing the input record.
 	 */
 	private void constructRecordBufferFromValueArray() {
@@ -426,7 +425,7 @@ public class WritableRecord<T extends Enum<T> & RecordMetadataInterface> extends
 					Object val = valueArray[i];
 					Field curField = curCol.getField();
 					FieldType curFieldType = curField.getType();
-					FieldValueOperatorInterface valOpr = 
+					FieldValueOperatorInterface valOpr =
 							FieldValueOperatorFactory.getOperator(curFieldType);
 
 					if (val != null && valOpr.isValid(val) && 
@@ -438,7 +437,7 @@ public class WritableRecord<T extends Enum<T> & RecordMetadataInterface> extends
 							hasValidValue = true;
 
 							// if it is a sort key
-							if (curField.isDesSortKey()) {
+							if (curField.isSortKey()) {
 								sortKeyOffset = curPosition;
 							}
 
@@ -460,7 +459,7 @@ public class WritableRecord<T extends Enum<T> & RecordMetadataInterface> extends
 								outStream.write(byteArray);
 								curPosition += byteArray.length;
 							} else {
-								if (curFieldType instanceof PrimitiveFieldType && 
+								if (curFieldType instanceof PrimitiveFieldType &&
 										((PrimitiveFieldType) curFieldType).getPrimitiveType().equals(PrimitiveType.STRING)) {
 									if (byteArray.length > Short.MAX_VALUE) {
 										outStream.write(new byte[]{(byte)0,(byte)0});

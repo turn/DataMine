@@ -8,4 +8,5 @@
     <suppress files="[\\/]generated[\\/]" checks="[a-zA-Z0-9]*"/>
     <suppress files="[\\/]gen[\\/]" checks="[a-zA-Z0-9]*"/>
     <suppress files="[\\/]example[\\/]" checks="[a-zA-Z0-9]*"/>
+    <suppress files="[\\/]src/test[\\/]" checks="[a-zA-Z0-9]*"/>
 </suppressions>

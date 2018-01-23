@@ -23,7 +23,7 @@ import datamine.storage.idl.validate.exceptions.IllegalNamingConversionException
 
 public class NamingConvensionValidationTest {
 
-	private final NamingConvensionValidation validator = 
+	private final NamingConvensionValidation validator =
 			new NamingConvensionValidation();
 	
 	@Test(expectedExceptions = IllegalNamingConversionException.class)

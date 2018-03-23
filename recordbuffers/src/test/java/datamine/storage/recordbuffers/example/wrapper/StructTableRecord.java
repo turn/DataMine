@@ -1,18 +1,3 @@
-/**
- * Copyright (C) 2016 Turn Inc. (yan.qi@turn.com)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package datamine.storage.recordbuffers.example.wrapper;
 
 import datamine.storage.recordbuffers.example.model.*;
@@ -31,7 +16,7 @@ import com.google.common.base.Strings;
 
 
 /**
- * DO NOT CHANGE! Auto-generated code
+ * DO Not CHANGE! Auto-generated code
  */
 public class StructTableRecord implements StructTableInterface {
     static final Logger LOG = LoggerFactory.getLogger(StructTableRecord.class);
@@ -103,6 +88,12 @@ public class StructTableRecord implements StructTableInterface {
         
     }
 
+    @Override
+    public int getIntSortedColumn() {
+        
+        return this.value.getInt(StructTableMetadata.INT_SORTED_COLUMN);
+    }
+
 
 
 	@Override
@@ -121,6 +112,20 @@ public class StructTableRecord implements StructTableInterface {
 		}
 	}
 
+
+	@Override
+	public void setIntSortedColumn(int input) {
+		if (1 == 1) {
+			
+			this.value.setValue(StructTableMetadata.INT_SORTED_COLUMN, input);
+		}
+	}
+
+
+    @Override
+    public int getIntSortedColumnDefaultValue() {
+        throw new NullPointerException("Require a valid value for int_sorted_column! Make sure the column has been selected!");
+    }
 
 
 	@Override

@@ -15,10 +15,10 @@
  */
 package datamine.storage.idl.generator.metadata;
 
+import com.google.common.collect.Lists;
+
 import java.util.Arrays;
 import java.util.List;
-
-import com.google.common.collect.Lists;
 
 import datamine.operator.UnaryOperatorInterface;
 import datamine.storage.api.RecordMetadataInterface;

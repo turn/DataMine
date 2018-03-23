@@ -15,18 +15,18 @@
  */
 package datamine.storage.idl.validate;
 
-import java.util.EnumSet;
-import java.util.List;
+import com.google.common.collect.Lists;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.Lists;
+import java.util.EnumSet;
+import java.util.List;
 
 import datamine.storage.idl.Field;
+import datamine.storage.idl.Field.Constraint;
 import datamine.storage.idl.Schema;
 import datamine.storage.idl.Table;
-import datamine.storage.idl.Field.Constraint;
 import datamine.storage.idl.type.PrimitiveFieldType;
 import datamine.storage.idl.type.PrimitiveType;
 import datamine.storage.idl.validate.exceptions.AbstractValidationException;

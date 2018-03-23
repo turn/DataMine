@@ -1,0 +1,56 @@
+allprojects  {
+  group = 'recordbuffer'
+  version = '0.9'
+}
+
+subprojects {
+  apply plugin: 'java'
+  sourceCompatibility = 1.8
+  targetCompatibility = 1.8
+  tasks.withType(JavaCompile) {
+  	options.encoding = 'UTF-8'
+  }
+
+  apply plugin: 'idea'
+//  apply plugin: 'checkstyle'
+
+//  checkstyle {
+//    configFile rootProject.file('gbi-checkstyle_checks.xml')
+//    toolVersion '7.7'    // set Checkstyle version here
+//    showViolations = true
+//  }
+
+  idea {
+    module {
+      inheritOutputDirs = false
+      outputDir = file('.out/classes/main')
+      testOutputDir = file('.out/classes/test')
+      sourceDirs += file('src/main/gen')
+    }
+  }
+
+  repositories {
+    mavenLocal()
+  }
+
+  // External variables
+  ext {
+    junitVersion = "4.12"
+    scalaVersion = "2.10"
+    sparkVersion = "1.6.0"
+  }
+
+  dependencies {
+    testCompile group: 'junit', name: 'junit', version: "$junitVersion"
+  }
+
+  task allDeps(type: DependencyReportTask) {}
+
+  test {
+    useJUnit()
+  }
+  tasks.withType(Javadoc).all { enabled = false }
+
+  sourceSets.main.java.srcDirs += "src/main/gen"
+
+}

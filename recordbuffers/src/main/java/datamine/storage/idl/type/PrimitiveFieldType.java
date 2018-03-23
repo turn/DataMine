@@ -56,5 +56,14 @@ final public class PrimitiveFieldType implements FieldType {
 		return true;
 	}
 
-	
+
+	@Override
+	public int getID() {
+		return type.getId();
+	}
+
+	@Override
+	public String toString() {
+		return type.getName();
+	}
 }

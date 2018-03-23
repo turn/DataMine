@@ -15,9 +15,9 @@
  */
 package datamine.storage.idl.validate;
 
-import java.util.Set;
-
 import com.google.common.collect.Sets;
+
+import java.util.Set;
 
 import datamine.storage.idl.Schema;
 import datamine.storage.idl.Table;
@@ -37,7 +37,7 @@ import datamine.storage.idl.validate.exceptions.NameDuplicationException;
  */
 public class SchemaValidation implements ValidateInterface<Schema> {
 
-	private static final TableValidation tableValidator = 
+	private static final TableValidation tableValidator =
 			new TableValidation();
 	
 	@Override

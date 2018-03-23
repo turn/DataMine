@@ -18,9 +18,10 @@ package datamine.storage.idl;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.gson.GsonBuilder;
-import datamine.storage.idl.type.FieldType;
 
 import java.util.EnumSet;
+
+import datamine.storage.idl.type.FieldType;
 
 /**
  * Definition of one field in Datamine
@@ -28,7 +29,7 @@ import java.util.EnumSet;
  * @author tliu
  * @author yqi
  */
-public class Field implements Element {
+public class Field extends BasicField implements Element {
 
     public static final int DERIVED_FIELD_ID = 0;
 
@@ -38,15 +39,12 @@ public class Field implements Element {
     }
 
     private final int id;
-    private final String name;
-    private final FieldType type;
     private final Object defaultValue;
     private final EnumSet<Constraint> constraints;
 
     private Field(Builder builder) {
+        super(builder.name, builder.type);
         this.id = builder.id;
-        this.name = builder.name;
-        this.type = builder.type;
         this.defaultValue = builder.defaultValue;
         this.constraints = getContraintEnumSet(
                 builder.isRequired, builder.isDesSorted,
@@ -172,11 +170,11 @@ public class Field implements Element {
     }
 
     public String getName() {
-        return name;
+        return super.getName();
     }
 
     public FieldType getType() {
-        return type;
+        return super.getType();
     }
 
     public Object getDefaultValue() {
@@ -243,8 +241,8 @@ public class Field implements Element {
         result = prime * result
                 + ((defaultValue == null) ? 0 : defaultValue.hashCode());
         result = prime * result + id;
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
-        result = prime * result + ((type == null) ? 0 : type.hashCode());
+        result = prime * result + ((getName() == null) ? 0 : getName().hashCode());
+        result = prime * result + ((getType() == null) ? 0 : getType().hashCode());
         return result;
     }
 
@@ -269,15 +267,15 @@ public class Field implements Element {
             return false;
         if (id != other.id)
             return false;
-        if (name == null) {
-            if (other.name != null)
+        if (getName() == null) {
+            if (other.getName() != null)
                 return false;
-        } else if (!name.equals(other.name))
+        } else if (!getName().equals(other.getName()))
             return false;
-        if (type == null) {
-            if (other.type != null)
+        if (getType() == null) {
+            if (other.getType() != null)
                 return false;
-        } else if (!type.equals(other.type))
+        } else if (!getType().equals(other.getType()))
             return false;
         return true;
     }

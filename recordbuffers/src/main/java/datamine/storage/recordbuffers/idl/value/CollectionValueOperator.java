@@ -15,15 +15,15 @@
  */
 package datamine.storage.recordbuffers.idl.value;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.List;
+import com.google.common.collect.Lists;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.Lists;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.List;
 
 import datamine.storage.idl.FieldValueOperatorInterface;
 import datamine.storage.idl.type.CollectionFieldType;

@@ -15,14 +15,14 @@
  */
 package datamine.storage.idl.validate;
 
-import java.io.File;
-import java.io.IOException;
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
+import java.io.File;
+import java.io.IOException;
 
 import datamine.storage.idl.Schema;
 import datamine.storage.idl.generator.metadata.MetadataPackageToSchema;
@@ -31,7 +31,7 @@ import datamine.storage.idl.validate.exceptions.AbstractValidationException;
 
 public class MetadataPackageToSchemaTest {
 
-	private final Schema currentSchema = 
+	private final Schema currentSchema =
 			new MetadataPackageToSchema().apply("datamine.storage.recordbuffers.example.model");
 	
 	@Test
@@ -39,7 +39,7 @@ public class MetadataPackageToSchemaTest {
 		File schemaPath = new File("src/test/resources/RBSchema.json");
 		Schema nextSchema = new JsonSchemaConvertor().apply(
 				Files.toString(schemaPath, Charsets.UTF_8));
-		SchemaEvolutionValidation validate = 
+		SchemaEvolutionValidation validate =
 				new SchemaEvolutionValidation(currentSchema);
 		validate.check(nextSchema);
 	}

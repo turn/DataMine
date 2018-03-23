@@ -17,6 +17,8 @@ package datamine.storage.recordbuffers;
 
 import com.google.common.base.Preconditions;
 
+import java.io.Serializable;
+
 import datamine.storage.api.RecordMetadataInterface;
 import datamine.storage.idl.Field;
 
@@ -25,7 +27,7 @@ import datamine.storage.idl.Field;
  * 
  * @author yqi
  */
-public abstract class Record<T extends Enum<T> & RecordMetadataInterface> {
+public abstract class Record<T extends Enum<T> & RecordMetadataInterface> implements Serializable {
 		
 	/**
 	 * The storage metadata about the recordbuffer is final

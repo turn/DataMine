@@ -15,10 +15,10 @@
  */
 package datamine.storage.idl.generator.metadata;
 
+import com.google.common.collect.Lists;
+
 import java.util.List;
 import java.util.Set;
-
-import com.google.common.collect.Lists;
 
 import datamine.operator.UnaryOperatorInterface;
 import datamine.storage.api.RecordMetadataInterface;
@@ -38,7 +38,7 @@ public class MetadataPackageToSchema implements
 	@Override
 	public Schema apply(String packageName) {
 		//1. the input string must be a valid package name
-		Set<Class<? extends RecordMetadataInterface>> allEnums = 
+		Set<Class<? extends RecordMetadataInterface>> allEnums =
 				new GetAllMetadataEnumClasses().apply(packageName);
 		
 		if (allEnums == null || allEnums.isEmpty()) {

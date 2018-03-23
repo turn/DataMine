@@ -1,6 +1,8 @@
 /.idea/
 /.settings/
 /.project
+*/.out/
+*/build/
 
 doc/DataMine_IDL.md.html
 README.md.html

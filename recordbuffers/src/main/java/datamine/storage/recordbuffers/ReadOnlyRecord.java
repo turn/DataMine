@@ -15,13 +15,13 @@
  */
 package datamine.storage.recordbuffers;
 
-import java.nio.ByteBuffer;
-import java.util.List;
+import com.google.common.base.Preconditions;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Preconditions;
+import java.nio.ByteBuffer;
+import java.util.List;
 
 import datamine.storage.api.RecordMetadataInterface;
 import datamine.storage.idl.Field;
@@ -79,7 +79,7 @@ public class ReadOnlyRecord<T extends Enum<T> & RecordMetadataInterface> extends
 	/**
 	 * Update the value of the input field
 	 * 
-	 * @param col the field of interest
+	 * @param field the field of interest
 	 * @param val the new value of the concerned field
 	 */
 	@Override
@@ -87,11 +87,11 @@ public class ReadOnlyRecord<T extends Enum<T> & RecordMetadataInterface> extends
 		throw new IllegalAccessError("No change is allowed for the read-only record!");
 	}
 	
-	private int getOffset(Field  field) {
+	private int getOffset(Field field) {
 
 		// when the column has its offset in the reference section
 		FieldType type = field.getType();
-		if ((field.isSortKey() || field.isFrequentlyUsed() || type instanceof CollectionFieldType) 
+		if ((field.isSortKey() || field.isFrequentlyUsed() || type instanceof CollectionFieldType)
 				&& offsetArray == null && this.buffer.getRecordBufferSize() > 0) {
 			// find out the offset directly
 			if (field.isSortKey()) {
@@ -325,7 +325,7 @@ public class ReadOnlyRecord<T extends Enum<T> & RecordMetadataInterface> extends
 	}
 	
 	/**
-	 * It creates an array of offsets from the instance of {@link RecordBuffer}. 
+	 * It creates an array of offsets from the instance of {@link RecordBuffer}.
 	 */
 	private void constructOffsetArrayFromRecordBuffer() {
 

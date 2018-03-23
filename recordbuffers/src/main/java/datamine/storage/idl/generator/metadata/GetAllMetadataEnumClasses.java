@@ -15,9 +15,9 @@
  */
 package datamine.storage.idl.generator.metadata;
 
-import java.util.Set;
-
 import org.reflections.Reflections;
+
+import java.util.Set;
 
 import datamine.operator.UnaryOperatorInterface;
 import datamine.storage.api.RecordMetadataInterface;
@@ -35,7 +35,7 @@ public class GetAllMetadataEnumClasses implements
 	@Override
 	public Set<Class<? extends RecordMetadataInterface>> apply(String input) {
 		Reflections reflections = new Reflections(input);
-		Set<Class<? extends RecordMetadataInterface>> allClasses = 
+		Set<Class<? extends RecordMetadataInterface>> allClasses =
 		     reflections.getSubTypesOf(RecordMetadataInterface.class);
 		return allClasses;
 	}

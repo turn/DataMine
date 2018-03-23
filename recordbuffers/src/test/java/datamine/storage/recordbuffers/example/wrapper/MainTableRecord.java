@@ -1,37 +1,28 @@
-/**
- * Copyright (C) 2016 Turn Inc. (yan.qi@turn.com)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package datamine.storage.recordbuffers.example.wrapper;
 
-import datamine.storage.recordbuffers.example.model.*;
-import datamine.storage.recordbuffers.example.interfaces.*;
-import datamine.storage.api.BaseInterface;
-import datamine.storage.recordbuffers.*;
-
-import java.nio.ByteBuffer;
-import java.util.*;
+import com.google.common.collect.Lists;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.google.common.collect.Lists;
-import com.google.common.base.Strings;
+
+import java.util.List;
+
+import datamine.storage.api.BaseInterface;
+import datamine.storage.recordbuffers.Record;
+import datamine.storage.recordbuffers.RecordBuffer;
+import datamine.storage.recordbuffers.WritableRecord;
+import datamine.storage.recordbuffers.example.interfaces.FirstLevelNestedTableInterface;
+import datamine.storage.recordbuffers.example.interfaces.MainTableDerivedValueInterface;
+import datamine.storage.recordbuffers.example.interfaces.MainTableInterface;
+import datamine.storage.recordbuffers.example.interfaces.StructTableInterface;
+import datamine.storage.recordbuffers.example.model.FirstLevelNestedTableMetadata;
+import datamine.storage.recordbuffers.example.model.MainTableMetadata;
+import datamine.storage.recordbuffers.example.model.StructTableMetadata;
 
 
 
 /**
- * DO NOT CHANGE! Auto-generated code
+ * DO Not CHANGE! Auto-generated code
  */
 public class MainTableRecord implements MainTableInterface {
     static final Logger LOG = LoggerFactory.getLogger(MainTableRecord.class);
@@ -400,7 +391,13 @@ public class MainTableRecord implements MainTableInterface {
 
 	@Override
 	public int compareTo(MainTableInterface o) {
-		return (o.getIntSortedColumn() - this.getIntSortedColumn());
+		if (this == o) return 0;
+		if (this == null) return 1;
+		if (o == null) return -1;
+
+		if (this.getIntSortedColumn() < o.getIntSortedColumn()) return 1;
+		else if (this.getIntSortedColumn() > o.getIntSortedColumn()) return -1;
+		else return 0;
 	}
 
 

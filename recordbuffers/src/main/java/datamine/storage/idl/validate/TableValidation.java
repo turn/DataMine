@@ -15,12 +15,12 @@
  */
 package datamine.storage.idl.validate;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 import datamine.storage.idl.Field;
 import datamine.storage.idl.Table;

@@ -15,19 +15,17 @@
  */
 package datamine.storage.idl.generator;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Preconditions;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import datamine.operator.UnaryOperatorInterface;
 import datamine.storage.idl.ElementVisitor;
 import datamine.storage.idl.Field;
 import datamine.storage.idl.Schema;
 import datamine.storage.idl.Table;
-import datamine.storage.idl.generator.CodeGenerator;
-import datamine.storage.idl.generator.CodeTemplate;
 import datamine.storage.idl.generator.java.InterfaceGenerator;
 import datamine.storage.idl.generator.java.JavaCodeGenerator;
 import datamine.storage.idl.generator.java.JavaTypeConvertor;
@@ -44,7 +42,7 @@ import datamine.storage.idl.type.PrimitiveFieldType;
  * @author yqi
  */
 public class TableTestDataGenerator implements ElementVisitor,
-	UnaryOperatorInterface<Schema, Void> {
+    UnaryOperatorInterface<Schema, Void> {
 
 	private Map<Table, CodeGenerator> templateMap = null;
 	private CodeTemplate currentTemplate = null;
@@ -160,7 +158,7 @@ public class TableTestDataGenerator implements ElementVisitor,
 		CodeTemplate bodyTemplate = new CodeTemplate(classCode);
 		CodeTemplate importTemplate = new CodeTemplate(importString);
 		String className = getTestDataClassName(table); 
-		JavaCodeGenerator javaCode = new JavaCodeGenerator(sourceDir, nameSpace, 
+		JavaCodeGenerator javaCode = new JavaCodeGenerator(sourceDir, nameSpace,
 				className, importTemplate, bodyTemplate);
 		bodyTemplate.fillFields("interfaceName", InterfaceGenerator.getInterfaceName(table.getName()));
 		bodyTemplate.fillFields("testDataClassName", className);
@@ -201,7 +199,7 @@ public class TableTestDataGenerator implements ElementVisitor,
 	 * @author yqi
 	 * @date Dec 16, 2014
 	 */
-	static class FieldSetterTemplateGenerator implements UnaryOperatorInterface<Field, CodeTemplate>{
+	static class FieldSetterTemplateGenerator implements UnaryOperatorInterface<Field, CodeTemplate> {
 
 		private Field field = null;
 		private CodeTemplate fieldSetterTemplate = null;

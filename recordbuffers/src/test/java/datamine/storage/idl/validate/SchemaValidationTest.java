@@ -19,6 +19,7 @@ import org.testng.annotations.Test;
 
 import datamine.storage.idl.Schema;
 import datamine.storage.idl.json.JsonSchemaConvertor;
+import datamine.storage.idl.validate.SchemaValidation;
 import datamine.storage.idl.validate.exceptions.AbstractValidationException;
 import datamine.storage.idl.validate.exceptions.IdentityDuplicationException;
 import datamine.storage.idl.validate.exceptions.IllegalDerivedFieldException;

@@ -15,17 +15,20 @@
  */
 package datamine.storage.recordbuffers;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import com.google.common.collect.Lists;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.Lists;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 import datamine.storage.idl.type.GroupFieldType;
+import datamine.storage.recordbuffers.ReadOnlyRecord;
+import datamine.storage.recordbuffers.Record;
+import datamine.storage.recordbuffers.RecordBuffer;
 import datamine.storage.recordbuffers.example.data.MainTableTestData;
 import datamine.storage.recordbuffers.example.derived.FirstLevelNestedTableDerived;
 import datamine.storage.recordbuffers.example.derived.MainTableDerived;
@@ -186,7 +189,7 @@ public class ReadWriteTest {
 
 		MainTableInterface aup = createRecord();
 		@SuppressWarnings("unchecked")
-		Record<MainTableMetadata> aupRecord = (Record<MainTableMetadata>) aup.getBaseObject();
+        Record<MainTableMetadata> aupRecord = (Record<MainTableMetadata>) aup.getBaseObject();
 		// start testing
 		int len = aupRecord.getNumOfBytes();
 		int impSize = aupRecord.getListSize(MainTableMetadata.NESTED_TABLE_COLUMN);

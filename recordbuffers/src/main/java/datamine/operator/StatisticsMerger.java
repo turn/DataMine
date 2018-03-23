@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,36 +15,36 @@
  */
 package datamine.operator;
 
-import java.util.Map;
-
 import com.google.common.collect.Maps;
+
+import java.util.Map;
 
 /**
  * @author yqi
  * @date Sep 3, 2014
  */
 public class StatisticsMerger implements
-		AggregatorInterface<Map<String, Long>, Map<String, Long>> {
+    AggregatorInterface<Map<String, Long>, Map<String, Long>> {
 
-	Map<String, Long> result = Maps.newHashMap();
-	
-	@Override
-	public Map<String, Long> apply(Map<String, Long> input) {
-		
-		for (String cur : input.keySet()) {
-			if (result.containsKey(cur)) {
-				result.put(cur, result.get(cur) + input.get(cur));
-			} else {
-				result.put(cur, input.get(cur));
-			}
-		}
-		
-		return result;
-	}
+    Map<String, Long> result = Maps.newHashMap();
 
-	@Override
-	public Map<String, Long> getResult() {
-		return result;
-	}
+    @Override
+    public Map<String, Long> apply(Map<String, Long> input) {
+
+        for (String cur : input.keySet()) {
+            if (result.containsKey(cur)) {
+                result.put(cur, result.get(cur) + input.get(cur));
+            } else {
+                result.put(cur, input.get(cur));
+            }
+        }
+
+        return result;
+    }
+
+    @Override
+    public Map<String, Long> getResult() {
+        return result;
+    }
 
 }

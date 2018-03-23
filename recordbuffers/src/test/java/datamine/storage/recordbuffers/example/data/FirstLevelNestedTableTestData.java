@@ -1,18 +1,3 @@
-/**
- * Copyright (C) 2016 Turn Inc. (yan.qi@turn.com)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package datamine.storage.recordbuffers.example.data;
 
 import datamine.storage.api.RecordBuilderInterface;
@@ -33,7 +18,7 @@ import com.google.common.collect.Maps;
 
 
 /**
- * DO NOT CHANGE! Auto-generated code
+ * DO Not CHANGE! Auto-generated code
  */
 public class FirstLevelNestedTableTestData extends AbstractTestData<FirstLevelNestedTableInterface, FirstLevelNestedTableMetadata> {
 
@@ -47,6 +32,10 @@ public class FirstLevelNestedTableTestData extends AbstractTestData<FirstLevelNe
 		for (EnumMap<FirstLevelNestedTableMetadata, Object> cur : data) {
 			FirstLevelNestedTableInterface record = builder.build(FirstLevelNestedTableInterface.class);
 			
+			if (cur.containsKey(FirstLevelNestedTableMetadata.EVENT_TIME)) {
+				record.setEventTime((Long) cur.get(FirstLevelNestedTableMetadata.EVENT_TIME));
+			}
+
 			if (cur.containsKey(FirstLevelNestedTableMetadata.INT_REQUIRED_COLUMN)) {
 				record.setIntRequiredColumn((Integer) cur.get(FirstLevelNestedTableMetadata.INT_REQUIRED_COLUMN));
 			}
@@ -66,6 +55,10 @@ public class FirstLevelNestedTableTestData extends AbstractTestData<FirstLevelNe
 		Assert.assertEquals(size, data.size());
 		for (int i = 0; i < size; ++i) {
 			
+			if (data.get(i).containsKey(FirstLevelNestedTableMetadata.EVENT_TIME)) {
+				Assert.assertEquals(objectList.get(i).getEventTime(), data.get(i).get(FirstLevelNestedTableMetadata.EVENT_TIME));
+			}
+
 			if (data.get(i).containsKey(FirstLevelNestedTableMetadata.INT_REQUIRED_COLUMN)) {
 				Assert.assertEquals(objectList.get(i).getIntRequiredColumn(), data.get(i).get(FirstLevelNestedTableMetadata.INT_REQUIRED_COLUMN));
 			}
@@ -86,6 +79,13 @@ public class FirstLevelNestedTableTestData extends AbstractTestData<FirstLevelNe
 		for (int i = 0; i < num; ++i) {
 			EnumMap<FirstLevelNestedTableMetadata, Object> dataMap = Maps.newEnumMap(FirstLevelNestedTableMetadata.class);
 			
+			{
+				Object val = RandomValueGenerator.getValueOf(((PrimitiveFieldType)FirstLevelNestedTableMetadata.EVENT_TIME.getField().getType()).getPrimitiveType());
+				if (val != null) {
+					dataMap.put(FirstLevelNestedTableMetadata.EVENT_TIME, val);
+				}
+			}
+
 			{
 				Object val = RandomValueGenerator.getValueOf(((PrimitiveFieldType)FirstLevelNestedTableMetadata.INT_REQUIRED_COLUMN.getField().getType()).getPrimitiveType());
 				if (val != null) {

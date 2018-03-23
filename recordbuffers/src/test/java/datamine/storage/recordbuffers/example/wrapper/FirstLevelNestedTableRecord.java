@@ -1,18 +1,3 @@
-/**
- * Copyright (C) 2016 Turn Inc. (yan.qi@turn.com)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package datamine.storage.recordbuffers.example.wrapper;
 
 import datamine.storage.recordbuffers.example.model.*;
@@ -31,7 +16,7 @@ import com.google.common.base.Strings;
 
 
 /**
- * DO NOT CHANGE! Auto-generated code
+ * DO Not CHANGE! Auto-generated code
  */
 public class FirstLevelNestedTableRecord implements FirstLevelNestedTableInterface {
     static final Logger LOG = LoggerFactory.getLogger(FirstLevelNestedTableRecord.class);
@@ -102,6 +87,12 @@ public class FirstLevelNestedTableRecord implements FirstLevelNestedTableInterfa
     }
 
     @Override
+    public long getEventTime() {
+        
+        return this.value.getLong(FirstLevelNestedTableMetadata.EVENT_TIME);
+    }
+
+    @Override
     public int getIntRequiredColumn() {
         
         return this.value.getInt(FirstLevelNestedTableMetadata.INT_REQUIRED_COLUMN);
@@ -127,6 +118,15 @@ public class FirstLevelNestedTableRecord implements FirstLevelNestedTableInterfa
         return derivedFieldValues.getStringDerivedColumn();
     }
 
+
+
+	@Override
+	public void setEventTime(long input) {
+		if (1 == 1) {
+			
+			this.value.setValue(FirstLevelNestedTableMetadata.EVENT_TIME, input);
+		}
+	}
 
 
 	@Override
@@ -156,6 +156,11 @@ public class FirstLevelNestedTableRecord implements FirstLevelNestedTableInterfa
 
 
     @Override
+    public long getEventTimeDefaultValue() {
+        throw new NullPointerException("Require a valid value for event_time! Make sure the column has been selected!");
+    }
+
+    @Override
     public int getIntRequiredColumnDefaultValue() {
         throw new NullPointerException("Require a valid value for int_required_column! Make sure the column has been selected!");
     }
@@ -172,6 +177,16 @@ public class FirstLevelNestedTableRecord implements FirstLevelNestedTableInterfa
 	}
 
 
+	@Override
+	public int compareTo(FirstLevelNestedTableInterface o) {
+		if (this == o) return 0;
+		if (this == null) return -1;
+		if (o == null) return 1;
+
+		if (this.getEventTime() < o.getEventTime()) return -1;
+		else if (this.getEventTime() > o.getEventTime()) return 1;
+		else return 0;
+	}
 
 
 	public static class FirstLevelNestedTableDefaultDerivedValues implements FirstLevelNestedTableDerivedValueInterface {

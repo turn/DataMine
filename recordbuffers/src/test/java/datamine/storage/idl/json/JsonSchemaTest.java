@@ -15,15 +15,15 @@
  */
 package datamine.storage.idl.json;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.util.List;
+import com.google.gson.Gson;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.google.gson.Gson;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.List;
 
 import datamine.storage.idl.json.JsonSchema;
 import datamine.storage.idl.json.JsonTable;

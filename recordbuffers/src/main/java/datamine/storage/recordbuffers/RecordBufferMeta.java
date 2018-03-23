@@ -15,17 +15,18 @@
  */
 package datamine.storage.recordbuffers;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 import datamine.storage.api.RecordMetadataInterface;
 import datamine.storage.idl.Field;
@@ -34,11 +35,11 @@ import datamine.storage.idl.type.CollectionFieldType;
 /**
  * RecordBufferMeta stores the information required for the serialization 
  * of a table defined by ENUM<T>. For example a header is needed when representing
- * a table record with the {@link RecordBuffer} instance. 
+ * a table record with the {@link RecordBuffer} instance.
  * 
  * @author yqi
  */
-public class RecordBufferMeta<T extends Enum<T> & RecordMetadataInterface> {
+public class RecordBufferMeta<T extends Enum<T> & RecordMetadataInterface> implements Serializable {
 
 	public static final Logger LOG = LoggerFactory.getLogger(RecordBufferMeta.class);
 	
@@ -52,7 +53,7 @@ public class RecordBufferMeta<T extends Enum<T> & RecordMetadataInterface> {
 	private static Map<Class, RecordBufferMeta> operatorMap = Maps.newHashMap();
 	
 	@SuppressWarnings("unchecked")
-	public static <T extends Enum<T> & RecordMetadataInterface> RecordBufferMeta<T> 
+	public static <T extends Enum<T> & RecordMetadataInterface> RecordBufferMeta<T>
 		getRecordOperator(Class<T> enumClass) {
 		if (operatorMap.containsKey(enumClass)) {
 			return operatorMap.get(enumClass);
@@ -97,7 +98,7 @@ public class RecordBufferMeta<T extends Enum<T> & RecordMetadataInterface> {
 	 * @param name the field name
 	 * @return the field ENUM, or null if the field doesn't exist
 	 */
-	public T getField(String name) {
+	public T getFieldMeta(String name) {
 		return nameFieldMap.get(name);
 	}
 	
@@ -203,7 +204,7 @@ public class RecordBufferMeta<T extends Enum<T> & RecordMetadataInterface> {
 	/** 
 	 * Find out the size of the collection-type field in the record
 	 * @param col the collection-type field 
-	 * @param buffer the record buffer storing the record
+	 * @param rb the record buffer storing the record
 	 * @return the size of the collection-type field in the record
 	 */
 	public int getCollectionSize(T col, RecordBuffer rb) {
@@ -213,7 +214,7 @@ public class RecordBufferMeta<T extends Enum<T> & RecordMetadataInterface> {
 	/** 
 	 * Find out the size of the collection-type field in the record
 	 * @param field the collection-type field 
-	 * @param buffer the record buffer storing the record
+	 * @param rb the record buffer storing the record
 	 * @return the size of the collection-type field in the record
 	 */
 	public int getCollectionSize(Field field, RecordBuffer rb) {
@@ -307,8 +308,7 @@ public class RecordBufferMeta<T extends Enum<T> & RecordMetadataInterface> {
 	
 	/**
 	 * Get the offset of the sort-key field in the record buffer
-	 * @param buffer the byte buffer storing the record
-	 * @param initOffset the starting position of the record
+	 * @param rb the byte buffer storing the record
 	 * @return the offset of the sort-key field in the record buffer
 	 */
 	public int getSortKeyOffset(RecordBuffer rb) {
@@ -318,6 +318,11 @@ public class RecordBufferMeta<T extends Enum<T> & RecordMetadataInterface> {
 		} else {
 			return -1;
 		}
+	}
+
+	@Override
+	public String toString() {
+		return fieldList.toString();
 	}
 
 	/**
@@ -339,7 +344,7 @@ public class RecordBufferMeta<T extends Enum<T> & RecordMetadataInterface> {
 	 * 
 	 * @author yqi
 	 */
-	public class ReferenceSection {
+	public class ReferenceSection implements Serializable {
 		// how many bytes used; 1 for collection type and 1 for the field with reference
 		private short length = 2; 				
 		// must decide at the creation; once set, no way to peel
@@ -355,7 +360,7 @@ public class RecordBufferMeta<T extends Enum<T> & RecordMetadataInterface> {
 			boolean hasReferenceType = false;
 			for (T cur : fieldList) {
 				Field field = cur.getField();
-				if (field.isDesSortKey()) {
+				if (field.isSortKey()) {
 					hasSortKey = true;
 					length += 4; // 4 (or integer) for the reference to the pos of sorted key attribute
 				}

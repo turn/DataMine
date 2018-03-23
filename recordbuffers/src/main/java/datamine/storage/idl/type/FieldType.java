@@ -21,4 +21,5 @@ package datamine.storage.idl.type;
  * @date Dec 10, 2014
  */
 public interface FieldType {
+    int getID();
 }

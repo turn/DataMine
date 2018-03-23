@@ -15,15 +15,15 @@
  */
 package datamine.storage.idl.json;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import com.google.gson.Gson;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.gson.Gson;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import datamine.operator.UnaryOperatorInterface;
 import datamine.storage.idl.Field;
@@ -64,7 +64,7 @@ public class JsonSchemaConvertor implements JsonElementVisitor,
 		String name = table.getName();
 		tableName.add(name);
 		fields = new ArrayList<Field>();
-		tables.add(new Table(name, fields, 
+		tables.add(new Table(name, fields,
 				Short.parseShort(table.getVersion())));
 	}
 
@@ -116,9 +116,9 @@ public class JsonSchemaConvertor implements JsonElementVisitor,
 		case Boolean:
 			return new PrimitiveFieldType(PrimitiveType.BOOL);
 		case Byte:
-			return new PrimitiveFieldType(PrimitiveType.BYTE); 
+			return new PrimitiveFieldType(PrimitiveType.BYTE);
 		case Short:
-			return new PrimitiveFieldType(PrimitiveType.INT16); 
+			return new PrimitiveFieldType(PrimitiveType.INT16);
 		case Integer: 
 			return new PrimitiveFieldType(PrimitiveType.INT32);
 		case Long:
@@ -126,7 +126,7 @@ public class JsonSchemaConvertor implements JsonElementVisitor,
 		case Float:
 			return new PrimitiveFieldType(PrimitiveType.FLOAT);
 		case Double:
-			return new PrimitiveFieldType(PrimitiveType.DOUBLE); 
+			return new PrimitiveFieldType(PrimitiveType.DOUBLE);
 		case String:
 			return new PrimitiveFieldType(PrimitiveType.STRING);
 		case Binary:
@@ -136,7 +136,7 @@ public class JsonSchemaConvertor implements JsonElementVisitor,
 			return new GroupFieldType(typeStr, null);
 		case List:
 			String elementTypeName = JsonFieldType.getElementTypeNameInList(typeStr);
-			return new CollectionFieldType(getType(elementTypeName), 
+			return new CollectionFieldType(getType(elementTypeName),
 					CollectionType.LIST);
 		}
 		throw new IllegalArgumentException("Illegal input type: " + typeStr);

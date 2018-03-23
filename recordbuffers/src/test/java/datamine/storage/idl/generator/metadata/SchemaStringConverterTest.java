@@ -17,14 +17,17 @@ package datamine.storage.idl.generator.metadata;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
-import datamine.storage.idl.Schema;
-import datamine.storage.idl.json.JsonSchemaConvertor;
+
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.File;
+
+import datamine.storage.idl.Schema;
+import datamine.storage.idl.generator.metadata.SchemaStringConverter;
+import datamine.storage.idl.json.JsonSchemaConvertor;
 
 import static org.testng.Assert.*;
 

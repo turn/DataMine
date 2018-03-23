@@ -15,15 +15,15 @@
  */
 package datamine.storage.idl.generator.metadata;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import datamine.operator.UnaryOperatorInterface;
 import datamine.storage.api.RecordMetadataInterface;
 import datamine.storage.idl.Schema;
 import datamine.storage.idl.Table;
 import datamine.storage.idl.type.CollectionFieldType;
 import datamine.storage.idl.type.GroupFieldType;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * convert a RecordMetadataInterface back to Schema
@@ -63,7 +63,7 @@ public class RecordMetaToSchema implements
     }
 
     // Check if schema already exist in the Schema
-    private boolean tableAlreadyAdded(List<Table> tableList,Class<? extends RecordMetadataInterface> tClass ){
+    private boolean tableAlreadyAdded(List<Table> tableList, Class<? extends RecordMetadataInterface> tClass ){
         for (Table table: tableList) {
             if (table.getName().toLowerCase().equals(tClass.getEnumConstants()[0].getTableName())) {
                 return true;

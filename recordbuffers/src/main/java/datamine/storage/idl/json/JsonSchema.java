@@ -15,15 +15,15 @@
  */
 package datamine.storage.idl.json;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.gson.GsonBuilder;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Schema definition
@@ -48,7 +48,7 @@ import com.google.gson.annotations.SerializedName;
  * @author tliu
  * @author yqi
  */
-public class JsonSchema implements JsonElement{
+public class JsonSchema implements JsonElement {
 	
 	static final Logger logger = LoggerFactory.getLogger(JsonSchema.class);
 	

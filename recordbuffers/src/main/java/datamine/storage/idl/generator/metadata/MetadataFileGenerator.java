@@ -15,11 +15,11 @@
  */
 package datamine.storage.idl.generator.metadata;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Preconditions;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import datamine.operator.UnaryOperatorInterface;
 import datamine.storage.idl.ElementVisitor;

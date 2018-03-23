@@ -15,9 +15,9 @@
  */
 package datamine.storage.recordbuffers.idl.value;
 
-import java.util.Map;
-
 import com.google.common.collect.Maps;
+
+import java.util.Map;
 
 import datamine.storage.idl.FieldValueOperatorInterface;
 import datamine.storage.idl.type.CollectionFieldType;
@@ -33,7 +33,7 @@ public class FieldValueOperatorFactory {
 	
 	private FieldValueOperatorFactory() {  }
 	
-	private static Map<FieldType, FieldValueOperatorInterface> valueOprMap = Maps.newHashMap(); 
+	private static Map<FieldType, FieldValueOperatorInterface> valueOprMap = Maps.newHashMap();
 	
 	public static final FieldValueOperatorInterface getOperator(FieldType type) {
 		if (valueOprMap.containsKey(type)) {

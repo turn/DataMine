@@ -23,10 +23,10 @@ import datamine.storage.recordbuffers.example.model.MainTableMetadata;
 public class RecordBufferMetaTest {
 	@Test
 	public void getField() {
-		RecordBufferMeta<MainTableMetadata> rbm = 
+		RecordBufferMeta<MainTableMetadata> rbm =
 				RecordBufferMeta.getRecordOperator(MainTableMetadata.class);
 		
-		Assert.assertEquals(MainTableMetadata.LONG_REQUIRED_COLUMN, rbm.getField("long_required_column"));
-		Assert.assertEquals(null, rbm.getField("fake_user_id"));
+		Assert.assertEquals(MainTableMetadata.LONG_REQUIRED_COLUMN, rbm.getFieldMeta("long_required_column"));
+		Assert.assertEquals(null, rbm.getFieldMeta("fake_user_id"));
 	}
 }

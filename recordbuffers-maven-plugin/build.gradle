@@ -1,0 +1,6 @@
+group = 'com.turn.datamine.plugins'
+description = 'Maven plug-in for RecordBuffer'
+dependencies {
+    compile group: 'org.apache.maven', name: 'maven-plugin-api', version:'3.0'
+  compile project(':recordbuffers')
+}

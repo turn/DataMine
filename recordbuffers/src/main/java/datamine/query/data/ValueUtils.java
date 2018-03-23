@@ -5,6 +5,7 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 
 import datamine.storage.idl.type.PrimitiveType;
+import datamine.utils.DataHasher;
 
 /**
  * It is a collection of commonly used routines that all other processes need.
@@ -123,7 +124,7 @@ public class ValueUtils implements Serializable {
 
         throw new IllegalArgumentException(
             String.format("Incompatible data types: %s v.s. %s",
-            left.getType(), right.getType()));
+                left.getType(), right.getType()));
     }
 
     /**
@@ -221,6 +222,78 @@ public class ValueUtils implements Serializable {
             left.getType(), right.getType()));
     }
 
+    /**
+     * Cast a value into a LONG value.
+     * @param value the input value
+     * @return a long number
+     */
+    public static Value castLong(Value value) {
+
+        if (value == null || value.getType() == NullDataType
+            || value.getValue() == null) {
+            return nullValue;
+        }
+
+        if (value.getType() == LongDataType) {
+            return value;
+        }
+
+        if (value.getType() == FloatDataType ||
+            value.getType() == DoubleDataType) {
+            Number num = (Number) value.getValue();
+            return new Value(num.longValue(), LongDataType);
+        }
+
+        throw new IllegalArgumentException(String.format(
+            "Cannot cast the value type (%s) to long",
+            value.getType()));
+    }
+
+    /**
+     * Calculate the hash of a string
+     * @param value the input string value
+     * @return the hash code of the input value
+     */
+    public static Value hashFunc(Value value) {
+
+        if (value == null || value.getType() == NullDataType
+            || value.getValue() == null) {
+            return nullValue;
+        }
+
+        if (value.getType() == StringDataType) {
+            return new Value(
+                DataHasher.hash(value.getValue().toString()),
+                ValueUtils.LongDataType);
+        }
+
+        throw new IllegalArgumentException(String.format(
+            "Cannot hash the non-string value type (%s) to long",
+            value.getType()));
+    }
+
+
+
+    /**
+     * Get the square root of the input number.
+     * @param value a number
+     * @return the square root of the input
+     */
+    public static Value sqrt(Value value) {
+
+        if (value == null ||
+            value.getType() == NullDataType ||
+            value.getValue() == null) {
+            return nullValue;
+        }
+
+        Number num = (Number) value.getValue();
+        if (num.doubleValue() < 0) {
+            return new Value(0f, FloatDataType);
+        }
+
+        return new Value(Math.sqrt(num.doubleValue()), FloatDataType);
+    }
 
     private static Value numbericOpr(Value left, Value right, String opr) {
 
@@ -239,13 +312,13 @@ public class ValueUtils implements Serializable {
             switch (opr) {
                 case "+":
                     return new Value(l.longValue() + r.longValue(),
-                            LongDataType);
+                        LongDataType);
                 case "-":
                     return new Value(l.longValue() - r.longValue(),
-                            LongDataType);
+                        LongDataType);
                 case "*":
                     return new Value(l.longValue() * r.longValue(),
-                            LongDataType);
+                        LongDataType);
                 case "/":
                     if (r.longValue() == 0l) {
                         return nullValue;
@@ -348,77 +421,6 @@ public class ValueUtils implements Serializable {
      */
     public static Value mod(Value left, Value right) {
         return numbericOpr(left, right, "%");
-    }
-
-    /**
-     * Translate a wildcard string into regular expression
-     * @param psedoRegEx the input wildcard string
-     * @return the regular expression of the input wildcard string
-     */
-    public static String getRegEx(String psedoRegEx) {
-        StringBuilder s = new StringBuilder();
-        s.append('^');
-        for (int i = 0, is = psedoRegEx.length(); i < is; i++) {
-            char c = psedoRegEx.charAt(i);
-            switch (c) {
-                case '%':
-                    s.append(".*");
-                    break;
-                case '?':
-                    s.append(".");
-                    break;
-                // escape special regexp-characters
-                case '{':
-                case '}':
-                case '[':
-                case ']':
-                case '(':
-                case ')':
-                case '.':
-                case '|':
-                case '$':
-                case '^':
-                case '\\':
-                    s.append("\\");
-                    s.append(c);
-                    break;
-                default:
-                    s.append(c);
-                    break;
-            }
-        }
-        s.append('$');
-        return (s.toString());
-    }
-
-    /**
-     * Check if the input String matches the right pattern
-     * @param txt the input string
-     * @param pattern the pattern
-     * @return true if the input string matches the pattern
-     */
-    public static Value like(Value txt, Value pattern) {
-
-        if (txt == null || pattern == null ||
-            txt.getType() == NullDataType ||
-            pattern.getType() == NullDataType ||
-            txt.getValue() == null ||
-            pattern.getValue() == null) {
-            return nullValue;
-        }
-
-        if (txt.getType() == StringDataType &&
-            pattern.getType() == StringDataType) {
-            String l = (String) txt.getValue();
-            String r = (String) pattern.getValue();
-            return Pattern.matches(getRegEx(r), l)
-                ? trueValue
-                : falseValue;
-        }
-
-        throw new IllegalArgumentException(String.format(
-            "Incompatible data types: %s v.s. %s",
-            txt.getType(), pattern.getType()));
     }
 
     /**
